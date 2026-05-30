@@ -18,14 +18,14 @@ Cloudflare Workers scores 5/5 on agent-friendly criteria (CLI-first, managed/ser
 
 ## Platform Comparison
 
-| Platform | CLI-first | Managed/Serverless | Agent-readable docs | Stable deploy API | MCP/Integration | Total | Est. Monthly Cost |
-|---|---|---|---|---|---|---|---|
-| **Cloudflare Workers** | **Pass** | **Pass** | **Pass** | **Pass** | **Pass** | **5/5** | **$0** (3M req/mo free) |
-| **Netlify** | Pass | Pass | **Pass** | Pass | **Pass** | **5/5** | **$0** (300 credits, 1.5M req if optimized) |
-| **Railway** | Pass | Pass | **Pass** | Pass | Partial | 4.5/5 | $15–20 |
-| **Render** | Partial | Pass | **Pass** | Partial | Pass | 3.5/5 | $7 (free tier unusable for SSR) |
-| **Vercel** | Pass | Pass | Partial | Pass | Pass | 4/5 | $0 Hobby (commercial use prohibited) |
-| **Fly.io** | Pass | Pass | Fail | Pass | Fail | 3/5 | $5 (no free tier) |
+| Platform               | CLI-first | Managed/Serverless | Agent-readable docs | Stable deploy API | MCP/Integration | Total   | Est. Monthly Cost                           |
+| ---------------------- | --------- | ------------------ | ------------------- | ----------------- | --------------- | ------- | ------------------------------------------- |
+| **Cloudflare Workers** | **Pass**  | **Pass**           | **Pass**            | **Pass**          | **Pass**        | **5/5** | **$0** (3M req/mo free)                     |
+| **Netlify**            | Pass      | Pass               | **Pass**            | Pass              | **Pass**        | **5/5** | **$0** (300 credits, 1.5M req if optimized) |
+| **Railway**            | Pass      | Pass               | **Pass**            | Pass              | Partial         | 4.5/5   | $15–20                                      |
+| **Render**             | Partial   | Pass               | **Pass**            | Partial           | Pass            | 3.5/5   | $7 (free tier unusable for SSR)             |
+| **Vercel**             | Pass      | Pass               | Partial             | Pass              | Pass            | 4/5     | $0 Hobby (commercial use prohibited)        |
+| **Fly.io**             | Pass      | Pass               | Fail                | Pass              | Fail            | 3/5     | $5 (no free tier)                           |
 
 ### Shortlisted Platforms
 
@@ -105,50 +105,56 @@ How Cloudflare Workers actually operates day to day:
 
 ## Risk Register
 
-| Risk | Source | Likelihood | Impact | Mitigation |
-|---|---|---|---|---|
-| Node.js dependency breaks at runtime (no `fs`, `child_process`, limited `node:crypto`) | Devil's advocate | **High** | **High** | Audit dependencies before adding (check for Node.js-specific APIs). Prefer Workers-compatible libraries (e.g., `date-fns` over `moment`, `zod` over `ajv`). Test locally with `npm run dev` (Astro 6 uses real Workers runtime). Keep a list of known-incompatible libs (e.g., `sharp` for image processing, `pdf-lib` for PDFs) and have Workers-compatible alternatives ready (`@cloudflare/workers-image`, client-side PDF.js). |
-| Pages SSR breaking change causes deploy failures | Devil's advocate | **Medium** | **Medium** | Ignore all references to `wrangler pages deploy` or `@astrojs/cloudflare` + Pages SSR. Use `wrangler deploy` (Workers, not Pages). Verify `astro.config.mjs` specifies `output: "server"` and `adapter: cloudflare()` with no `mode: "directory"` (Pages-specific). If following external tutorials, cross-check against Cloudflare's official docs (last updated post-May 2026). |
-| 128MB memory limit causes OOM under concurrent SSR load | Devil's advocate, Pre-mortem | **Medium** | **High** | Monitor memory usage via `wrangler tail` (OOM errors show as "Worker exceeded memory limit"). Optimize SSR rendering: lazy-load components, paginate large datasets, cache static content at edge (Cloudflare Cache API). If free tier OOM persists, upgrade to Paid Workers ($5/mo, 256MB limit). For heavy computation (charts, reports), move to client-side rendering or background jobs (Cloudflare Queues). |
-| Vendor lock-in to Cloudflare-specific APIs (D1, KV, Durable Objects) | Devil's advocate, Pre-mortem | **Low** | **Medium** | This project uses Supabase Postgres (already chosen), so database lock-in is avoided. If Workers KV or D1 are added later, abstract behind a data access layer (e.g., `src/lib/storage.ts` with swappable backends). Document migration paths in `context/foundation/lessons.md` as they're discovered. KV → Redis migration is straightforward (key-value semantics identical). D1 → Postgres requires schema conversion (SQLite → Postgres dialect differences). |
-| 30-second CPU timeout hit during synchronous processing | Devil's advocate | **Low** | **Medium** | Astro SSR is I/O-bound (database queries, API calls), not CPU-bound. 30s CPU timeout is unlikely to be hit unless the app does heavy computation (e.g., server-side chart rendering, large JSON parsing). If timeout occurs, offload to background job (Cloudflare Queues) or client-side (move chart rendering to React component with `client:load`). Monitor CPU time via `wrangler tail` (log entries include CPU duration). |
-| Billing surprise from CPU-time vs wall-time model | Unknown unknowns | **Low** | **Low** | Cloudflare bills by CPU execution time, not wall-clock invocation time. External API waits (Supabase, OAuth) don't count toward CPU. Free tier (100k req/day, 10ms CPU/invocation) covers typical SSR workloads with margin. Monitor usage in Cloudflare dashboard (Analytics > Workers). If CPU usage spikes unexpectedly, profile with `console.time()` / `console.timeEnd()` to find hot paths. Paid tier overages: $0.02/million CPU-ms (cheap unless doing heavy computation). |
-| Dev dependencies break locally with real Workers runtime | Unknown unknowns | **Medium** | **Low** | Astro 6 dev server (`npm run dev`) now uses workerd (real Workers runtime) instead of Node.js. This surfaces runtime incompatibilities earlier (a pro), but means dev environment is stricter. If a dev dependency (e.g., test fixture generator, dev-only script) uses Node.js APIs, move it to a separate Node.js script (`scripts/seed-data.js`) and run outside Astro's dev server. Keep `package.json` devDependencies clean of Node.js-specific libs. |
-| D1 (SQLite) vs Postgres semantic differences | Unknown unknowns | **Low** | **Low** | Not applicable — this project uses Supabase Postgres. If D1 is added later for Workers-local caching, be aware: D1 is SQLite (different `ALTER TABLE` support, JSON handling, no full-text search without FTS5). Document D1 usage in `context/foundation/tech-stack.md` if adopted. |
-| Free tier rate limits shared across all projects on account | Unknown unknowns | **Low** | **Low** | Cloudflare free tier limits (100k req/day) apply per-account, not per-project. If multiple side projects share the same account, they compete for quota. Mitigation: use separate Cloudflare accounts for unrelated projects, or upgrade to Paid Workers ($5/mo, per-project billing). Monitor per-project usage in dashboard (Workers > Analytics). |
-| MCP server requires paid Claude subscription for OAuth | Unknown unknowns | **Low** | **Low** | Cloudflare MCP server (GA) supports OAuth-authenticated access, but OAuth flow requires Claude Pro/Team/Enterprise (not Free). If using Claude Free, MCP server can't authenticate. Fallback: use `wrangler` CLI directly (no MCP). CLI works identically; MCP adds convenience (structured tools vs CLI parsing). If MCP is critical, upgrade to Claude Pro ($20/mo). |
-| Chart library incompatibility with Workers runtime | Pre-mortem | **Medium** | **High** | If adding progress charts (FR-014 requirement), verify library compatibility. Server-side chart rendering (e.g., `recharts`, `chart.js` in SSR) may use Node.js `canvas` or `stream` APIs (incompatible with Workers). Mitigation: use client-side rendering (`client:load` in Astro) for charts, or Workers-compatible libraries (`@cloudflare/d3` if available, or raw SVG generation). Test chart rendering locally with `npm run dev` before deploy. |
-| Lack of built-in cron for background jobs | Pre-mortem | **Low** | **Medium** | Workers doesn't support cron on free tier. If background jobs are needed post-MVP (e.g., send reminder emails when users haven't practiced in 7 days), use Cloudflare Queues (GA, paid) or external cron (GitHub Actions scheduled workflows, Supabase Edge Functions + pg_cron). Railway or Render have built-in cron ($1/mo), but that's a platform swap. For MVP, defer background jobs until required. |
-| Data migration friction if platform swap needed | Pre-mortem | **Low** | **Medium** | Supabase Postgres (already chosen) is platform-agnostic, so database migration is trivial (export SQL dump, import to new host). If Workers KV or D1 are used, migration requires custom scripts. Mitigation: minimize use of Workers-native storage. If KV is adopted, document export process (`wrangler kv:key list` + `wrangler kv:key get` scripted to JSON dump). D1 exports are SQLite dumps (`.db` file), convertible to Postgres with schema mapping tools. |
-| Concurrent SSR OOM during traffic spikes | Pre-mortem | **Medium** | **High** | Duplicate of "128MB memory limit" risk above. Covered in mitigation: monitor via logs, optimize rendering, cache static content, upgrade to Paid Workers if needed. |
-| Stale tutorial confusion on Pages vs Workers | Research finding | **Medium** | **Low** | Cloudflare removed Pages SSR support in May 2026. External tutorials, Stack Overflow answers, and even Astro's own guides may reference Pages SSR (now broken). Developers following stale docs will hit "ASSETS reserved name" errors. Mitigation: always cross-check against official Cloudflare docs (post-May 2026). Trust `wrangler deploy` (Workers), not `wrangler pages deploy` (broken for SSR). Add a note in `CLAUDE.md` or `context/foundation/lessons.md`: "Deploy to Workers, not Pages — Pages SSR removed May 2026." |
+| Risk                                                                                   | Source                       | Likelihood | Impact     | Mitigation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| -------------------------------------------------------------------------------------- | ---------------------------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Node.js dependency breaks at runtime (no `fs`, `child_process`, limited `node:crypto`) | Devil's advocate             | **High**   | **High**   | Audit dependencies before adding (check for Node.js-specific APIs). Prefer Workers-compatible libraries (e.g., `date-fns` over `moment`, `zod` over `ajv`). Test locally with `npm run dev` (Astro 6 uses real Workers runtime). Keep a list of known-incompatible libs (e.g., `sharp` for image processing, `pdf-lib` for PDFs) and have Workers-compatible alternatives ready (`@cloudflare/workers-image`, client-side PDF.js).                                                                                                   |
+| Pages SSR breaking change causes deploy failures                                       | Devil's advocate             | **Medium** | **Medium** | Ignore all references to `wrangler pages deploy` or `@astrojs/cloudflare` + Pages SSR. Use `wrangler deploy` (Workers, not Pages). Verify `astro.config.mjs` specifies `output: "server"` and `adapter: cloudflare()` with no `mode: "directory"` (Pages-specific). If following external tutorials, cross-check against Cloudflare's official docs (last updated post-May 2026).                                                                                                                                                    |
+| 128MB memory limit causes OOM under concurrent SSR load                                | Devil's advocate, Pre-mortem | **Medium** | **High**   | Monitor memory usage via `wrangler tail` (OOM errors show as "Worker exceeded memory limit"). Optimize SSR rendering: lazy-load components, paginate large datasets, cache static content at edge (Cloudflare Cache API). If free tier OOM persists, upgrade to Paid Workers ($5/mo, 256MB limit). For heavy computation (charts, reports), move to client-side rendering or background jobs (Cloudflare Queues).                                                                                                                    |
+| Vendor lock-in to Cloudflare-specific APIs (D1, KV, Durable Objects)                   | Devil's advocate, Pre-mortem | **Low**    | **Medium** | This project uses Supabase Postgres (already chosen), so database lock-in is avoided. If Workers KV or D1 are added later, abstract behind a data access layer (e.g., `src/lib/storage.ts` with swappable backends). Document migration paths in `context/foundation/lessons.md` as they're discovered. KV → Redis migration is straightforward (key-value semantics identical). D1 → Postgres requires schema conversion (SQLite → Postgres dialect differences).                                                                   |
+| 30-second CPU timeout hit during synchronous processing                                | Devil's advocate             | **Low**    | **Medium** | Astro SSR is I/O-bound (database queries, API calls), not CPU-bound. 30s CPU timeout is unlikely to be hit unless the app does heavy computation (e.g., server-side chart rendering, large JSON parsing). If timeout occurs, offload to background job (Cloudflare Queues) or client-side (move chart rendering to React component with `client:load`). Monitor CPU time via `wrangler tail` (log entries include CPU duration).                                                                                                     |
+| Billing surprise from CPU-time vs wall-time model                                      | Unknown unknowns             | **Low**    | **Low**    | Cloudflare bills by CPU execution time, not wall-clock invocation time. External API waits (Supabase, OAuth) don't count toward CPU. Free tier (100k req/day, 10ms CPU/invocation) covers typical SSR workloads with margin. Monitor usage in Cloudflare dashboard (Analytics > Workers). If CPU usage spikes unexpectedly, profile with `console.time()` / `console.timeEnd()` to find hot paths. Paid tier overages: $0.02/million CPU-ms (cheap unless doing heavy computation).                                                  |
+| Dev dependencies break locally with real Workers runtime                               | Unknown unknowns             | **Medium** | **Low**    | Astro 6 dev server (`npm run dev`) now uses workerd (real Workers runtime) instead of Node.js. This surfaces runtime incompatibilities earlier (a pro), but means dev environment is stricter. If a dev dependency (e.g., test fixture generator, dev-only script) uses Node.js APIs, move it to a separate Node.js script (`scripts/seed-data.js`) and run outside Astro's dev server. Keep `package.json` devDependencies clean of Node.js-specific libs.                                                                          |
+| D1 (SQLite) vs Postgres semantic differences                                           | Unknown unknowns             | **Low**    | **Low**    | Not applicable — this project uses Supabase Postgres. If D1 is added later for Workers-local caching, be aware: D1 is SQLite (different `ALTER TABLE` support, JSON handling, no full-text search without FTS5). Document D1 usage in `context/foundation/tech-stack.md` if adopted.                                                                                                                                                                                                                                                 |
+| Free tier rate limits shared across all projects on account                            | Unknown unknowns             | **Low**    | **Low**    | Cloudflare free tier limits (100k req/day) apply per-account, not per-project. If multiple side projects share the same account, they compete for quota. Mitigation: use separate Cloudflare accounts for unrelated projects, or upgrade to Paid Workers ($5/mo, per-project billing). Monitor per-project usage in dashboard (Workers > Analytics).                                                                                                                                                                                 |
+| MCP server requires paid Claude subscription for OAuth                                 | Unknown unknowns             | **Low**    | **Low**    | Cloudflare MCP server (GA) supports OAuth-authenticated access, but OAuth flow requires Claude Pro/Team/Enterprise (not Free). If using Claude Free, MCP server can't authenticate. Fallback: use `wrangler` CLI directly (no MCP). CLI works identically; MCP adds convenience (structured tools vs CLI parsing). If MCP is critical, upgrade to Claude Pro ($20/mo).                                                                                                                                                               |
+| Chart library incompatibility with Workers runtime                                     | Pre-mortem                   | **Medium** | **High**   | If adding progress charts (FR-014 requirement), verify library compatibility. Server-side chart rendering (e.g., `recharts`, `chart.js` in SSR) may use Node.js `canvas` or `stream` APIs (incompatible with Workers). Mitigation: use client-side rendering (`client:load` in Astro) for charts, or Workers-compatible libraries (`@cloudflare/d3` if available, or raw SVG generation). Test chart rendering locally with `npm run dev` before deploy.                                                                             |
+| Lack of built-in cron for background jobs                                              | Pre-mortem                   | **Low**    | **Medium** | Workers doesn't support cron on free tier. If background jobs are needed post-MVP (e.g., send reminder emails when users haven't practiced in 7 days), use Cloudflare Queues (GA, paid) or external cron (GitHub Actions scheduled workflows, Supabase Edge Functions + pg_cron). Railway or Render have built-in cron ($1/mo), but that's a platform swap. For MVP, defer background jobs until required.                                                                                                                           |
+| Data migration friction if platform swap needed                                        | Pre-mortem                   | **Low**    | **Medium** | Supabase Postgres (already chosen) is platform-agnostic, so database migration is trivial (export SQL dump, import to new host). If Workers KV or D1 are used, migration requires custom scripts. Mitigation: minimize use of Workers-native storage. If KV is adopted, document export process (`wrangler kv:key list` + `wrangler kv:key get` scripted to JSON dump). D1 exports are SQLite dumps (`.db` file), convertible to Postgres with schema mapping tools.                                                                 |
+| Concurrent SSR OOM during traffic spikes                                               | Pre-mortem                   | **Medium** | **High**   | Duplicate of "128MB memory limit" risk above. Covered in mitigation: monitor via logs, optimize rendering, cache static content, upgrade to Paid Workers if needed.                                                                                                                                                                                                                                                                                                                                                                  |
+| Stale tutorial confusion on Pages vs Workers                                           | Research finding             | **Medium** | **Low**    | Cloudflare removed Pages SSR support in May 2026. External tutorials, Stack Overflow answers, and even Astro's own guides may reference Pages SSR (now broken). Developers following stale docs will hit "ASSETS reserved name" errors. Mitigation: always cross-check against official Cloudflare docs (post-May 2026). Trust `wrangler deploy` (Workers), not `wrangler pages deploy` (broken for SSR). Add a note in `CLAUDE.md` or `context/foundation/lessons.md`: "Deploy to Workers, not Pages — Pages SSR removed May 2026." |
 
 ## Getting Started
 
 1. **Install Wrangler CLI** (if not already installed):
+
    ```bash
    npm install -g wrangler
    ```
 
 2. **Authenticate Wrangler** with your Cloudflare account:
+
    ```bash
    wrangler login
    ```
+
    Opens a browser window for OAuth. Grants CLI access to your Cloudflare account.
 
 3. **Verify Astro configuration** (`astro.config.mjs`) specifies Workers deployment (not Pages):
+
    ```typescript
-   import { defineConfig } from 'astro/config';
-   import cloudflare from '@astrojs/cloudflare';
+   import { defineConfig } from "astro/config";
+   import cloudflare from "@astrojs/cloudflare";
 
    export default defineConfig({
-     output: 'server',  // SSR mode
-     adapter: cloudflare(),  // Workers runtime (NOT Pages)
+     output: "server", // SSR mode
+     adapter: cloudflare(), // Workers runtime (NOT Pages)
    });
    ```
+
    Ensure `@astrojs/cloudflare` is v13+ (Astro 6 requirement).
 
 4. **Create `wrangler.toml`** in project root (if not already present):
+
    ```toml
    name = "speed-reading-training-app"
    main = "dist/_worker.js"
@@ -167,6 +173,7 @@ How Cloudflare Workers actually operates day to day:
    ```
 
 5. **Set secrets** (Supabase credentials from `.env`):
+
    ```bash
    wrangler secret put SUPABASE_URL
    # Paste value when prompted
@@ -175,10 +182,12 @@ How Cloudflare Workers actually operates day to day:
    ```
 
 6. **Build and deploy** to Workers:
+
    ```bash
    npm run build
    wrangler deploy
    ```
+
    First deploy creates a `*.workers.dev` URL (e.g., `speed-reading-training-app.sobas.workers.dev`). Custom domain configuration requires adding a route in `wrangler.toml` and DNS setup in Cloudflare dashboard.
 
 7. **Tail logs** to verify deployment:
@@ -192,6 +201,7 @@ How Cloudflare Workers actually operates day to day:
 ## Out of Scope
 
 The following were not evaluated in this research:
+
 - Docker image configuration (not applicable to Workers — uses V8 isolates, not containers)
 - CI/CD pipeline setup (GitHub Actions workflow already exists; Wrangler integration deferred to implementation phase)
 - Production-scale architecture (multi-region, HA, DR) — MVP scope only

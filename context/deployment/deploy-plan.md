@@ -13,6 +13,7 @@ Deploy the Astro 6 SSR application to Cloudflare Workers following the infrastru
 ## Current State
 
 **What's Ready**:
+
 - ✅ Astro 6 configured with Cloudflare Workers adapter
 - ✅ wrangler.jsonc exists with basic config
 - ✅ Wrangler CLI v4.94.0 installed
@@ -20,6 +21,7 @@ Deploy the Astro 6 SSR application to Cloudflare Workers following the infrastru
 - ✅ `.env` file exists with Supabase credentials
 
 **What's Missing**:
+
 - ❌ wrangler.jsonc incomplete (no account_id, missing env splits)
 - ❌ No `.dev.vars` file for local Cloudflare dev
 - ❌ Production secrets not set in Workers
@@ -52,6 +54,7 @@ Deploy the Astro 6 SSR application to Cloudflare Workers following the infrastru
 Navigate to: https://github.com/aerlevsedi/speedReading/settings/secrets/actions
 
 Add these repository secrets:
+
 - `CLOUDFLARE_API_TOKEN` (from step 1.1)
 - `CLOUDFLARE_ACCOUNT_ID` (from `wrangler whoami`)
 - `SUPABASE_URL` (from `.env`)
@@ -66,6 +69,7 @@ Add these repository secrets:
 ### 2.2 Update wrangler.jsonc
 
 ✅ **COMPLETED** - Updated with:
+
 - Project name: `speed-reading-training-app`
 - Compatibility date: `2026-05-30`
 - Environment splits (production/preview)
@@ -74,6 +78,7 @@ Add these repository secrets:
 **MANUAL ACTION REQUIRED**: Replace `<YOUR_ACCOUNT_ID>` in `wrangler.jsonc` with actual account ID from step 1.1.
 
 **Verify**:
+
 ```bash
 npx wrangler deploy --dry-run --env production
 # Should parse config without errors
@@ -86,6 +91,7 @@ npm run build
 ```
 
 **Verify**:
+
 ```bash
 ls -la dist/
 # Expected: _worker.js, _astro/, and other assets
@@ -106,6 +112,7 @@ npx wrangler secret put SUPABASE_KEY --env production
 ```
 
 **Verify**:
+
 ```bash
 npx wrangler secret list --env production
 # Expected: Both secrets listed
@@ -118,12 +125,14 @@ npx wrangler deploy --env production
 ```
 
 **Expected output**:
+
 ```
 Published speed-reading-training-app
   https://speed-reading-training-app.<subdomain>.workers.dev
 ```
 
 **Common failures**:
+
 - "ASSETS is a reserved namespace" → You used `wrangler pages deploy` instead of `wrangler deploy`
 - "account_id is required" → Update wrangler.jsonc with account ID
 - "Authentication required" → Run `wrangler login`
@@ -135,6 +144,7 @@ Published speed-reading-training-app
 Visit: `https://speed-reading-training-app.<subdomain>.workers.dev`
 
 **Manual testing checklist**:
+
 - [ ] Landing page loads (no 500 error)
 - [ ] Navigate to `/auth/signin` (form loads)
 - [ ] Sign up flow works (create test user)
@@ -149,10 +159,12 @@ npx wrangler tail --env production
 ```
 
 **Look for**:
+
 - ✅ HTTP 200 responses, fast durations (<500ms)
 - ❌ 500 errors, "process is not defined", "fs module not found"
 
 **If errors found**:
+
 ```bash
 # Filter errors only
 npx wrangler tail --env production --status error
@@ -176,6 +188,7 @@ npx wrangler deploy --env production
 ### 4.1 Update GitHub Actions Workflow
 
 ✅ **COMPLETED** - `.github/workflows/ci.yml` updated with:
+
 - Renamed workflow to "CI/CD"
 - Added build artifact upload
 - Added deploy job for production
@@ -194,6 +207,7 @@ git push origin master
 ```
 
 **Verify**:
+
 - Visit https://github.com/aerlevsedi/speedReading/actions
 - Both `ci` and `deploy` jobs run successfully
 - Visit production URL - change appears
@@ -203,12 +217,14 @@ git push origin master
 ### 5.1 Create Deployment Directory Structure
 
 ✅ **COMPLETED** - Created:
+
 - `context/deployment/verification-logs/`
 - `context/deployment/runbooks/`
 
 ### 5.2 Update README.md
 
 ✅ **COMPLETED** - Deployment section updated (lines 153-177) with:
+
 - Manual deployment steps
 - CI/CD automation info
 - Rollback instructions
@@ -222,6 +238,7 @@ git push origin master
 ### 5.4 Create Operational Runbook
 
 ✅ **COMPLETED** - Created `context/deployment/runbooks/cloudflare-workers-ops.md` with:
+
 - Daily health checks
 - Incident response (500 errors, OOM, slow responses)
 - Monitoring commands
@@ -231,6 +248,7 @@ git push origin master
 ### 5.5 Create Verification Checklist Template
 
 ✅ **COMPLETED** - Created `context/deployment/verification-logs/deployment-checklist.md` with:
+
 - Pre-deployment checks
 - Deployment steps
 - Post-deployment verification
@@ -254,6 +272,7 @@ The following files have been automatically updated/created:
 Before you can deploy, you must:
 
 1. **Get Cloudflare Account ID**:
+
    ```bash
    npx wrangler login
    npx wrangler whoami
@@ -275,6 +294,7 @@ Before you can deploy, you must:
      - `SUPABASE_KEY`
 
 5. **Build and Deploy**:
+
    ```bash
    npm run build
    npx wrangler secret put SUPABASE_URL --env production
@@ -290,6 +310,7 @@ Before you can deploy, you must:
 ## Success Criteria
 
 Deployment is successful when:
+
 - ✅ Production URL accessible
 - ✅ Sign-up/sign-in flows work
 - ✅ Dashboard accessible for authenticated users
@@ -300,13 +321,13 @@ Deployment is successful when:
 
 ## Risk Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Pages SSR breaking change | Use `wrangler deploy`, NOT `wrangler pages deploy` |
+| Risk                          | Mitigation                                         |
+| ----------------------------- | -------------------------------------------------- |
+| Pages SSR breaking change     | Use `wrangler deploy`, NOT `wrangler pages deploy` |
 | Node.js API incompatibilities | Monitor logs; find Workers-compatible alternatives |
-| 128MB memory limit | Test under load; upgrade to Paid Workers if needed |
-| Secret rotation complexity | Document `wrangler secret put` workflow |
-| Stale tutorials | README explicitly warns against Pages deployment |
+| 128MB memory limit            | Test under load; upgrade to Paid Workers if needed |
+| Secret rotation complexity    | Document `wrangler secret put` workflow            |
+| Stale tutorials               | README explicitly warns against Pages deployment   |
 
 ## Verification Commands Reference
 
@@ -341,6 +362,7 @@ npx wrangler secret delete <KEY> --env production
 ---
 
 **References**:
+
 - Infrastructure decision: `context/foundation/infrastructure.md`
 - Tech stack: `context/foundation/tech-stack.md`
 - PRD: `context/foundation/prd.md`

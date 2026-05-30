@@ -157,17 +157,20 @@ This project deploys to [Cloudflare Workers](https://workers.cloudflare.com/).
 ### Manual Deployment
 
 1. **Build the project**:
+
    ```bash
    npm run build
    ```
 
 2. **Set production secrets** (first time only):
+
    ```bash
    npx wrangler secret put SUPABASE_URL --env production
    npx wrangler secret put SUPABASE_KEY --env production
    ```
 
 3. **Deploy to production**:
+
    ```bash
    npx wrangler deploy --env production
    ```

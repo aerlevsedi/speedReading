@@ -1,26 +1,24 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "speed-reading-app",
-	"main": "@astrojs/cloudflare/entrypoints/server",
-	"compatibility_date": "2026-05-28",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-	"account_id": "8fa58b42a7b2491334382a42190747e9",
-	"assets": {
-		"binding": "ASSETS",
-		"directory": "./dist",
-		"not_found_handling": "404-page"
-	},
-	"observability": {
-		"enabled": true
-	},
-	"env": {
-		"production": {
-			"name": "speed-reading-app"
-		},
-		"preview": {
-			"name": "speed-reading-app-preview"
-		}
-	}
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "speed-reading-app",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-05-28",
+  "compatibility_flags": ["nodejs_compat"],
+  "account_id": "8fa58b42a7b2491334382a42190747e9",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+  },
+  "observability": {
+    "enabled": true,
+  },
+  "env": {
+    "production": {
+      "name": "speed-reading-app",
+    },
+    "preview": {
+      "name": "speed-reading-app-preview",
+    },
+  },
 }

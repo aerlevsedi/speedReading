@@ -43,6 +43,7 @@ npx wrangler tail --env production --status error --format json | jq -s 'length'
 **Symptoms**: Users see "Internal Server Error"
 
 **Diagnosis**:
+
 ```bash
 # Get error logs
 npx wrangler tail --env production --status error
@@ -52,6 +53,7 @@ npx wrangler deployments list --env production
 ```
 
 **Resolution**:
+
 1. Identify the error from logs
 2. If recent deployment caused it:
    ```bash
@@ -64,17 +66,20 @@ npx wrangler deployments list --env production
 ### Out of Memory (OOM)
 
 **Symptoms**:
+
 - 500 errors
 - Logs show "Exceeded memory limit"
 - Workers free tier: 128MB limit
 
 **Diagnosis**:
+
 ```bash
 # Check for memory-related errors
 npx wrangler tail --env production | grep -i "memory"
 ```
 
 **Resolution**:
+
 1. Identify memory-heavy operations
 2. Optimize:
    - Reduce payload sizes
@@ -88,6 +93,7 @@ npx wrangler tail --env production | grep -i "memory"
 **Symptoms**: Pages load slowly (>2s)
 
 **Diagnosis**:
+
 ```bash
 # Monitor response times
 npx wrangler tail --env production --format json | jq '.event.request.duration'
@@ -97,6 +103,7 @@ npx wrangler tail --env production | grep -i "supabase"
 ```
 
 **Resolution**:
+
 1. Identify slow operations from logs
 2. Common fixes:
    - Add database indexes (Supabase)
@@ -113,6 +120,7 @@ npx wrangler tail --env production | grep -i "supabase"
 **Symptoms**: Users cannot sign in/up
 
 **Diagnosis**:
+
 ```bash
 # Check auth-related errors
 npx wrangler tail --env production | grep -i "auth"
@@ -122,6 +130,7 @@ npx wrangler secret list --env production
 ```
 
 **Resolution**:
+
 1. Verify Supabase credentials:
    ```bash
    npx wrangler secret list --env production
@@ -175,6 +184,7 @@ npx wrangler deployments list --env production
 ### Complete Service Outage
 
 **Steps**:
+
 1. Check Cloudflare status: https://www.cloudflarestatus.com/
 2. Verify DNS resolution:
    ```bash
@@ -194,6 +204,7 @@ npx wrangler deployments list --env production
 **Prevention**: Store secrets in password manager
 
 **Recovery**:
+
 1. Get secrets from `.env` file (local backup)
 2. Re-set in production:
    ```bash
@@ -205,6 +216,7 @@ npx wrangler deployments list --env production
 ### Database Corruption (Supabase)
 
 **Steps**:
+
 1. Check Supabase dashboard: https://app.supabase.com/
 2. Verify database connectivity:
    ```bash
@@ -243,10 +255,12 @@ npx wrangler tail --env production --format json | jq -s 'length'
 ### Approaching Limits
 
 **Warning signs**:
+
 - Dashboard shows >80% of daily request limit
 - Requests start failing with 429 (rate limit)
 
 **Actions**:
+
 1. Identify traffic patterns:
    ```bash
    npx wrangler tail --env production --format json | jq '.event.request.url'
