@@ -1,4 +1,6 @@
-# 10x Astro Starter
+# Speed Reading Project for 10xDevs
+
+## 10x Astro Starter
 
 ![](./public/template.png)
 
