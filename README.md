@@ -154,23 +154,54 @@ Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_
 
 This project deploys to [Cloudflare Workers](https://workers.cloudflare.com/).
 
-1. Build the project:
+### Manual Deployment
+
+1. **Build the project**:
+   ```bash
+   npm run build
+   ```
+
+2. **Set production secrets** (first time only):
+   ```bash
+   npx wrangler secret put SUPABASE_URL --env production
+   npx wrangler secret put SUPABASE_KEY --env production
+   ```
+
+3. **Deploy to production**:
+   ```bash
+   npx wrangler deploy --env production
+   ```
+
+4. **Verify deployment**:
+   ```bash
+   npx wrangler tail --env production
+   ```
+
+### Automated Deployment (CI/CD)
+
+GitHub Actions automatically deploys to production on every push to `master`.
+
+### Rollback
 
 ```bash
-npm run build
+npx wrangler rollback --env production
 ```
 
-2. Deploy with Wrangler:
+### Logs
 
 ```bash
-npx wrangler deploy
+# Real-time logs
+npx wrangler tail --env production
+
+# Errors only
+npx wrangler tail --env production --status error
 ```
 
-Set `SUPABASE_URL` and `SUPABASE_KEY` as secrets in your Cloudflare dashboard or via `npx wrangler secret put`.
+### Critical Notes
 
-## CI
-
-GitHub Actions runs lint + build on every push and PR to `master`. Configure `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets in GitHub for the build step.
+- **Do NOT use `wrangler pages deploy`** - Pages SSR removed May 2026
+- Always use `wrangler deploy` (Workers deployment)
+- Free tier: 100k requests/day (3M/month), 128MB memory
 
 ## License
 
