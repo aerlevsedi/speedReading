@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs:
   ci:
@@ -25,7 +25,7 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
       - uses: actions/upload-artifact@v4
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           name: dist
           path: dist/
@@ -35,7 +35,7 @@ jobs:
     name: Deploy to Cloudflare Workers
     needs: ci
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
 
