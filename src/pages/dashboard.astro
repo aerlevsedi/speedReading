@@ -1,28 +1,52 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { createClient } from "@/lib/supabase";
+import ExerciseCard from "@/components/dashboard/ExerciseCard";
+import type { Exercise } from "@/types";
 
 const { user } = Astro.locals;
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+const result = await supabase.from("exercises").select("*").order("created_at", { ascending: true });
+
+if (result.error) {
+  console.error("Failed to fetch exercises:", result.error);
+}
+
+const exercises = result.data;
 ---
 
 <Layout title="Dashboard">
-  <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
-    <div class="rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-white backdrop-blur-xl">
-      <h1 class="mb-4 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-        Dashboard
-      </h1>
-      <p class="text-blue-100/80">
-        Welcome, <span class="font-semibold text-white">{user?.email}</span>
-      </p>
-      <p class="mt-2 text-sm text-blue-100/50">This page is only for authenticated users.</p>
-      <p class="mt-2 text-sm text-blue-100/50">And you can see it...so you are authenticated. Congrats.</p>
-      <form method="POST" action="/api/auth/signout" class="mt-6">
-        <button
-          type="submit"
-          class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm transition-colors hover:bg-white/20"
-        >
-          Sign out
-        </button>
-      </form>
+  <div class="bg-cosmic min-h-screen p-4">
+    <div class="mx-auto max-w-5xl">
+      <!-- Header -->
+      <div class="mb-8 rounded-2xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+        <h1 class="mb-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+          Speed Reading Training
+        </h1>
+        <p class="text-blue-100/80">
+          Welcome back, <span class="font-semibold text-white">{user?.email}</span>
+        </p>
+        <form method="POST" action="/api/auth/signout" class="mt-4">
+          <button
+            type="submit"
+            class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white/90 transition-colors hover:bg-white/20"
+          >
+            Sign out
+          </button>
+        </form>
+      </div>
+
+      <!-- Exercise Grid -->
+      <div class="grid gap-6 sm:grid-cols-2">
+        {
+          exercises && exercises.length > 0 ? (
+            exercises.map((exercise) => <ExerciseCard exercise={exercise as Exercise} client:load />)
+          ) : (
+            <p class="text-blue-100/60">No exercises available yet.</p>
+          )
+        }
+      </div>
     </div>
   </div>
 </Layout>

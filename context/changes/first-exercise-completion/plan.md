@@ -1013,22 +1013,22 @@ Manual browser testing covering:
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run lint`
-- [x] 1.2 Build succeeds: `npm run build`
-- [x] 1.3 API route is accessible: `curl http://localhost:4321/api/exercises/a0000000-0000-0000-0000-000000000001` returns 200
+- [x] 1.1 Type checking passes: `npm run lint` — c2dbf78
+- [x] 1.2 Build succeeds: `npm run build` — c2dbf78
+- [x] 1.3 API route is accessible: `curl http://localhost:4321/api/exercises/a0000000-0000-0000-0000-000000000001` returns 200 — c2dbf78
 
 #### Manual
 
-- [x] 1.4 Visit API route in browser: see JSON with exercise data
-- [x] 1.5 Invalid UUID returns 404
+- [x] 1.4 Visit API route in browser: see JSON with exercise data — c2dbf78
+- [x] 1.5 Invalid UUID returns 404 — c2dbf78
 
 ### Phase 2: Dashboard with exercise card
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run lint`
-- [ ] 2.2 Build succeeds: `npm run build`
-- [ ] 2.3 Component renders without errors: `npm run dev`
+- [x] 2.1 Type checking passes: `npm run lint`
+- [x] 2.2 Build succeeds: `npm run build`
+- [x] 2.3 Component renders without errors: `npm run dev`
 
 #### Manual
 
