@@ -1039,24 +1039,24 @@ Manual browser testing covering:
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run lint`
-- [x] 3.2 Build succeeds: `npm run build`
-- [x] 3.3 Exercise page accessible with no console errors
+- [x] 3.1 Type checking passes: `npm run lint` — 5cbcf18
+- [x] 3.2 Build succeeds: `npm run build` — 5cbcf18
+- [x] 3.3 Exercise page accessible with no console errors — 5cbcf18
 
 #### Manual
 
-- [ ] 3.4 Click Start: words highlight sequentially at correct pace
-- [ ] 3.5 Pause/Resume buttons work correctly
-- [ ] 3.6 Quiz appears after reading completes
-- [ ] 3.7 Form auto-submits after second question answered
+- [x] 3.4 Click Start: words highlight sequentially at correct pace — 5cbcf18
+- [x] 3.5 Pause/Resume buttons work correctly — 5cbcf18
+- [x] 3.6 Quiz appears after reading completes — 5cbcf18
+- [x] 3.7 Form auto-submits after second question answered — 5cbcf18
 
 ### Phase 4: Completion API and results page
 
 #### Automated
 
-- [ ] 4.1 Type checking passes: `npm run lint`
-- [ ] 4.2 Build succeeds: `npm run build`
-- [ ] 4.3 API route handles POST successfully
+- [x] 4.1 Type checking passes: `npm run lint`
+- [x] 4.2 Build succeeds: `npm run build`
+- [x] 4.3 API route handles POST successfully
 
 #### Manual
 
