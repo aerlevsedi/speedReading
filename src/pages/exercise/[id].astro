@@ -1,0 +1,40 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { createClient } from "@/lib/supabase";
+import type { Exercise } from "@/types";
+import ExerciseFlow from "@/components/exercise/ExerciseFlow";
+
+export const prerender = false;
+
+const { id } = Astro.params;
+
+// Handle missing ID
+if (!id) {
+  Astro.redirect("/dashboard?error=Invalid+exercise+ID");
+}
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const result = await supabase.from("exercises").select("*").eq("id", id).single();
+
+// Handle not found
+if (result.error || !result.data) {
+  Astro.redirect("/dashboard?error=Exercise+not+found");
+}
+
+const exercise = result.data as Exercise;
+---
+
+<Layout title={exercise.title}>
+  <div class="bg-cosmic min-h-screen p-4">
+    <div class="mx-auto max-w-4xl">
+      <div class="mb-6 text-center">
+        <h1 class="mb-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+          {exercise.title}
+        </h1>
+        <p class="text-sm text-blue-100/60">Read at your own pace. Focus on comprehension.</p>
+      </div>
+
+      <ExerciseFlow exercise={exercise} client:load />
+    </div>
+  </div>
+</Layout>

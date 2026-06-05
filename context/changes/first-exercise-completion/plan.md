@@ -1026,22 +1026,22 @@ Manual browser testing covering:
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run lint`
-- [x] 2.2 Build succeeds: `npm run build`
-- [x] 2.3 Component renders without errors: `npm run dev`
+- [x] 2.1 Type checking passes: `npm run lint` — 89dd640
+- [x] 2.2 Build succeeds: `npm run build` — 89dd640
+- [x] 2.3 Component renders without errors: `npm run dev` — 89dd640
 
 #### Manual
 
-- [ ] 2.4 Visit dashboard: see exercise card with correct title and metadata
-- [ ] 2.5 Hover effect works on card
+- [x] 2.4 Visit dashboard: see exercise card with correct title and metadata — 89dd640
+- [x] 2.5 Hover effect works on card — 89dd640
 
 ### Phase 3: Animated Pacer exercise UI
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run lint`
-- [ ] 3.2 Build succeeds: `npm run build`
-- [ ] 3.3 Exercise page accessible with no console errors
+- [x] 3.1 Type checking passes: `npm run lint`
+- [x] 3.2 Build succeeds: `npm run build`
+- [x] 3.3 Exercise page accessible with no console errors
 
 #### Manual
 
