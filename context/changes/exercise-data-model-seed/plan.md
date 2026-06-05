@@ -413,10 +413,10 @@ DROP TABLE IF EXISTS exercises CASCADE;
 ### Phase 2: Define exercises table
 
 #### Automated
-- [x] 2.1 Migration syntax is valid: `npx supabase db reset` succeeds
-- [x] 2.2 Table exists: `psql` query `\dt exercises` returns table
-- [x] 2.3 RLS enabled: `SELECT relrowsecurity FROM pg_class WHERE relname = 'exercises'` returns `t`
-- [x] 2.4 Check constraints work: attempt to insert invalid `exercise_type` fails
+- [x] 2.1 Migration syntax is valid: `npx supabase db reset` succeeds — 73d1138
+- [x] 2.2 Table exists: `psql` query `\dt exercises` returns table — 73d1138
+- [x] 2.3 RLS enabled: `SELECT relrowsecurity FROM pg_class WHERE relname = 'exercises'` returns `t` — 73d1138
+- [x] 2.4 Check constraints work: attempt to insert invalid `exercise_type` fails — 73d1138
 
 #### Manual
 - [ ] 2.5 Public read policy works: unauthenticated query via Supabase client can SELECT exercises
@@ -425,11 +425,11 @@ DROP TABLE IF EXISTS exercises CASCADE;
 ### Phase 3: Define exercise_completions table
 
 #### Automated
-- [x] 3.1 Migration runs successfully: `npx supabase db reset` completes without errors
-- [x] 3.2 Table exists: `psql` query `\dt exercise_completions` returns table
-- [x] 3.3 Foreign keys enforced: attempt to insert completion with invalid `exercise_id` fails
-- [x] 3.4 Index created: `\di idx_exercise_completions_user_date` returns index
-- [x] 3.5 RLS enabled: `SELECT relrowsecurity FROM pg_class WHERE relname = 'exercise_completions'` returns `t`
+- [x] 3.1 Migration runs successfully: `npx supabase db reset` completes without errors — 73d1138
+- [x] 3.2 Table exists: `psql` query `\dt exercise_completions` returns table — 73d1138
+- [x] 3.3 Foreign keys enforced: attempt to insert completion with invalid `exercise_id` fails — 73d1138
+- [x] 3.4 Index created: `\di idx_exercise_completions_user_date` returns index — 73d1138
+- [x] 3.5 RLS enabled: `SELECT relrowsecurity FROM pg_class WHERE relname = 'exercise_completions'` returns `t` — 73d1138
 
 #### Manual
 - [ ] 3.6 User can insert own completion: authenticated user inserts completion via Supabase client succeeds
@@ -439,24 +439,24 @@ DROP TABLE IF EXISTS exercises CASCADE;
 ### Phase 4: Seed north star exercise
 
 #### Automated
-- [x] 4.1 Migration runs successfully: `npx supabase db reset` completes without errors
-- [x] 4.2 Seed data exists: `SELECT COUNT(*) FROM exercises` returns `1`
-- [x] 4.3 Seed data is correct: `SELECT exercise_type, title FROM exercises WHERE id = 'a0000000-0000-0000-0000-000000000001'` returns `animated_pacer` and `Database Performance Fundamentals`
+- [x] 4.1 Migration runs successfully: `npx supabase db reset` completes without errors — 73d1138
+- [x] 4.2 Seed data exists: `SELECT COUNT(*) FROM exercises` returns `1` — 73d1138
+- [x] 4.3 Seed data is correct: `SELECT exercise_type, title FROM exercises WHERE id = 'a0000000-0000-0000-0000-000000000001'` returns `animated_pacer` and `Database Performance Fundamentals` — 73d1138
 
 #### Manual
-- [x] 4.4 Content length is appropriate: ~450 words
-- [x] 4.5 Content is technical and developer-relevant
-- [x] 4.6 JSONB config is valid: `SELECT config->>'target_wpm'` returns `250`
+- [x] 4.4 Content length is appropriate: ~450 words — 73d1138
+- [x] 4.5 Content is technical and developer-relevant — 73d1138
+- [x] 4.6 JSONB config is valid: `SELECT config->>'target_wpm'` returns `250` — 73d1138
 
 ### Phase 5: Verify migration
 
 #### Automated
-- [x] 5.1 Database reset succeeds: `npx supabase db reset` exits 0
-- [x] 5.2 No schema drift: `npx supabase db diff` returns no differences
-- [x] 5.3 Tables created: `npx supabase db dump --data-only --schema public -t exercises -t exercise_completions` succeeds
-- [x] 5.4 RLS enabled on both tables: SQL query confirms `relrowsecurity = true` for both
+- [x] 5.1 Database reset succeeds: `npx supabase db reset` exits 0 — 73d1138
+- [x] 5.2 No schema drift: `npx supabase db diff` returns no differences — 73d1138
+- [x] 5.3 Tables created: `npx supabase db dump --data-only --schema public -t exercises -t exercise_completions` succeeds — 73d1138
+- [x] 5.4 RLS enabled on both tables: SQL query confirms `relrowsecurity = true` for both — 73d1138
 
 #### Manual
 - [ ] 5.5 Seed data is readable: Visit Supabase Studio, see 1 row in exercises table
 - [ ] 5.6 RLS policies functional: Test script verifies user can insert completion but not exercise
-- [x] 5.7 Foreign key constraints work: Attempt to insert completion with non-existent exercise_id fails
+- [x] 5.7 Foreign key constraints work: Attempt to insert completion with non-existent exercise_id fails — 73d1138
