@@ -1068,13 +1068,13 @@ Manual browser testing covering:
 
 #### Automated
 
-- [x] 5.1 Type checking passes: `npm run lint`
-- [x] 5.2 Build succeeds: `npm run build`
-- [x] 5.3 Protected routes redirect unauthenticated users
+- [x] 5.1 Type checking passes: `npm run lint` — 1f8c826
+- [x] 5.2 Build succeeds: `npm run build` — 1f8c826
+- [x] 5.3 Protected routes redirect unauthenticated users — 1f8c826
 
 #### Manual
 
-- [ ] 5.4 Full flow works end-to-end: dashboard → exercise → results → dashboard
-- [ ] 5.5 Error handling displays messages correctly
-- [ ] 5.6 WPM calculation is accurate
-- [ ] 5.7 Completion saved to database (verified in Supabase Studio)
+- [x] 5.4 Full flow works end-to-end: dashboard → exercise → results → dashboard — 1f8c826
+- [x] 5.5 Error handling displays messages correctly — 1f8c826
+- [x] 5.6 WPM calculation is accurate — 1f8c826
+- [x] 5.7 Completion saved to database (verified in Supabase Studio) — 1f8c826

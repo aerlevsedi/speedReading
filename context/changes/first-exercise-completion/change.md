@@ -1,7 +1,7 @@
 ---
 change_id: first-exercise-completion
 title: First exercise completion
-status: implementing
+status: implemented
 created: 2026-06-05
 updated: 2026-06-05
 archived_at: null
