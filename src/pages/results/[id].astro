@@ -11,13 +11,13 @@ const { id } = Astro.params;
 const { user } = Astro.locals;
 
 if (!id) {
-  Astro.redirect("/dashboard?error=Invalid+completion+ID");
+  return Astro.redirect("/dashboard?error=Invalid+completion+ID");
 }
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 
 if (!user) {
-  Astro.redirect("/auth/signin?error=Authentication+required");
+  return Astro.redirect("/auth/signin?error=Authentication+required");
 }
 
 const result = await supabase
@@ -28,7 +28,7 @@ const result = await supabase
   .single();
 
 if (result.error || !result.data) {
-  Astro.redirect("/dashboard?error=Completion+not+found");
+  return Astro.redirect("/dashboard?error=Completion+not+found");
 }
 
 const completion = result.data as Completion & { exercises: Exercise };

@@ -1054,23 +1054,23 @@ Manual browser testing covering:
 
 #### Automated
 
-- [x] 4.1 Type checking passes: `npm run lint`
-- [x] 4.2 Build succeeds: `npm run build`
-- [x] 4.3 API route handles POST successfully
+- [x] 4.1 Type checking passes: `npm run lint` — a6ddbad
+- [x] 4.2 Build succeeds: `npm run build` — a6ddbad
+- [x] 4.3 API route handles POST successfully — a6ddbad
 
 #### Manual
 
-- [ ] 4.4 Complete exercise: redirected to results page
-- [ ] 4.5 Results show correct duration, WPM, and comprehension metrics
-- [ ] 4.6 Back to Dashboard button works
+- [x] 4.4 Complete exercise: redirected to results page — a6ddbad
+- [x] 4.5 Results show correct duration, WPM, and comprehension metrics — a6ddbad
+- [x] 4.6 Back to Dashboard button works — a6ddbad
 
 ### Phase 5: Integration and navigation
 
 #### Automated
 
-- [ ] 5.1 Type checking passes: `npm run lint`
-- [ ] 5.2 Build succeeds: `npm run build`
-- [ ] 5.3 Protected routes redirect unauthenticated users
+- [x] 5.1 Type checking passes: `npm run lint`
+- [x] 5.2 Build succeeds: `npm run build`
+- [x] 5.3 Protected routes redirect unauthenticated users
 
 #### Manual
 

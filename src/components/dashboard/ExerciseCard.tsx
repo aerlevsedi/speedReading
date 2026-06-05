@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Play, Clock, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Exercise } from "@/types";
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export default function ExerciseCard({ exercise }: Props) {
+  const [isNavigating, setIsNavigating] = useState(false);
   const typeBadgeColor = {
     animated_pacer: "bg-blue-500/20 text-blue-300",
     smart_questions: "bg-purple-500/20 text-purple-300",
@@ -45,10 +47,24 @@ export default function ExerciseCard({ exercise }: Props) {
         {estimatedMinutes ? `~${estimatedMinutes} min` : "Time varies"}
       </div>
 
-      <a href={`/exercise/${exercise.id}`}>
-        <Button className="w-full" size="lg">
-          <Play className="size-4" />
-          Start Exercise
+      <a
+        href={`/exercise/${exercise.id}`}
+        onClick={() => {
+          setIsNavigating(true);
+        }}
+      >
+        <Button className="w-full" size="lg" disabled={isNavigating}>
+          {isNavigating ? (
+            <>
+              <span className="animate-spin">⏳</span>
+              Loading...
+            </>
+          ) : (
+            <>
+              <Play className="size-4" />
+              Start Exercise
+            </>
+          )}
         </Button>
       </a>
     </div>

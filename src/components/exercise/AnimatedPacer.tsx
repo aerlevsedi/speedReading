@@ -76,11 +76,11 @@ export default function AnimatedPacer({ exercise, onComplete }: Props) {
               key={index}
               style={{
                 backgroundColor: index === currentIndex ? highlightColor : "transparent",
-                padding: index === currentIndex ? "2px 4px" : "0",
-                borderRadius: index === currentIndex ? "4px" : "0",
-                transition: "background-color 0.1s ease",
+                color: index === currentIndex ? "#ffffff" : "rgb(191 219 254 / 0.7)",
+                padding: "2px 4px",
+                borderRadius: "4px",
+                transition: "background-color 0.3s ease, color 0.3s ease",
               }}
-              className={index === currentIndex ? "font-semibold text-white" : "text-blue-100/70"}
             >
               {word}{" "}
             </span>

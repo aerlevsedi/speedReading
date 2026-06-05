@@ -10,7 +10,7 @@ const { id } = Astro.params;
 
 // Handle missing ID
 if (!id) {
-  Astro.redirect("/dashboard?error=Invalid+exercise+ID");
+  return Astro.redirect("/dashboard?error=Invalid+exercise+ID");
 }
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
@@ -18,7 +18,7 @@ const result = await supabase.from("exercises").select("*").eq("id", id).single(
 
 // Handle not found
 if (result.error || !result.data) {
-  Astro.redirect("/dashboard?error=Exercise+not+found");
+  return Astro.redirect("/dashboard?error=Exercise+not+found");
 }
 
 const exercise = result.data as Exercise;

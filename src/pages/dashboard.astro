@@ -2,10 +2,13 @@
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
 import ExerciseCard from "@/components/dashboard/ExerciseCard";
+import Banner from "@/components/Banner.astro";
 import type { Exercise } from "@/types";
 
 const { user } = Astro.locals;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+const error = Astro.url.searchParams.get("error");
 
 const result = await supabase.from("exercises").select("*").order("created_at", { ascending: true });
 
@@ -18,6 +21,13 @@ const exercises = result.data;
 
 <Layout title="Dashboard">
   <div class="bg-cosmic min-h-screen p-4">
+    {
+      error && (
+        <div class="mx-auto mb-4 max-w-5xl">
+          <Banner variant="error">{decodeURIComponent(error)}</Banner>
+        </div>
+      )
+    }
     <div class="mx-auto max-w-5xl">
       <!-- Header -->
       <div class="mb-8 rounded-2xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
