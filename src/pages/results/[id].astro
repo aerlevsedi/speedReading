@@ -15,6 +15,9 @@ if (!id) {
 }
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
+if (!supabase) {
+  return Astro.redirect("/dashboard?error=Server+configuration+error");
+}
 
 if (!user) {
   return Astro.redirect("/auth/signin?error=Authentication+required");

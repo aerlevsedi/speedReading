@@ -18,6 +18,9 @@ export const POST: APIRoute = async (context) => {
   }
 
   const supabase = createClient(context.request.headers, context.cookies);
+  if (!supabase) {
+    return context.redirect("/dashboard?error=Server+configuration+error");
+  }
 
   // Fetch exercise to calculate WPM
   const exerciseResult = await supabase.from("exercises").select("content").eq("id", exerciseId).single();

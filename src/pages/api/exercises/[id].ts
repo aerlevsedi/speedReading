@@ -9,6 +9,9 @@ export const GET: APIRoute = async (context) => {
   }
 
   const supabase = createClient(context.request.headers, context.cookies);
+  if (!supabase) {
+    return new Response(JSON.stringify({ error: "Server configuration error" }), { status: 500 });
+  }
 
   const result = await supabase.from("exercises").select("*").eq("id", id).single();
 

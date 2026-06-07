@@ -7,6 +7,9 @@ import type { Exercise } from "@/types";
 
 const { user } = Astro.locals;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
+if (!supabase) {
+  return Astro.redirect("/auth/signin?error=Server+configuration+error");
+}
 
 const error = Astro.url.searchParams.get("error");
 
