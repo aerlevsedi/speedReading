@@ -27,7 +27,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 
 | ID   | Change ID                     | Outcome (user can …)                                                           | Prerequisites | PRD refs                           | Status   |
 | ---- | ----------------------------- | ------------------------------------------------------------------------------ | ------------- | ---------------------------------- | -------- |
-| F-01 | exercise-data-model-seed      | (foundation) exercise schema + completions table + 1 seeded exercise instance  | —             | FR-018, FR-019                     | ready    |
+| F-01 | exercise-data-model-seed      | (foundation) exercise schema + completions table + 1 seeded exercise instance  | —             | FR-018, FR-019                     | done     |
 | S-01 | first-exercise-completion     | log in, complete one exercise, see result summary (errors + duration)         | F-01          | US-01, FR-001, FR-004, FR-006, FR-009, FR-010 | done     |
 | S-02 | all-exercise-types            | see all 4 exercise types on dashboard and select any (8 total instances)      | S-01          | FR-018, FR-019, FR-006             | proposed |
 | S-03 | goal-comparison               | set a reading speed goal and see goal comparison on result summary            | S-01          | FR-016, FR-017, FR-015             | proposed |
@@ -72,7 +72,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Exercise types now defined: Animated Pacer (visual speed guide with WPM tracking), Smart Questions (adaptive comprehension), Focus Sprint (timed speed challenge with leaderboard), Speed Scan (skimming/scanning training). Schema supports all 4 types with distinct scoring logic. Domain-specificity decision: generic text for MVP (any prose/articles), code-specific datasets deferred to post-MVP per `main_goal: speed` — the core loop is identical whether text is code or prose; domain-specificity is a content decision, not architectural.
-- **Status:** ready
+- **Status:** done
 
 ## Slices
 
@@ -210,4 +210,5 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Done
 
+- **F-01: (foundation) exercise schema + completions table + RLS policies landed; 1 exercise instance seeded for north star validation.** — Archived 2026-06-07 → `context/archive/2026-06-05-exercise-data-model-seed/`. Lesson: —.
 - **S-01: user can log in, complete one exercise, see result summary (errors + duration)** — Archived 2026-06-07 → `context/archive/2026-06-05-first-exercise-completion/`. Lesson: —.
