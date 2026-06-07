@@ -124,24 +124,24 @@ import { createClient } from '@/lib/supabase';
 import type { Exercise } from '@/types';
 
 export const GET: APIRoute = async (context) => {
-  const { id } = context.params;
+  const id = context.params.id;
   if (!id) {
     return new Response(JSON.stringify({ error: 'Missing exercise ID' }), { status: 400 });
   }
 
   const supabase = createClient(context.request.headers, context.cookies);
 
-  const { data, error } = await supabase
+  const result = await supabase
     .from('exercises')
     .select('*')
     .eq('id', id)
     .single();
 
-  if (error || !data) {
+  if (result.error || !result.data) {
     return new Response(JSON.stringify({ error: 'Exercise not found' }), { status: 404 });
   }
 
-  return new Response(JSON.stringify(data as Exercise), {
+  return new Response(JSON.stringify(result.data as Exercise), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   });
@@ -262,13 +262,15 @@ import type { Exercise } from '@/types';
 const { user } = Astro.locals;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 
-const { data: exercises, error } = await supabase
+const result = await supabase
   .from('exercises')
   .select('*')
   .order('created_at', { ascending: true });
 
-if (error) {
-  console.error('Failed to fetch exercises:', error);
+const exercises = result.data;
+
+if (result.error) {
+  console.error('Failed to fetch exercises:', result.error);
 }
 ---
 
@@ -533,21 +535,22 @@ import ExerciseFlow from '@/components/exercise/ExerciseFlow';
 
 export const prerender = false;
 
-const { id } = Astro.params;
-const { user } = Astro.locals;
+const id = Astro.params.id;
 
 if (!id) {
   return Astro.redirect('/dashboard?error=Invalid+exercise+ID');
 }
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
-const { data: exercise, error } = await supabase
+const result = await supabase
   .from('exercises')
   .select('*')
   .eq('id', id)
   .single();
 
-if (error || !exercise) {
+const exercise = result.data as Exercise;
+
+if (result.error || !result.data) {
   return Astro.redirect('/dashboard?error=Exercise+not+found');
 }
 ---
@@ -702,21 +705,21 @@ export const POST: APIRoute = async (context) => {
   const supabase = createClient(context.request.headers, context.cookies);
 
   // Fetch exercise to calculate WPM
-  const { data: exercise } = await supabase
+  const exerciseResult = await supabase
     .from('exercises')
     .select('content')
     .eq('id', exerciseId)
     .single();
 
-  if (!exercise) {
+  if (!exerciseResult.data) {
     return context.redirect('/dashboard?error=Exercise+not+found');
   }
 
-  const wordCount = exercise.content.split(/\s+/).length;
+  const wordCount = (exerciseResult.data.content as string).split(/\s+/).length;
   const wpm = durationSeconds > 0 ? Math.round(wordCount / (durationSeconds / 60)) : 0;
 
   // Insert completion
-  const { data: completion, error } = await supabase
+  const completionResult = await supabase
     .from('exercise_completions')
     .insert({
       user_id: user.id,
@@ -728,12 +731,12 @@ export const POST: APIRoute = async (context) => {
     .select()
     .single();
 
-  if (error || !completion) {
-    console.error('Failed to save completion:', error);
+  if (completionResult.error || !completionResult.data) {
+    console.error('Failed to save completion:', completionResult.error);
     return context.redirect('/dashboard?error=Failed+to+save+completion');
   }
 
-  return context.redirect(`/results/${completion.id}`);
+  return context.redirect(`/results/${(completionResult.data as { id: string }).id}`);
 };
 
 export const prerender = false;
@@ -766,19 +769,24 @@ if (!id) {
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 
-const { data: completion, error } = await supabase
+if (!user) {
+  return Astro.redirect('/auth/signin?error=Authentication+required');
+}
+
+const result = await supabase
   .from('exercise_completions')
   .select('*, exercises(*)')
   .eq('id', id)
-  .eq('user_id', user!.id) // Ensure user can only see their own completions
+  .eq('user_id', user.id) // Ensure user can only see their own completions
   .single();
 
-if (error || !completion) {
+if (result.error || !result.data) {
   return Astro.redirect('/dashboard?error=Completion+not+found');
 }
 
+const completion = result.data;
 const exercise = completion.exercises as unknown as Exercise;
-const wpm = completion.type_data?.wpm || 0;
+const wpm = completion.type_data?.wpm ?? 0;
 const totalQuestions = 2; // Hard-coded for now (matches quiz)
 const correctAnswers = totalQuestions - completion.errors;
 
