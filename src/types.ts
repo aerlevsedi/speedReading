@@ -7,10 +7,22 @@ export interface Exercise {
   description: string | null;
   content: string;
   config: {
+    // Animated Pacer
     target_wpm?: number;
     pacer_speed?: "fixed" | "adaptive";
     highlight_color?: string;
-    // Extensible for other exercise types in S-02
+
+    // Smart Questions
+    questions_count?: number;
+    time_per_question?: number;
+
+    // Focus Sprint
+    pressure_threshold?: number;
+    countdown_seconds?: number;
+
+    // Speed Scan
+    scan_time_seconds?: number;
+    info_recall_count?: number;
   };
   difficulty: "beginner" | "intermediate" | "advanced" | null;
   estimated_duration_seconds: number | null;

@@ -648,10 +648,10 @@ Existing Animated Pacer exercise (ID `a0000000-0000-0000-0000-000000000001`) is 
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly: `npx supabase migration up`
-- [x] 1.2 Query returns 8 exercises: `SELECT COUNT(*) FROM exercises;` → 8
-- [x] 1.3 Each exercise type has 2 datasets: `SELECT exercise_type, COUNT(DISTINCT dataset_id) FROM exercises GROUP BY exercise_type;` → all rows show count=2
-- [x] 1.4 All exercises have content: `SELECT COUNT(*) FROM exercises WHERE content IS NOT NULL AND length(content) > 0;` → 8
+- [x] 1.1 Migration applies cleanly: `npx supabase migration up` — 63d6b3e
+- [x] 1.2 Query returns 8 exercises: `SELECT COUNT(*) FROM exercises;` → 8 — 63d6b3e
+- [x] 1.3 Each exercise type has 2 datasets: `SELECT exercise_type, COUNT(DISTINCT dataset_id) FROM exercises GROUP BY exercise_type;` → all rows show count=2 — 63d6b3e
+- [x] 1.4 All exercises have content: `SELECT COUNT(*) FROM exercises WHERE content IS NOT NULL AND length(content) > 0;` → 8 — 63d6b3e
 
 #### Manual
 
@@ -663,9 +663,9 @@ Existing Animated Pacer exercise (ID `a0000000-0000-0000-0000-000000000001`) is 
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 API endpoint responds: `curl http://localhost:4321/api/exercises/next-for-type?type=animated_pacer` returns 200 with exercise JSON
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 API endpoint responds: `curl http://localhost:4321/api/exercises/next-for-type?type=animated_pacer` returns 200 with exercise JSON
 
 #### Manual
 
