@@ -419,8 +419,8 @@ DROP TABLE IF EXISTS exercises CASCADE;
 - [x] 2.4 Check constraints work: attempt to insert invalid `exercise_type` fails — 73d1138
 
 #### Manual
-- [ ] 2.5 Public read policy works: unauthenticated query via Supabase client can SELECT exercises
-- [ ] 2.6 Admin write-only works: authenticated user cannot INSERT via Supabase client (gets RLS error)
+- [x] 2.5 Public read policy works: unauthenticated query via Supabase client can SELECT exercises — 73d1138
+- [x] 2.6 Admin write-only works: authenticated user cannot INSERT via Supabase client (gets RLS error) — 73d1138
 
 ### Phase 3: Define exercise_completions table
 
@@ -432,9 +432,9 @@ DROP TABLE IF EXISTS exercises CASCADE;
 - [x] 3.5 RLS enabled: `SELECT relrowsecurity FROM pg_class WHERE relname = 'exercise_completions'` returns `t` — 73d1138
 
 #### Manual
-- [ ] 3.6 User can insert own completion: authenticated user inserts completion via Supabase client succeeds
-- [ ] 3.7 User cannot read others' completions: user A cannot query user B's completions (empty result set)
-- [ ] 3.8 User cannot UPDATE own completion: authenticated user attempts UPDATE fails (no policy = denied)
+- [x] 3.6 User can insert own completion: authenticated user inserts completion via Supabase client succeeds — 73d1138
+- [x] 3.7 User cannot read others' completions: user A cannot query user B's completions (empty result set) — 73d1138
+- [x] 3.8 User cannot UPDATE own completion: authenticated user attempts UPDATE fails (no policy = denied) — 73d1138
 
 ### Phase 4: Seed north star exercise
 
@@ -457,6 +457,6 @@ DROP TABLE IF EXISTS exercises CASCADE;
 - [x] 5.4 RLS enabled on both tables: SQL query confirms `relrowsecurity = true` for both — 73d1138
 
 #### Manual
-- [ ] 5.5 Seed data is readable: Visit Supabase Studio, see 1 row in exercises table
-- [ ] 5.6 RLS policies functional: Test script verifies user can insert completion but not exercise
+- [x] 5.5 Seed data is readable: Visit Supabase Studio, see 1 row in exercises table — 73d1138
+- [x] 5.6 RLS policies functional: Test script verifies user can insert completion but not exercise — 73d1138
 - [x] 5.7 Foreign key constraints work: Attempt to insert completion with non-existent exercise_id fails — 73d1138

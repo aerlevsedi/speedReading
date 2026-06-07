@@ -1,8 +1,8 @@
 ---
 change_id: exercise-data-model-seed
-status: implemented
+status: impl_reviewed
 created: 2026-06-05
-updated: 2026-06-05
+updated: 2026-06-07
 ---
 
 # Exercise Data Model and Seed
