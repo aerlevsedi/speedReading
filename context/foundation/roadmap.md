@@ -3,7 +3,7 @@ project: Speed-Reading Training App
 version: 1
 status: draft
 created: 2026-06-02
-updated: 2026-06-02
+updated: 2026-06-07
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -28,7 +28,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | ID   | Change ID                     | Outcome (user can …)                                                           | Prerequisites | PRD refs                           | Status   |
 | ---- | ----------------------------- | ------------------------------------------------------------------------------ | ------------- | ---------------------------------- | -------- |
 | F-01 | exercise-data-model-seed      | (foundation) exercise schema + completions table + 1 seeded exercise instance  | —             | FR-018, FR-019                     | ready    |
-| S-01 | first-exercise-completion     | log in, complete one exercise, see result summary (errors + duration)         | F-01          | US-01, FR-001, FR-004, FR-006, FR-009, FR-010 | proposed |
+| S-01 | first-exercise-completion     | log in, complete one exercise, see result summary (errors + duration)         | F-01          | US-01, FR-001, FR-004, FR-006, FR-009, FR-010 | done     |
 | S-02 | all-exercise-types            | see all 4 exercise types on dashboard and select any (8 total instances)      | S-01          | FR-018, FR-019, FR-006             | proposed |
 | S-03 | goal-comparison               | set a reading speed goal and see goal comparison on result summary            | S-01          | FR-016, FR-017, FR-015             | proposed |
 | S-04 | recommendation-system         | see recommended exercise marked on dashboard (least-used algorithm)           | S-01, S-02    | FR-005, FR-020                     | proposed |
@@ -86,7 +86,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** This is the north star — everything else only matters if this works. Sequenced immediately after F-01 to validate the core loop before adding variety or recommendations. If the exercise-to-result flow has UX or scoring issues, discovering them here (with 1 exercise type) is cheaper than discovering them after building 4 types.
-- **Status:** proposed
+- **Status:** done
 
 ### S-02: All exercise types
 
@@ -210,4 +210,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Done
 
-(Empty on first generation. `/10x-archive` appends entries here when changes are archived.)
+- **S-01: user can log in, complete one exercise, see result summary (errors + duration)** — Archived 2026-06-07 → `context/archive/2026-06-05-first-exercise-completion/`. Lesson: —.
