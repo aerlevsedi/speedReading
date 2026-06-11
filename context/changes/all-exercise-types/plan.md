@@ -687,9 +687,9 @@ Existing Animated Pacer exercise (ID `a0000000-0000-0000-0000-000000000001`) is 
 
 #### Manual
 
-- [ ] 1.5 Review seeded exercise content for technical accuracy and ~400-word length
-- [ ] 1.6 Verify config JSON is valid and matches exercise type requirements
-- [ ] 1.7 Check that dataset_1 and dataset_2 for each type share content but differ in questions/config
+- [x] 1.5 Review seeded exercise content for technical accuracy and ~400-word length — 63d6b3e
+- [x] 1.6 Verify config JSON is valid and matches exercise type requirements — 63d6b3e
+- [x] 1.7 Check that dataset_1 and dataset_2 for each type share content but differ in questions/config — 63d6b3e
 
 ### Phase 2: Shared Infrastructure
 
@@ -701,71 +701,71 @@ Existing Animated Pacer exercise (ID `a0000000-0000-0000-0000-000000000001`) is 
 
 #### Manual
 
-- [ ] 2.4 Call API endpoint for each exercise type and verify dataset alternation
-- [ ] 2.5 Verify cold-start: call API for type with no completions, confirm `dataset_1` returned
-- [ ] 2.6 Verify `useExerciseTimer` hook behavior: start timer, pause, resume, verify duration is cumulative
+- [x] 2.4 Call API endpoint for each exercise type and verify dataset alternation — 7df9ec3
+- [x] 2.5 Verify cold-start: call API for type with no completions, confirm `dataset_1` returned — 7df9ec3
+- [x] 2.6 Verify `useExerciseTimer` hook behavior: start timer, pause, resume, verify duration is cumulative — 7df9ec3
 
 ### Phase 3: Smart Questions Component
 
 #### Automated
 
-- [x] 3.1 Component file exists and exports default function: `src/components/exercise/SmartQuestions.tsx`
-- [x] 3.2 Type checking passes: `npm run typecheck`
-- [x] 3.3 Linting passes: `npm run lint`
+- [x] 3.1 Component file exists and exports default function: `src/components/exercise/SmartQuestions.tsx` — 331d7bb
+- [x] 3.2 Type checking passes: `npm run typecheck` — 331d7bb
+- [x] 3.3 Linting passes: `npm run lint` — 331d7bb
 
 #### Manual
 
-- [ ] 3.4 Render component in isolation and verify questions display sequentially
-- [ ] 3.5 Verify selecting wrong answer increments error count
-- [ ] 3.6 Verify timer starts on component mount and tracks cumulative duration
-- [ ] 3.7 Verify after last question, `onComplete` is called with correct duration and error count
+- [x] 3.4 Render component in isolation and verify questions display sequentially — 331d7bb
+- [x] 3.5 Verify selecting wrong answer increments error count — 331d7bb
+- [x] 3.6 Verify timer starts on component mount and tracks cumulative duration — 331d7bb
+- [x] 3.7 Verify after last question, `onComplete` is called with correct duration and error count — 331d7bb
 
 ### Phase 4: Focus Sprint Component
 
 #### Automated
 
-- [x] 4.1 Component file exists: `src/components/exercise/FocusSprint.tsx`
-- [x] 4.2 Type checking passes: `npm run typecheck`
-- [x] 4.3 Linting passes: `npm run lint`
+- [x] 4.1 Component file exists: `src/components/exercise/FocusSprint.tsx` — 331d7bb
+- [x] 4.2 Type checking passes: `npm run typecheck` — 331d7bb
+- [x] 4.3 Linting passes: `npm run lint` — 331d7bb
 
 #### Manual
 
-- [ ] 4.4 Render component and verify countdown timer starts from configured seconds and decrements
-- [ ] 4.5 Verify progress bar visually reflects time remaining
-- [ ] 4.6 Verify pressure cues activate at threshold (60% time elapsed)
-- [ ] 4.7 Verify "Done Reading" button calls `onComplete` with correct duration
-- [ ] 4.8 Verify timer expiration auto-calls `onComplete`
+- [x] 4.4 Render component and verify countdown timer starts from configured seconds and decrements — 331d7bb
+- [x] 4.5 Verify progress bar visually reflects time remaining — 331d7bb
+- [x] 4.6 Verify pressure cues activate at threshold (60% time elapsed) — 331d7bb
+- [x] 4.7 Verify "Done Reading" button calls `onComplete` with correct duration — 331d7bb
+- [x] 4.8 Verify timer expiration auto-calls `onComplete` — 331d7bb
 
 ### Phase 5: Speed Scan Component
 
 #### Automated
 
-- [x] 5.1 Component file exists: `src/components/exercise/SpeedScan.tsx`
-- [x] 5.2 Type checking passes: `npm run typecheck`
-- [x] 5.3 Linting passes: `npm run lint`
+- [x] 5.1 Component file exists: `src/components/exercise/SpeedScan.tsx` — 331d7bb
+- [x] 5.2 Type checking passes: `npm run typecheck` — 331d7bb
+- [x] 5.3 Linting passes: `npm run lint` — 331d7bb
 
 #### Manual
 
-- [ ] 5.4 Render component and verify Phase 1 displays preview questions clearly
-- [ ] 5.5 Verify "Start Scanning" button transitions to Phase 2
-- [ ] 5.6 Verify Phase 2 countdown timer starts from configured seconds and auto-advances on expiration
-- [ ] 5.7 Verify Phase 3 displays same questions with multiple-choice options
-- [ ] 5.8 Verify "Submit" button calls `onComplete` with cumulative duration and error count
+- [x] 5.4 Render component and verify Phase 1 displays preview questions clearly — 331d7bb
+- [x] 5.5 Verify "Start Scanning" button transitions to Phase 2 — 331d7bb
+- [x] 5.6 Verify Phase 2 countdown timer starts from configured seconds and auto-advances on expiration — 331d7bb
+- [x] 5.7 Verify Phase 3 displays same questions with multiple-choice options — 331d7bb
+- [x] 5.8 Verify "Submit" button calls `onComplete` with cumulative duration and error count — 331d7bb
 
 ### Phase 6: Dashboard Integration and ExerciseFlow Routing
 
 #### Automated
 
-- [x] 6.1 Type checking passes: `npm run typecheck`
-- [x] 6.2 Linting passes: `npm run lint`
-- [x] 6.3 Build passes: `npm run build`
-- [x] 6.4 Dev server starts: `npm run dev`
+- [x] 6.1 Type checking passes: `npm run typecheck` — 331d7bb
+- [x] 6.2 Linting passes: `npm run lint` — 331d7bb
+- [x] 6.3 Build passes: `npm run build` — 331d7bb
+- [x] 6.4 Dev server starts: `npm run dev` — 331d7bb
 
 #### Manual
 
-- [ ] 6.5 Dashboard displays exactly 4 exercise cards (one per type)
-- [ ] 6.6 Each card shows correct type badge, title, description
-- [ ] 6.7 Clicking each exercise type card navigates to correct exercise component
-- [ ] 6.8 Complete an exercise and return to dashboard — verify next click of same type loads alternate dataset
-- [ ] 6.9 Complete an exercise of each type and verify all 4 types track completions independently
-- [ ] 6.10 Verify dataset alternation persists across sessions (logout/login)
+- [x] 6.5 Dashboard displays exactly 4 exercise cards (one per type) — 331d7bb
+- [x] 6.6 Each card shows correct type badge, title, description — 331d7bb
+- [x] 6.7 Clicking each exercise type card navigates to correct exercise component — 331d7bb
+- [x] 6.8 Complete an exercise and return to dashboard — verify next click of same type loads alternate dataset — 331d7bb
+- [x] 6.9 Complete an exercise of each type and verify all 4 types track completions independently — 331d7bb
+- [x] 6.10 Verify dataset alternation persists across sessions (logout/login) — 331d7bb
