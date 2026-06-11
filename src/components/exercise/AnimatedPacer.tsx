@@ -1,12 +1,32 @@
 import { useState, useEffect, useRef } from "react";
 import { Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ComprehensionQuiz from "./ComprehensionQuiz";
 import type { Exercise } from "@/types";
 
 interface Props {
   exercise: Exercise;
-  onComplete: (durationSeconds: number) => void;
+  onComplete: (durationSeconds: number, errors: number) => void;
 }
+
+// Hard-coded comprehension questions for Animated Pacer
+const QUESTIONS = [
+  {
+    text: "What is the most common index type mentioned in the text?",
+    options: ["GIN index", "B-tree index", "GiST index", "Hash index"],
+    correctIndex: 1,
+  },
+  {
+    text: "What is a key tradeoff of having too many indexes?",
+    options: [
+      "Queries become faster",
+      "Storage space increases",
+      "INSERT and UPDATE operations become slower",
+      "Database crashes",
+    ],
+    correctIndex: 2,
+  },
+];
 
 export default function AnimatedPacer({ exercise, onComplete }: Props) {
   const words = exercise.content.split(/\s+/); // Split by whitespace
@@ -16,7 +36,8 @@ export default function AnimatedPacer({ exercise, onComplete }: Props) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [duration, setDuration] = useState(0);
   const startTimeRef = useRef<number | null>(null);
   const intervalRef = useRef<number | null>(null);
 
@@ -27,9 +48,9 @@ export default function AnimatedPacer({ exercise, onComplete }: Props) {
           const next = prev + 1;
           if (next >= words.length) {
             setIsRunning(false);
-            setIsComplete(true);
             const durationSeconds = startTimeRef.current ? Math.floor((Date.now() - startTimeRef.current) / 1000) : 0;
-            onComplete(durationSeconds);
+            setDuration(durationSeconds);
+            setShowQuiz(true);
           }
           return next;
         });
@@ -50,11 +71,20 @@ export default function AnimatedPacer({ exercise, onComplete }: Props) {
     setIsRunning(false);
   };
 
+  const handleQuizComplete = (errors: number) => {
+    onComplete(duration, errors);
+  };
+
+  // Show quiz after pacer completes
+  if (showQuiz) {
+    return <ComprehensionQuiz questions={QUESTIONS} onComplete={handleQuizComplete} />;
+  }
+
   return (
     <div className="space-y-6">
       {/* Controls */}
       <div className="flex items-center justify-center gap-4">
-        {!isRunning && !isComplete && (
+        {!isRunning && (
           <Button onClick={handleStart} size="lg">
             <Play className="size-4" />
             {currentIndex === 0 ? "Start Reading" : "Resume"}

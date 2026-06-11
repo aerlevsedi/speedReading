@@ -2,7 +2,11 @@ import { useRef, useState } from "react";
 
 /**
  * Reusable timer hook for exercise components.
- * Tracks cumulative duration with pause/resume support.
+ * Tracks cumulative duration from start() call to getDuration() call.
+ *
+ * NOTE: pause() only sets isRunning flag - it does NOT stop time accumulation.
+ * getDuration() always calculates from original start time to current time,
+ * regardless of pause/resume state. Use pause() only for UI display purposes.
  */
 export function useExerciseTimer(): {
   start: () => void;

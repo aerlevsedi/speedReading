@@ -37,8 +37,20 @@ if (result.error || !result.data) {
 const completion = result.data as Completion & { exercises: Exercise };
 const exercise = completion.exercises;
 const wpm = completion.type_data.wpm ?? 0;
-const totalQuestions = 2; // Hard-coded for now (matches quiz)
+
+// Map exercise type to question count
+// Note: smart_questions removed 2026-06-08, kept here for backward compatibility with old completions
+const questionCountByType: Record<string, number> = {
+  animated_pacer: 2,
+  smart_questions: 5, // Removed type, but may have old completion records
+  focus_sprint: 3, // Read at own pace + comprehension quiz
+  speed_scan: 3,
+};
+const totalQuestions = questionCountByType[exercise.exercise_type] ?? 0;
 const correctAnswers = totalQuestions - completion.errors;
+
+// WPM is shown for all reading exercises (all types read text)
+const showWpm = exercise.exercise_type === "animated_pacer" || exercise.exercise_type === "focus_sprint";
 
 // Format duration as MM:SS
 const minutes = Math.floor(completion.duration_seconds / 60);
@@ -57,7 +69,7 @@ const formattedDuration = `${minutes}:${seconds.toString().padStart(2, "0")}`;
       </div>
 
       <!-- Metrics Grid -->
-      <div class="mb-8 grid gap-4 sm:grid-cols-3">
+      <div class:list={["mb-8 grid gap-4", showWpm ? "sm:grid-cols-3" : "sm:grid-cols-2"]}>
         <!-- Duration -->
         <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-center backdrop-blur-xl">
           <Clock class="mx-auto mb-2 size-8 text-blue-300" />
@@ -65,27 +77,33 @@ const formattedDuration = `${minutes}:${seconds.toString().padStart(2, "0")}`;
           <div class="text-xs text-blue-100/60">Duration</div>
         </div>
 
-        <!-- WPM -->
-        <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-center backdrop-blur-xl">
-          <Zap class="mx-auto mb-2 size-8 text-purple-300" />
-          <div class="mb-1 text-3xl font-bold text-white">{wpm} WPM</div>
-          <div class="text-xs text-blue-100/60">Reading Speed</div>
-        </div>
+        <!-- WPM (only for reading exercises) -->
+        {
+          showWpm && (
+            <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-center backdrop-blur-xl">
+              <Zap class="mx-auto mb-2 size-8 text-purple-300" />
+              <div class="mb-1 text-3xl font-bold text-white">{wpm} WPM</div>
+              <div class="text-xs text-blue-100/60">Reading Speed</div>
+            </div>
+          )
+        }
 
-        <!-- Comprehension -->
-        <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-center backdrop-blur-xl">
-          {
-            completion.errors === 0 ? (
-              <CheckCircle2 class="mx-auto mb-2 size-8 text-green-300" />
-            ) : (
-              <XCircle class="mx-auto mb-2 size-8 text-orange-300" />
-            )
-          }
-          <div class="mb-1 text-3xl font-bold text-white">
-            {correctAnswers}/{totalQuestions}
-          </div>
-          <div class="text-xs text-blue-100/60">Correct Answers</div>
-        </div>
+        <!-- Comprehension (only if exercise has questions) -->
+        {
+          totalQuestions > 0 && (
+            <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-center backdrop-blur-xl">
+              {completion.errors === 0 ? (
+                <CheckCircle2 class="mx-auto mb-2 size-8 text-green-300" />
+              ) : (
+                <XCircle class="mx-auto mb-2 size-8 text-orange-300" />
+              )}
+              <div class="mb-1 text-3xl font-bold text-white">
+                {correctAnswers}/{totalQuestions}
+              </div>
+              <div class="text-xs text-blue-100/60">Correct Answers</div>
+            </div>
+          )
+        }
       </div>
 
       <!-- Navigation -->

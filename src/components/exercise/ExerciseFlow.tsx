@@ -1,55 +1,41 @@
 import { useState } from "react";
 import AnimatedPacer from "./AnimatedPacer";
-import ComprehensionQuiz from "./ComprehensionQuiz";
+import SmartQuestions from "./SmartQuestions";
+import FocusSprint from "./FocusSprint";
+import SpeedScan from "./SpeedScan";
 import type { Exercise } from "@/types";
 
 interface Props {
   exercise: Exercise;
 }
 
+// Component map for routing based on exercise type
+const ExerciseComponentMap = {
+  animated_pacer: AnimatedPacer,
+  smart_questions: SmartQuestions,
+  focus_sprint: FocusSprint,
+  speed_scan: SpeedScan,
+} as const;
+
 export default function ExerciseFlow({ exercise }: Props) {
-  const [step, setStep] = useState<"pacer" | "quiz" | "submit">("pacer");
+  const [isComplete, setIsComplete] = useState(false);
   const [duration, setDuration] = useState(0);
   const [errors, setErrors] = useState(0);
 
-  // Hard-coded comprehension questions for the seeded exercise
-  const questions = [
-    {
-      text: "What is the most common index type mentioned in the text?",
-      options: ["GIN index", "B-tree index", "GiST index", "Hash index"],
-      correctIndex: 1,
-    },
-    {
-      text: "What is a key tradeoff of having too many indexes?",
-      options: [
-        "Queries become faster",
-        "Storage space increases",
-        "INSERT and UPDATE operations become slower",
-        "Database crashes",
-      ],
-      correctIndex: 2,
-    },
-  ];
-
-  const handlePacerComplete = (durationSeconds: number) => {
+  const handleComplete = (durationSeconds: number, errorCount: number) => {
     setDuration(durationSeconds);
-    setStep("quiz");
-  };
-
-  const handleQuizComplete = (errorCount: number) => {
     setErrors(errorCount);
-    setStep("submit");
+    setIsComplete(true);
   };
 
-  if (step === "pacer") {
-    return <AnimatedPacer exercise={exercise} onComplete={handlePacerComplete} />;
+  // Route to the appropriate exercise component
+  const ExerciseComponent = ExerciseComponentMap[exercise.exercise_type];
+
+  if (!isComplete) {
+    return <ExerciseComponent exercise={exercise} onComplete={handleComplete} />;
   }
 
-  if (step === "quiz") {
-    return <ComprehensionQuiz questions={questions} onComplete={handleQuizComplete} />;
-  }
-
-  // Auto-submit form when step = 'submit'
+  // Auto-submit form when complete
   return (
     <form method="POST" action="/api/exercises/complete" className="hidden">
       <input type="hidden" name="exercise_id" value={exercise.id} />

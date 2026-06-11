@@ -17,7 +17,7 @@ top_blocker: time
 
 ## Vision recap
 
-Developers reading code spend too much time reading slowly, wasting time that could be used for implementation. They want to improve their reading speed with structured practice, measurable progress, and a clear graduation point — proof they've mastered the skill and can stop using the app. Existing speed-reading apps lack progress proof and domain-specific exercises (code snippets, technical documentation). This app fills that gap with 4 exercise types, goal tracking, and a recommendation system that guides users through balanced practice.
+Developers reading code spend too much time reading slowly, wasting time that could be used for implementation. They want to improve their reading speed with structured practice, measurable progress, and a clear graduation point — proof they've mastered the skill and can stop using the app. Existing speed-reading apps lack progress proof and domain-specific exercises (code snippets, technical documentation). This app fills that gap with **3 exercise types** (originally 4, reduced during implementation — see S-02 note), goal tracking, and a recommendation system that guides users through balanced practice.
 
 ## North star
 
@@ -29,7 +29,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | ---- | ----------------------------- | ------------------------------------------------------------------------------ | ------------- | ---------------------------------- | -------- |
 | F-01 | exercise-data-model-seed      | (foundation) exercise schema + completions table + 1 seeded exercise instance  | —             | FR-018, FR-019                     | done     |
 | S-01 | first-exercise-completion     | log in, complete one exercise, see result summary (errors + duration)         | F-01          | US-01, FR-001, FR-004, FR-006, FR-009, FR-010 | done     |
-| S-02 | all-exercise-types            | see all 4 exercise types on dashboard and select any (8 total instances)      | S-01          | FR-018, FR-019, FR-006             | proposed |
+| S-02 | all-exercise-types            | see all 3 exercise types on dashboard and select any (6 total instances)      | S-01          | FR-018, FR-019, FR-006             | in-progress |
 | S-03 | goal-comparison               | set a reading speed goal and see goal comparison on result summary            | S-01          | FR-016, FR-017, FR-015             | proposed |
 | S-04 | recommendation-system         | see recommended exercise marked on dashboard (least-used algorithm)           | S-01, S-02    | FR-005, FR-020                     | proposed |
 | S-05 | progress-chart                | see progress chart comparing current to previous sessions                     | S-01          | FR-014                             | proposed |
@@ -65,13 +65,13 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **Outcome:** (foundation) exercise schema + completions table + RLS policies landed; 1 exercise instance seeded for north star validation.
 - **Change ID:** exercise-data-model-seed
-- **PRD refs:** FR-018 (4 exercise types), FR-019 (2 datasets per type)
-- **Unlocks:** S-01 (north star needs 1 exercise to run), S-02 (needs exercises table for 8 instances), S-05 (needs completions history for chart)
+- **PRD refs:** FR-018 (4 exercise types, later revised to 3 in S-02), FR-019 (2 datasets per type)
+- **Unlocks:** S-01 (north star needs 1 exercise to run), S-02 (needs exercises table for 6 instances after Smart Questions removal), S-05 (needs completions history for chart)
 - **Prerequisites:** —
 - **Parallel with:** —
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** Exercise types now defined: Animated Pacer (visual speed guide with WPM tracking), Smart Questions (adaptive comprehension), Focus Sprint (timed speed challenge with leaderboard), Speed Scan (skimming/scanning training). Schema supports all 4 types with distinct scoring logic. Domain-specificity decision: generic text for MVP (any prose/articles), code-specific datasets deferred to post-MVP per `main_goal: speed` — the core loop is identical whether text is code or prose; domain-specificity is a content decision, not architectural.
+- **Risk:** Exercise types originally defined: Animated Pacer (visual speed guide with WPM tracking), Smart Questions (adaptive comprehension), Focus Sprint (timed speed challenge with leaderboard), Speed Scan (skimming/scanning training). Schema supports all 4 types with distinct scoring logic. **Note:** Smart Questions later removed during S-02 implementation (2026-06-08) due to incomplete design (no reading content) and redundancy with Focus Sprint. Final types: Animated Pacer, Focus Sprint, Speed Scan. Domain-specificity decision: generic text for MVP (any prose/articles), code-specific datasets deferred to post-MVP per `main_goal: speed` — the core loop is identical whether text is code or prose; domain-specificity is a content decision, not architectural.
 - **Status:** done
 
 ## Slices
@@ -90,15 +90,16 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-02: All exercise types
 
-- **Outcome:** user can see all 4 exercise types on dashboard and select any (8 total instances seeded)
+- **Outcome:** user can see all 3 exercise types on dashboard and select any (6 total instances seeded: 3 types × 2 datasets)
 - **Change ID:** all-exercise-types
-- **PRD refs:** FR-018 (4 types), FR-019 (2 datasets per type), FR-006 (select)
+- **PRD refs:** FR-018 (4 types, revised to 3), FR-019 (2 datasets per type), FR-006 (select)
 - **Prerequisites:** S-01
 - **Parallel with:** —
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** Adds variety — the 4-type requirement is what distinguishes this from a one-trick app (PRD Vision). Sequenced after north star (S-01) to prove the loop works before scaling to 4 types. Unlocks recommendation (S-04) which needs multiple types to recommend from, and retry-dataset (S-06) which needs 2 datasets per type.
-- **Status:** proposed
+- **Risk:** Adds variety — the multi-type requirement is what distinguishes this from a one-trick app (PRD Vision). Sequenced after north star (S-01) to prove the loop works before scaling to multiple types. Unlocks recommendation (S-04) which needs multiple types to recommend from, and retry-dataset (S-06) which needs 2 datasets per type.
+- **Implementation note (2026-06-08):** Originally planned 4 types (Animated Pacer, Smart Questions, Focus Sprint, Speed Scan). During Phase 3-6 implementation, Smart Questions was identified as incomplete (no reading content, only quiz) and redundant with Focus Sprint (both are "read + answer questions"). **Decision: Remove Smart Questions, ship with 3 types.** Final types: **(1) Animated Pacer** (word-by-word guided reading with WPM tracking), **(2) Focus Sprint** (timed reading with countdown pressure + comprehension questions), **(3) Speed Scan** (3-phase: preview questions → scan text → recall answers). Database migration includes all 4 types (8 instances seeded), but dashboard surfaces only 3 types (6 instances). Smart Questions seeds (IDs ending in 011, 012) remain in DB but unused. SmartQuestions.tsx component exists in codebase but is not routed. This preserves flexibility to re-introduce Smart Questions later (e.g., as standalone quiz or Focus Sprint mode toggle) without DB migration.
+- **Status:** in-progress
 
 ### S-03: Goal comparison
 
@@ -196,11 +197,13 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Parked
 
-- **Domain-specific exercises (code snippets, technical docs)** — Why parked: PRD Vision calls for developer-focused content, but MVP ships with generic text datasets per `main_goal: speed`. Exercise mechanics (Animated Pacer, Smart Questions, Focus Sprint, Speed Scan) are domain-agnostic — they work identically with code or prose. Domain-specificity is a content decision (which datasets to seed), not architectural; can be swapped post-MVP without rewriting exercise logic. Hard deadline 2026-06-22 prioritizes proving the core loop over curating specialized datasets.
+- **Domain-specific exercises (code snippets, technical docs)** — Why parked: PRD Vision calls for developer-focused content, but MVP ships with generic text datasets per `main_goal: speed`. Exercise mechanics (Animated Pacer, Focus Sprint, Speed Scan) are domain-agnostic — they work identically with code or prose. Domain-specificity is a content decision (which datasets to seed), not architectural; can be swapped post-MVP without rewriting exercise logic. Hard deadline 2026-06-22 prioritizes proving the core loop over curating specialized datasets.
 
 - **Break suggestion after 3 exercises** — Why parked: FR-011 enhancement + Business Logic secondary output. Nice-to-have UX polish deferred per `main_goal: speed`. Hard deadline 2026-06-22 prioritizes core loop over fatigue-prevention messaging.
 
 - **Leaderboard / social features** — Why parked: PRD §Non-Goals explicitly out of MVP scope. Users can see their own progress but not compare with others. (Note: Focus Sprint exercise includes leaderboard schema — deferred to post-MVP if all core slices complete ahead of deadline.)
+
+- **Smart Questions exercise type** — Why parked (removed 2026-06-08 during S-02 implementation): Originally planned as 4th exercise type (progressive multi-step quiz with sequential difficulty). Removed due to: (1) incomplete design — component had no reading content, only quiz questions, making it impossible for users to learn before answering; (2) redundancy with Focus Sprint — both types are "read text + answer questions," insufficient differentiation. Database migration includes Smart Questions seeds (IDs ending in 011, 012) and SmartQuestions.tsx component exists in codebase, but dashboard surfaces only 3 types (Animated Pacer, Focus Sprint, Speed Scan). Preserves flexibility to re-introduce later as standalone quiz feature (no reading) or merge into Focus Sprint as a config toggle (remove countdown, focus on comprehension). Decision documented in `context/changes/all-exercise-types/plan.md` § Design Decisions.
 
 - **Advanced analytics / detailed progress reports** — Why parked: PRD §Non-Goals. Simple charts only (S-05 progress chart + S-03 goal comparison). No drill-down, export, or complex visualizations.
 

@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
+import { getNextExerciseForType } from "@/lib/services/exerciseService";
 import ExerciseCard from "@/components/dashboard/ExerciseCard";
 import Banner from "@/components/Banner.astro";
 import type { Exercise } from "@/types";
@@ -11,15 +12,26 @@ if (!supabase) {
   return Astro.redirect("/auth/signin?error=Server+configuration+error");
 }
 
-const error = Astro.url.searchParams.get("error");
-
-const result = await supabase.from("exercises").select("*").order("created_at", { ascending: true });
-
-if (result.error) {
-  console.error("Failed to fetch exercises:", result.error);
+if (!user) {
+  return Astro.redirect("/auth/signin?error=Unauthorized");
 }
 
-const exercises = result.data;
+const error = Astro.url.searchParams.get("error");
+
+// Fetch one exercise per type using dataset selection logic
+// Note: Smart Questions removed 2026-06-08 (incomplete design, redundant with Focus Sprint)
+const exerciseTypes = ["animated_pacer", "focus_sprint", "speed_scan"] as const;
+
+let exercises: Exercise[] = [];
+try {
+  const exercisePromises = exerciseTypes.map((type) => getNextExerciseForType(supabase, user.id, type));
+  const exerciseResults = await Promise.all(exercisePromises);
+  // Filter out nulls (exercises that don't exist yet)
+  exercises = exerciseResults.filter((ex): ex is Exercise => ex !== null);
+} catch (err) {
+  console.error("Failed to fetch exercises:", err);
+  return Astro.redirect("/dashboard?error=Failed+to+load+exercises");
+}
 ---
 
 <Layout title="Dashboard">
@@ -38,7 +50,7 @@ const exercises = result.data;
           Speed Reading Training
         </h1>
         <p class="text-blue-100/80">
-          Welcome back, <span class="font-semibold text-white">{user?.email}</span>
+          Welcome back, <span class="font-semibold text-white">{user.email}</span>
         </p>
         <form method="POST" action="/api/auth/signout" class="mt-4">
           <button
@@ -53,8 +65,8 @@ const exercises = result.data;
       <!-- Exercise Grid -->
       <div class="grid gap-6 sm:grid-cols-2">
         {
-          exercises && exercises.length > 0 ? (
-            exercises.map((exercise) => <ExerciseCard exercise={exercise as Exercise} client:load />)
+          exercises.length > 0 ? (
+            exercises.map((exercise) => <ExerciseCard exercise={exercise} client:load />)
           ) : (
             <p class="text-blue-100/60">No exercises available yet.</p>
           )

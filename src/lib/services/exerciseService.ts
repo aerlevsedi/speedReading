@@ -25,8 +25,9 @@ export async function getNextExerciseForType(
   let selectedDataset = "dataset_1"; // Cold-start default
 
   if (historyResult.data) {
-    // Type assertion for exercises nested data
-    const lastDataset = (historyResult.data.exercises as unknown as { dataset_id: string }).dataset_id;
+    // Type assertion for exercises nested data with null safety
+    const exercisesData = historyResult.data.exercises as unknown as { dataset_id?: string };
+    const lastDataset = exercisesData?.dataset_id ?? "dataset_1";
     // Alternate between dataset_1 and dataset_2
     selectedDataset = lastDataset === "dataset_1" ? "dataset_2" : "dataset_1";
   }

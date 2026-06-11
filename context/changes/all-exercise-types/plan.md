@@ -2,7 +2,9 @@
 
 ## Overview
 
-Expand the speed-reading training app from 1 to 4 exercise types (Animated Pacer, Smart Questions, Focus Sprint, Speed Scan) with 2 datasets each (8 total instances). Dashboard shows 4 exercise cards (one per type), with server-side dataset selection ensuring users alternate between datasets to prevent answer memorization. Each exercise type has distinct UI and mechanics while following the established ExerciseFlow pattern.
+Expand the speed-reading training app from 1 to 3 exercise types (Animated Pacer, Focus Sprint, Speed Scan) with 2 datasets each (6 total instances surfaced to users). Dashboard shows 3 exercise cards (one per type), with server-side dataset selection ensuring users alternate between datasets to prevent answer memorization. Each exercise type has distinct UI and mechanics while following the established ExerciseFlow pattern.
+
+**Note:** Originally planned 4 types (including Smart Questions), reduced to 3 during implementation (see "Design Decisions During Implementation" section below).
 
 ## Current State Analysis
 
@@ -38,17 +40,21 @@ Expand the speed-reading training app from 1 to 4 exercise types (Animated Pacer
 
 ## Desired End State
 
-Users see 4 exercise cards on the dashboard (one per type). When clicking a card, the system automatically selects the alternate dataset (if they completed `dataset_1` last time, select `dataset_2` this time; cold-start defaults to `dataset_1`). Each exercise type has distinct UI: Smart Questions shows progressive multi-step quiz, Focus Sprint displays countdown timer with pressure cues, Speed Scan implements 3-phase flow (pre-task questions → timed scan → information recall), and Animated Pacer continues with existing word-by-word highlighting.
+Users see 3 exercise cards on the dashboard (one per type). When clicking a card, the system automatically selects the alternate dataset (if they completed `dataset_1` last time, select `dataset_2` this time; cold-start defaults to `dataset_1`). Each exercise type has distinct UI and purpose:
+
+1. **Animated Pacer**: Word-by-word highlighting with WPM tracking, followed by 2 comprehension questions
+2. **Focus Sprint**: Read full text at own pace, click "Done Reading", then answer 3 comprehension questions
+3. **Speed Scan**: 3-phase flow (preview questions → timed scan → information recall with 3 questions)
 
 ### Verification
 
-- Dashboard shows exactly 4 exercise cards (one per type)
+- Dashboard shows exactly 3 exercise cards (one per type)
 - Clicking the same exercise type twice in a row loads different datasets
-- Smart Questions component displays sequential questions with increasing difficulty
-- Focus Sprint component shows countdown timer with visual pressure indicators (color changes, progress bar)
-- Speed Scan component shows pre-task questions before scanning, then validates information recall
+- Animated Pacer displays word-by-word highlighting, then quiz
+- Focus Sprint shows full text with "Done Reading" button, then comprehension quiz (3 questions)
+- Speed Scan implements 3-phase flow: preview questions → timed scan → recall quiz
 - All exercise types save completions with correct `type_data` metrics
-- Database has 8 seeded exercise instances (4 types × 2 datasets)
+- Database has 8 seeded exercise instances (4 types × 2 datasets), but only 6 instances surface to users (3 active types × 2 datasets)
 
 ### Key Discoveries:
 
@@ -67,6 +73,32 @@ Users see 4 exercise cards on the dashboard (one per type). When clicking a card
 - No code-specific datasets yet (using generic web dev fundamentals text; domain-specificity is a content decision deferred to post-MVP per roadmap F-01 Risk note)
 - No interaction tracking for Speed Scan (scroll/click patterns) — using simple time threshold + pre-task questions
 - No dataset alternation enforcement for direct /exercise/<id> navigation — users can bookmark and repeat the same dataset by navigating directly to /exercise/<id> instead of via dashboard. Accepted limitation for MVP since the primary flow (dashboard → exercise) enforces alternation. If this becomes an issue post-MVP, can add redirect logic to /exercise/[id].astro or dataset selection there.
+
+## Design Decisions During Implementation
+
+### Decision: Remove Smart Questions Exercise Type (2026-06-08)
+
+**Context**: During Phase 3-6 implementation and user testing, two critical issues emerged with Smart Questions:
+1. **No reading content**: Smart Questions component only displayed quiz questions without any text to read, making it an incomplete exercise (user cannot learn/comprehend content before answering).
+2. **Too similar to Focus Sprint**: Both exercise types show text + comprehension questions. The only differences were countdown timer (Focus Sprint) vs no timer (Smart Questions), which isn't enough differentiation for separate exercise types.
+
+**Decision**: Remove Smart Questions exercise type entirely. Reduce from 4 exercise types to 3:
+- **Keep**: Animated Pacer (word-by-word guided reading), Focus Sprint (timed reading with pressure), Speed Scan (information location/recall)
+- **Remove**: Smart Questions (quiz-only, no reading content, redundant with Focus Sprint)
+
+**Impact**:
+- Dashboard will show 3 exercise cards instead of 4
+- Database migration already created smart_questions seeds (IDs ending in 011, 012) — these will remain in DB but won't be surfaced to users
+- SmartQuestions.tsx component remains in codebase but is unused (can be deleted in cleanup)
+- Exercise type routing in ExerciseFlow.tsx will skip smart_questions
+- Results page question count mapping already accounts for all types
+
+**Rationale**:
+- Better to have 3 distinct, complete exercise types than 4 types where one is broken/incomplete
+- Focus Sprint already provides "read + answer questions" flow (can be enhanced in future if needed)
+- Smart Questions could be re-introduced later as a standalone quiz feature (no reading content) or merged into Focus Sprint with a config toggle
+
+**Future consideration**: ~~May want to add a "read at your own pace + questions" mode to Focus Sprint (remove countdown, make it pure comprehension-focused reading). This would be a Focus Sprint enhancement, not a separate type.~~ **IMPLEMENTED 2026-06-08** - Focus Sprint converted to "read at your own pace + comprehension quiz" mode. Removed countdown timer and pressure cues. User reads text freely, clicks "Done Reading" when ready, then answers 3 comprehension questions. Results show duration, WPM, and correct answers (now 3 questions instead of 0).
 
 ## Implementation Approach
 
@@ -663,9 +695,9 @@ Existing Animated Pacer exercise (ID `a0000000-0000-0000-0000-000000000001`) is 
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 API endpoint responds: `curl http://localhost:4321/api/exercises/next-for-type?type=animated_pacer` returns 200 with exercise JSON
+- [x] 2.1 Type checking passes: `npm run typecheck` — 7df9ec3
+- [x] 2.2 Linting passes: `npm run lint` — 7df9ec3
+- [x] 2.3 API endpoint responds: `curl http://localhost:4321/api/exercises/next-for-type?type=animated_pacer` returns 200 with exercise JSON — 7df9ec3
 
 #### Manual
 
@@ -677,9 +709,9 @@ Existing Animated Pacer exercise (ID `a0000000-0000-0000-0000-000000000001`) is 
 
 #### Automated
 
-- [ ] 3.1 Component file exists and exports default function: `src/components/exercise/SmartQuestions.tsx`
-- [ ] 3.2 Type checking passes: `npm run typecheck`
-- [ ] 3.3 Linting passes: `npm run lint`
+- [x] 3.1 Component file exists and exports default function: `src/components/exercise/SmartQuestions.tsx`
+- [x] 3.2 Type checking passes: `npm run typecheck`
+- [x] 3.3 Linting passes: `npm run lint`
 
 #### Manual
 
@@ -692,9 +724,9 @@ Existing Animated Pacer exercise (ID `a0000000-0000-0000-0000-000000000001`) is 
 
 #### Automated
 
-- [ ] 4.1 Component file exists: `src/components/exercise/FocusSprint.tsx`
-- [ ] 4.2 Type checking passes: `npm run typecheck`
-- [ ] 4.3 Linting passes: `npm run lint`
+- [x] 4.1 Component file exists: `src/components/exercise/FocusSprint.tsx`
+- [x] 4.2 Type checking passes: `npm run typecheck`
+- [x] 4.3 Linting passes: `npm run lint`
 
 #### Manual
 
@@ -708,9 +740,9 @@ Existing Animated Pacer exercise (ID `a0000000-0000-0000-0000-000000000001`) is 
 
 #### Automated
 
-- [ ] 5.1 Component file exists: `src/components/exercise/SpeedScan.tsx`
-- [ ] 5.2 Type checking passes: `npm run typecheck`
-- [ ] 5.3 Linting passes: `npm run lint`
+- [x] 5.1 Component file exists: `src/components/exercise/SpeedScan.tsx`
+- [x] 5.2 Type checking passes: `npm run typecheck`
+- [x] 5.3 Linting passes: `npm run lint`
 
 #### Manual
 
@@ -724,10 +756,10 @@ Existing Animated Pacer exercise (ID `a0000000-0000-0000-0000-000000000001`) is 
 
 #### Automated
 
-- [ ] 6.1 Type checking passes: `npm run typecheck`
-- [ ] 6.2 Linting passes: `npm run lint`
-- [ ] 6.3 Build passes: `npm run build`
-- [ ] 6.4 Dev server starts: `npm run dev`
+- [x] 6.1 Type checking passes: `npm run typecheck`
+- [x] 6.2 Linting passes: `npm run lint`
+- [x] 6.3 Build passes: `npm run build`
+- [x] 6.4 Dev server starts: `npm run dev`
 
 #### Manual
 
