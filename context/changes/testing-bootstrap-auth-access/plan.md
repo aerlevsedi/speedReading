@@ -306,8 +306,8 @@ Update `context/foundation/test-plan.md §6.2` with the completed cookbook patte
 
 #### Automated
 
-- [x] 4.1 `npm run lint` passes (test-plan.md valid markdown)
+- [x] 4.1 `npm run lint` passes (test-plan.md valid markdown) — 67bac9c
 
 #### Manual
 
-- [x] 4.2 §6.2 in test-plan.md is filled in with location, naming, run command, and reference test
+- [x] 4.2 §6.2 in test-plan.md is filled in with location, naming, run command, and reference test — 67bac9c
