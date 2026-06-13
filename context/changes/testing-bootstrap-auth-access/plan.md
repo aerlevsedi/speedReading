@@ -294,20 +294,20 @@ Update `context/foundation/test-plan.md §6.2` with the completed cookbook patte
 
 #### Automated
 
-- [x] 3.1 `npm test` passes — 1 test green
-- [x] 3.2 `npm run lint` passes on the new test file
-- [x] 3.3 `npx tsc --noEmit` passes
+- [x] 3.1 `npm test` passes — 1 test green — 2b2d3e7
+- [x] 3.2 `npm run lint` passes on the new test file — 2b2d3e7
+- [x] 3.3 `npx tsc --noEmit` passes — 2b2d3e7
 
 #### Manual
 
-- [x] 3.4 Remove `completions_select_own` policy locally → `npm test` turns red; restore → green
+- [x] 3.4 Remove `completions_select_own` policy locally → `npm test` turns red; restore → green — 2b2d3e7
 
 ### Phase 4: Cookbook update
 
 #### Automated
 
-- [ ] 4.1 `npm run lint` passes (test-plan.md valid markdown)
+- [x] 4.1 `npm run lint` passes (test-plan.md valid markdown)
 
 #### Manual
 
-- [ ] 4.2 §6.2 in test-plan.md is filled in with location, naming, run command, and reference test
+- [x] 4.2 §6.2 in test-plan.md is filled in with location, naming, run command, and reference test

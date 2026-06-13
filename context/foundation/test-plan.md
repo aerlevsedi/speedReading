@@ -108,7 +108,29 @@ TBD — see §3 Phase 1 (Bootstrap + auth/access integration)
 
 ### 6.2 RLS / cross-user isolation integration test
 
-TBD — see §3 Phase 1 (Bootstrap + auth/access integration)
+**Location:** `tests/integration/` — all access-control integration tests live here.
+
+**Naming:** `<subject>-isolation.test.ts` or `<subject>-access.test.ts`
+
+**Run command:**
+- All integration tests: `npm test`
+- Single file: `npx vitest run tests/integration/<file>`
+
+**Helper dependencies:**
+- `tests/helpers/supabase.ts` — `adminClient()` (service-role, bypasses RLS) and `authClient(jwt)` (anon key + JWT, respects RLS)
+- `tests/helpers/fixtures.ts` — `createFixtureUser`, `createFixtureCompletion`, `deleteFixtureUsers`
+
+**Reference test:** `tests/integration/rls-isolation.test.ts`
+
+The reference test uses a two-user pattern:
+1. `beforeAll` — create User A and User B via `createFixtureUser`; insert a completion for User A via `adminClient()` + `createFixtureCompletion`
+2. First `it` — User A's `authClient(jwt)` must return the row (proves the policy allows own data)
+3. Second `it` — User B's `authClient(jwt)` queries the same row by ID and must get 0 results (proves isolation)
+4. `afterAll` — `deleteFixtureUsers(admin, [userAId, userBId].filter(Boolean))` cleans up both users; `ON DELETE CASCADE` removes their completions
+
+**Key rule:** Always use `authClient(jwt)` for assertions — it respects RLS. Use `adminClient()` only for fixture setup/teardown — it bypasses RLS. **Never mock the Supabase client** in access-control tests: a mock is always green even if the policy is deleted.
+
+**Red/green verification:** Remove the SELECT policy in Supabase Studio → `npm test` turns red on the "User A can read their own completion" assertion. Restore via `npx supabase db reset` → green. This confirms the test exercises the real policy.
 
 ### 6.3 Middleware redirect integration test
 
