@@ -271,24 +271,24 @@ Update `context/foundation/test-plan.md §6.2` with the completed cookbook patte
 
 #### Automated
 
-- [x] 1.1 `npm test` exits 0 with "0 tests passed" (empty suite)
-- [x] 1.2 `npx tsc --noEmit` passes with vitest.config.ts present
+- [x] 1.1 `npm test` exits 0 with "0 tests passed" (empty suite) — 39e54b8
+- [x] 1.2 `npx tsc --noEmit` passes with vitest.config.ts present — 39e54b8
 
 #### Manual
 
-- [x] 1.3 `.env.test` exists at project root and is not tracked by git
-- [x] 1.4 `npx supabase start` runs without errors (Docker running)
+- [x] 1.3 `.env.test` exists at project root and is not tracked by git — 39e54b8
+- [x] 1.4 `npx supabase start` runs without errors (Docker running) — 39e54b8
 
 ### Phase 2: Test helpers
 
 #### Automated
 
-- [ ] 2.1 `npx tsc --noEmit` passes with test helper files included
-- [ ] 2.2 `npm run lint` passes on `tests/helpers/`
+- [x] 2.1 `npx tsc --noEmit` passes with test helper files included
+- [x] 2.2 `npm run lint` passes on `tests/helpers/`
 
 #### Manual
 
-- [ ] 2.3 `adminClient()` connects to local Supabase without error (verified manually)
+- [x] 2.3 `adminClient()` connects to local Supabase without error (verified manually)
 
 ### Phase 3: RLS isolation integration test
 
