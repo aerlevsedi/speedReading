@@ -283,24 +283,24 @@ Update `context/foundation/test-plan.md §6.2` with the completed cookbook patte
 
 #### Automated
 
-- [x] 2.1 `npx tsc --noEmit` passes with test helper files included
-- [x] 2.2 `npm run lint` passes on `tests/helpers/`
+- [x] 2.1 `npx tsc --noEmit` passes with test helper files included — 6ba7b95
+- [x] 2.2 `npm run lint` passes on `tests/helpers/` — 6ba7b95
 
 #### Manual
 
-- [x] 2.3 `adminClient()` connects to local Supabase without error (verified manually)
+- [x] 2.3 `adminClient()` connects to local Supabase without error (verified manually) — 6ba7b95
 
 ### Phase 3: RLS isolation integration test
 
 #### Automated
 
-- [ ] 3.1 `npm test` passes — 1 test green
-- [ ] 3.2 `npm run lint` passes on the new test file
-- [ ] 3.3 `npx tsc --noEmit` passes
+- [x] 3.1 `npm test` passes — 1 test green
+- [x] 3.2 `npm run lint` passes on the new test file
+- [x] 3.3 `npx tsc --noEmit` passes
 
 #### Manual
 
-- [ ] 3.4 Remove `completions_select_own` policy locally → `npm test` turns red; restore → green
+- [x] 3.4 Remove `completions_select_own` policy locally → `npm test` turns red; restore → green
 
 ### Phase 4: Cookbook update
 
