@@ -1,7 +1,7 @@
 ---
 change_id: testing-bootstrap-auth-access
 title: "Bootstrap + auth/access integration tests"
-status: implemented
+status: impl_reviewed
 created: 2026-06-13
 updated: 2026-06-13
 roadmap_ref: "test-plan.md §3 Phase 1"

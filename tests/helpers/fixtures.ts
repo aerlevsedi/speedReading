@@ -1,4 +1,4 @@
-import { adminClient, authClient } from "./supabase";
+import { adminClient, anonClient, authClient } from "./supabase";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const SEEDED_EXERCISE_ID = "a0000000-0000-0000-0000-000000000001";
@@ -18,8 +18,7 @@ export async function createFixtureUser(email: string, password: string): Promis
 
   const userId = createResult.data.user.id;
 
-  const regular = authClient("");
-  const signInResult = await regular.auth.signInWithPassword({ email, password });
+  const signInResult = await anonClient().auth.signInWithPassword({ email, password });
 
   if (signInResult.error) {
     throw new Error(`createFixtureUser signIn: ${signInResult.error.message}`);
@@ -54,10 +53,12 @@ export async function createFixtureCompletion(
 }
 
 export async function deleteFixtureUsers(admin: SupabaseClient, userIds: string[]): Promise<void> {
-  for (const id of userIds) {
-    const result = await admin.auth.admin.deleteUser(id);
-    if (result.error) {
-      console.warn(`deleteFixtureUsers: failed to delete ${id}: ${result.error.message}`);
+  const results = await Promise.allSettled(userIds.map((id) => admin.auth.admin.deleteUser(id)));
+  results.forEach((r, i) => {
+    if (r.status === "rejected") {
+      console.warn(`deleteFixtureUsers: failed to delete ${userIds[i]}: ${String(r.reason)}`);
+    } else if (r.value.error) {
+      console.warn(`deleteFixtureUsers: failed to delete ${userIds[i]}: ${r.value.error.message}`);
     }
-  }
+  });
 }

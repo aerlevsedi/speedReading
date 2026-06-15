@@ -11,15 +11,23 @@ describe("exercise_completions RLS isolation", () => {
   let userACompletionId: string;
 
   beforeAll(async () => {
-    const userA = await createFixtureUser("rls-user-a@test.local", "password-a-123!");
-    const userB = await createFixtureUser("rls-user-b@test.local", "password-b-123!");
+    const createdIds: string[] = [];
+    try {
+      const userA = await createFixtureUser("rls-user-a@test.local", "password-a-123!");
+      createdIds.push(userA.id);
+      const userB = await createFixtureUser("rls-user-b@test.local", "password-b-123!");
+      createdIds.push(userB.id);
 
-    userAId = userA.id;
-    userBId = userB.id;
-    userAJwt = userA.jwt;
-    userBJwt = userB.jwt;
+      userAId = userA.id;
+      userBId = userB.id;
+      userAJwt = userA.jwt;
+      userBJwt = userB.jwt;
 
-    userACompletionId = await createFixtureCompletion(admin, userA.id);
+      userACompletionId = await createFixtureCompletion(admin, userA.id);
+    } catch (err) {
+      await deleteFixtureUsers(admin, createdIds);
+      throw err;
+    }
   });
 
   afterAll(async () => {
@@ -31,6 +39,7 @@ describe("exercise_completions RLS isolation", () => {
 
     const result = await client.from("exercise_completions").select("id").eq("id", userACompletionId);
 
+    expect(result.error).toBeNull();
     expect(result.data).toHaveLength(1);
   });
 
@@ -39,7 +48,7 @@ describe("exercise_completions RLS isolation", () => {
 
     const result = await client.from("exercise_completions").select("id").eq("id", userACompletionId);
 
-    const isEmpty = result.data === null || result.data.length === 0;
-    expect(isEmpty).toBe(true);
+    expect(result.error).toBeNull();
+    expect(result.data).toHaveLength(0);
   });
 });
