@@ -544,26 +544,26 @@ Fill in `context/foundation/test-plan.md §6.3` (middleware redirect cookbook) a
 
 #### Automated
 
-- [x] 6.1 `npm test` passes — 4 new middleware tests green (total ≥6 across 2+ suites)
-- [x] 6.2 `npm run lint` passes on `tests/integration/middleware-redirect.test.ts`
-- [x] 6.3 `npx tsc --noEmit` passes
+- [x] 6.1 `npm test` passes — 4 new middleware tests green (total ≥6 across 2+ suites) — 9ae2d26
+- [x] 6.2 `npm run lint` passes on `tests/integration/middleware-redirect.test.ts` — 9ae2d26
+- [x] 6.3 `npx tsc --noEmit` passes — 9ae2d26
 
 #### Manual
 
-- [x] 6.4 Empty `PROTECTED_ROUTES` in `src/middleware.ts` → `npm test` turns red on middleware tests; restore → green
-- [x] 6.5 `/auth/signin` test stays 200 (no redirect loop confirmed)
+- [x] 6.4 Empty `PROTECTED_ROUTES` in `src/middleware.ts` → `npm test` turns red on middleware tests; restore → green — 9ae2d26
+- [x] 6.5 `/auth/signin` test stays 200 (no redirect loop confirmed) — 9ae2d26
 
 ### Phase 7: Secret-leak integration test
 
 #### Automated
 
-- [ ] 7.1 `npm test` passes — 2 new secret-leak tests green (total ≥8 across 3 suites)
-- [ ] 7.2 `npm run lint` passes on `tests/integration/secret-leak.test.ts`
-- [ ] 7.3 `npx tsc --noEmit` passes
+- [x] 7.1 `npm test` passes — 2 new secret-leak tests green (total ≥8 across 3 suites)
+- [x] 7.2 `npm run lint` passes on `tests/integration/secret-leak.test.ts`
+- [x] 7.3 `npx tsc --noEmit` passes
 
 #### Manual
 
-- [ ] 7.4 Temporarily inject `process.env.SUPABASE_TEST_ANON_KEY` into the 401 response body → `npm test` turns red; revert → green
+- [x] 7.4 Temporarily inject `process.env.SUPABASE_TEST_ANON_KEY` into the 401 response body → `npm test` turns red; revert → green
 
 ### Phase 8: Cookbook update (§6.3 and §6.4)
 
