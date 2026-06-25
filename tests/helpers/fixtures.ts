@@ -1,30 +1,59 @@
-import { adminClient, anonClient, authClient } from "./supabase";
+import { adminClient, anonClient } from "./supabase";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const SEEDED_EXERCISE_ID = "a0000000-0000-0000-0000-000000000001";
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 2000;
+
+function isRetryableAuthError(error: { name?: string; status?: number } | null): boolean {
+  if (!error) return false;
+  if (error.name === "AuthRetryableFetchError") return true;
+  if (error.status && error.status >= 500) return true;
+  return false;
+}
+
 export async function createFixtureUser(email: string, password: string): Promise<{ id: string; jwt: string }> {
   const admin = adminClient();
 
-  const createResult = await admin.auth.admin.createUser({
-    email,
-    password,
-    email_confirm: true,
-  });
+  let lastCreateError: unknown = null;
+  let userId = "";
 
-  if (createResult.error) {
-    throw new Error(`createFixtureUser: ${createResult.error.message}`);
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    const result = await admin.auth.admin.createUser({ email, password, email_confirm: true });
+    if (!result.error) {
+      userId = result.data.user.id;
+      lastCreateError = null;
+      break;
+    }
+    lastCreateError = result.error;
+    if (!isRetryableAuthError(result.error) || attempt === MAX_RETRIES) break;
+    await new Promise((r) => setTimeout(r, RETRY_DELAY_MS));
   }
 
-  const userId = createResult.data.user.id;
-
-  const signInResult = await anonClient().auth.signInWithPassword({ email, password });
-
-  if (signInResult.error) {
-    throw new Error(`createFixtureUser signIn: ${signInResult.error.message}`);
+  if (lastCreateError) {
+    throw new Error(`createFixtureUser: ${JSON.stringify(lastCreateError)}`);
   }
 
-  const jwt = signInResult.data.session.access_token;
+  let lastSignInError: unknown = null;
+  let jwt = "";
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    const result = await anonClient().auth.signInWithPassword({ email, password });
+    if (!result.error) {
+      jwt = result.data.session.access_token;
+      lastSignInError = null;
+      break;
+    }
+    lastSignInError = result.error;
+    if (!isRetryableAuthError(result.error) || attempt === MAX_RETRIES) break;
+    await new Promise((r) => setTimeout(r, RETRY_DELAY_MS));
+  }
+
+  if (lastSignInError) {
+    throw new Error(`createFixtureUser signIn: ${JSON.stringify(lastSignInError)}`);
+  }
+
   return { id: userId, jwt };
 }
 

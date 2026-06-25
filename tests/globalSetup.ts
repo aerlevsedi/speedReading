@@ -20,9 +20,7 @@ async function waitForServer(): Promise<void> {
     await new Promise((r) => setTimeout(r, POLL_INTERVAL_MS));
   }
 
-  throw new Error(
-    `Astro dev server did not start within ${TIMEOUT_MS / 1000}s on ${BASE_URL}`
-  );
+  throw new Error(`Astro dev server did not start within ${TIMEOUT_MS / 1000}s on ${BASE_URL}`);
 }
 
 export async function setup(): Promise<void> {
@@ -45,13 +43,16 @@ export async function setup(): Promise<void> {
 export async function teardown(): Promise<void> {
   if (!child) return;
 
+  const proc = child;
   return new Promise<void>((resolve) => {
-    child!.on("close", () => resolve());
-    child!.kill("SIGTERM");
+    proc.on("close", () => {
+      resolve();
+    });
+    proc.kill("SIGTERM");
 
     setTimeout(() => {
-      if (child && !child.killed) {
-        child.kill("SIGKILL");
+      if (!proc.killed) {
+        proc.kill("SIGKILL");
       }
       resolve();
     }, 5_000);

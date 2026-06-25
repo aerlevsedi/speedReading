@@ -532,26 +532,26 @@ Fill in `context/foundation/test-plan.md §6.3` (middleware redirect cookbook) a
 
 #### Automated
 
-- [x] 5.1 `npm test` starts the Astro dev server automatically (port 4322), runs all existing tests green, and shuts the server down on exit
-- [x] 5.2 `npx tsc --noEmit` passes with `tests/globalSetup.ts` included
+- [x] 5.1 `npm test` starts the Astro dev server automatically (port 4322), runs all existing tests green, and shuts the server down on exit — 482d8af
+- [x] 5.2 `npx tsc --noEmit` passes with `tests/globalSetup.ts` included — 482d8af
 
 #### Manual
 
-- [x] 5.3 After `npm test` completes, no process remains on port 4322 (`lsof -i :4322` returns nothing)
-- [x] 5.4 If server fails to start within 30s, `npm test` exits non-zero with a clear timeout error
+- [x] 5.3 After `npm test` completes, no process remains on port 4322 (`lsof -i :4322` returns nothing) — 482d8af
+- [x] 5.4 If server fails to start within 30s, `npm test` exits non-zero with a clear timeout error — 482d8af
 
 ### Phase 6: Middleware redirect integration test
 
 #### Automated
 
-- [ ] 6.1 `npm test` passes — 4 new middleware tests green (total ≥6 across 2+ suites)
-- [ ] 6.2 `npm run lint` passes on `tests/integration/middleware-redirect.test.ts`
-- [ ] 6.3 `npx tsc --noEmit` passes
+- [x] 6.1 `npm test` passes — 4 new middleware tests green (total ≥6 across 2+ suites)
+- [x] 6.2 `npm run lint` passes on `tests/integration/middleware-redirect.test.ts`
+- [x] 6.3 `npx tsc --noEmit` passes
 
 #### Manual
 
-- [ ] 6.4 Empty `PROTECTED_ROUTES` in `src/middleware.ts` → `npm test` turns red on middleware tests; restore → green
-- [ ] 6.5 `/auth/signin` test stays 200 (no redirect loop confirmed)
+- [x] 6.4 Empty `PROTECTED_ROUTES` in `src/middleware.ts` → `npm test` turns red on middleware tests; restore → green
+- [x] 6.5 `/auth/signin` test stays 200 (no redirect loop confirmed)
 
 ### Phase 7: Secret-leak integration test
 
