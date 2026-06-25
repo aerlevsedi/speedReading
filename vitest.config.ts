@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
     include: ["tests/**/*.test.ts"],
     passWithNoTests: true,
     hookTimeout: 30000,
+    globalSetup: ["tests/globalSetup.ts"],
     env: loadEnv(mode, process.cwd(), ""),
   },
   resolve: {

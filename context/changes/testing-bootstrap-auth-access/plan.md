@@ -254,6 +254,222 @@ Update `context/foundation/test-plan.md §6.2` with the completed cookbook patte
 
 ---
 
+---
+
+## Phase 5: Astro dev server globalSetup
+
+### Overview
+
+Add a Vitest `globalSetup` file that spawns `astro dev` on port 4322 before any test runs and kills it in teardown. Once this phase is done, `npm test` is fully self-contained for HTTP-level integration tests — no manual server start required.
+
+### Changes Required
+
+#### 1. globalSetup file
+
+**File**: `tests/globalSetup.ts` (new file)
+
+**Intent**: Spawn `npm run dev -- --port 4322` as a child process in the `setup()` export, poll `http://127.0.0.1:4322/` until the server responds (max ~30s), and kill the process in `teardown()`.
+
+**Contract**:
+- Export two named functions: `async function setup()` and `async function teardown()`
+- In `setup()`: spawn the child process, store the reference in module scope, poll every 250ms until a `fetch("http://127.0.0.1:4322/")` resolves without throwing, throw if the timeout expires
+- In `teardown()`: call `child.kill()` and wait for exit; suppress ECONNRESET errors during shutdown
+- Expose the base URL as `process.env.TEST_SERVER_URL = "http://127.0.0.1:4322"` so test files read from a single source
+
+The server needs `.dev.vars` (or equivalent env vars) to start without crashing. Tests that hit the server send no auth cookie — the server's env is the same as a normal dev session.
+
+#### 2. Wire globalSetup in vitest.config.ts
+
+**File**: `vitest.config.ts`
+
+**Intent**: Register the globalSetup file so Vitest runs it once before any test suite.
+
+**Contract**: Add `globalSetup: ["tests/globalSetup.ts"]` to the `test` block. No other changes to the config.
+
+### Success Criteria
+
+#### Automated Verification
+
+- `npm test` starts the Astro dev server automatically, runs the existing RLS test suite (still green), and shuts the server down on exit — all in one `npm test` call
+- `npx tsc --noEmit` passes with `tests/globalSetup.ts` included
+
+#### Manual Verification
+
+- After `npm test` completes, no `astro dev` process remains running on port 4322 (`lsof -i :4322` returns nothing)
+- If the server fails to start within 30s, `npm test` exits non-zero with a clear timeout error message
+
+**Implementation note**: The `.dev.vars` file must exist (with valid `SUPABASE_URL` and `SUPABASE_KEY`) for the Astro dev server to start. This is a local-only requirement — the file is gitignored.
+
+---
+
+## Phase 6: Middleware redirect integration test
+
+### Overview
+
+Write `tests/integration/middleware-redirect.test.ts` — HTTP-level assertions that unauthenticated GET requests to every protected route return 302 → `/auth/signin`, and that `/auth/signin` itself returns 200 (no redirect loop).
+
+### Changes Required
+
+#### 1. Middleware redirect test file
+
+**File**: `tests/integration/middleware-redirect.test.ts` (new file)
+
+**Intent**: Prove the four oracle assertions from research using plain `fetch()` against the running Astro dev server on port 4322.
+
+**Contract**: The test file reads the server URL from `process.env.TEST_SERVER_URL`. It uses `fetch(url, { redirect: "manual" })` so that Node does not follow the 302 automatically — the test must assert the raw 302 status and `Location` header. No cookies are set in any request. No Supabase Docker needed.
+
+Four test cases:
+
+```
+1. GET /dashboard        → status 302, Location starts with /auth/signin
+2. GET /exercise/test-id → status 302, Location starts with /auth/signin
+3. GET /results/test-id  → status 302, Location starts with /auth/signin
+4. GET /auth/signin      → status 200 (not a redirect — no loop)
+```
+
+Structure:
+- One `describe("Middleware redirect — unauthenticated requests")` block
+- `it` per route variant (four tests)
+- No `beforeAll`/`afterAll` needed (server managed by globalSetup)
+- No mocking
+
+**Regressions caught:**
+- `PROTECTED_ROUTES` array emptied or routes removed → protected routes return 200
+- `startsWith` replaced with `===` → `/exercise/abc` bypasses protection (only `/exercise` exact would match)
+- Redirect target changed to a different path → Location header assertion fails
+- `/auth/signin` added to `PROTECTED_ROUTES` by mistake → test 4 returns 302 instead of 200 (loop regression)
+
+### Success Criteria
+
+#### Automated Verification
+
+- `npm test` passes with 4 new tests green (total: 6 tests across 2 suites)
+- `npm run lint` passes on the new test file
+- `npx tsc --noEmit` passes
+
+#### Manual Verification
+
+- Temporarily empty the `PROTECTED_ROUTES` array in `src/middleware.ts` → re-run `npm test` → middleware redirect tests turn red; restore `PROTECTED_ROUTES` → green
+- Confirm `GET /auth/signin` test stays green (status 200), ruling out a redirect loop
+
+---
+
+## Phase 7: Secret-leak integration test
+
+### Overview
+
+Write `tests/integration/secret-leak.test.ts` — two HTTP-level assertions that error responses from API routes contain no secret string values. Requires both the Astro dev server (Phase 5) and local Supabase Docker (already running for Phase 3).
+
+### Changes Required
+
+#### 1. Secret-leak test file
+
+**File**: `tests/integration/secret-leak.test.ts` (new file)
+
+**Intent**: Prove that two distinct error-branch responses contain no Supabase secrets, no Bearer tokens, and no stack traces.
+
+**Contract**: The test reads the actual secret values at test time from `process.env.SUPABASE_TEST_ANON_KEY` and `process.env.SUPABASE_TEST_URL` (already in `.env.test`). It asserts that these strings are absent from each response body. Two requests:
+
+```
+1. GET /api/exercises/next-for-type?type=animated_pacer (no cookie)
+   → expected status: 401
+   → expected body: {"error":"Unauthorized"}
+   → assert: body does NOT contain process.env.SUPABASE_TEST_ANON_KEY
+   → assert: body does NOT contain process.env.SUPABASE_TEST_URL
+   → assert: body does NOT contain "Bearer "
+   → assert: body does NOT contain "Error:" or a stack trace pattern
+
+2. GET /api/exercises/00000000-0000-0000-0000-000000000000 (no cookie needed — unprotected route)
+   → expected status: 404 or 200 with error JSON (route has no auth check; exercises are public)
+   → assert: body does NOT contain process.env.SUPABASE_TEST_ANON_KEY
+   → assert: body does NOT contain process.env.SUPABASE_TEST_URL
+   → assert: body does NOT contain "Bearer "
+```
+
+Structure:
+- One `describe("Secret leak — error responses contain no secrets")` block
+- `it` per endpoint (two tests)
+- No fixture setup needed — both requests are unauthenticated and deterministic
+- The first test requires no Supabase (401 fires before any DB call); the second needs Supabase running (the route calls the DB; it returns 404 because the UUID doesn't exist)
+
+**Regressions caught:**
+- A future refactor serializes a raw Supabase error object into a JSON response → the error object might include connection string → test fails on the anon key assertion
+- Accidentally interpolating `SUPABASE_KEY` into an error message string → test fails on key assertion
+- `console.error` mistakenly replaced with a response `json()` that includes the error object → caught on either endpoint
+
+### Success Criteria
+
+#### Automated Verification
+
+- `npm test` passes with 2 new tests green (total: 8 tests across 3 suites)
+- `npm run lint` passes on the new test file
+- `npx tsc --noEmit` passes
+
+#### Manual Verification
+
+- In `src/pages/api/exercises/next-for-type.ts`, temporarily change the 401 response to `JSON.stringify({ error: "Unauthorized", debug: process.env.SUPABASE_TEST_ANON_KEY })` → re-run `npm test` → secret-leak test turns red; revert → green
+- This confirms the test would have caught a real key-in-body regression
+
+---
+
+## Phase 8: Cookbook update (§6.3 and §6.4)
+
+### Overview
+
+Fill in `context/foundation/test-plan.md §6.3` (middleware redirect cookbook) and `§6.4` (secret-leak cookbook) with the patterns established by Phases 5–7. Also update `§3 Phase 1` status from `implementing` to `complete`.
+
+### Changes Required
+
+#### 1. §6.3 Middleware redirect integration test
+
+**File**: `context/foundation/test-plan.md`
+
+**Intent**: Document the HTTP-level integration test pattern for middleware redirect so future contributors know how to add a new protected-route assertion.
+
+**Contract**: The §6.3 entry must include:
+- **Location**: `tests/integration/middleware-redirect.test.ts`
+- **Run command**: `npm test` or `npx vitest run tests/integration/middleware-redirect.test.ts`
+- **Server dependency**: Requires globalSetup (`tests/globalSetup.ts`) to spawn Astro dev on port 4322; `TEST_SERVER_URL` env var holds the base URL
+- **Key technique**: `fetch(url, { redirect: "manual" })` — prevents Node from auto-following 302; lets you assert `response.status === 302` and `response.headers.get("Location")`
+- **No-loop assertion**: Always include a test that `/auth/signin` returns 200, proving no redirect loop exists
+- **Regressions caught**: `PROTECTED_ROUTES` modification, `startsWith` → `===` regression, redirect target change, `/auth/signin` added to protected routes by mistake
+
+#### 2. §6.4 Secret-leak integration test
+
+**File**: `context/foundation/test-plan.md`
+
+**Intent**: Document the secret-leak test pattern so future contributors know how to verify a new API error branch doesn't expose secrets.
+
+**Contract**: The §6.4 entry must include:
+- **Location**: `tests/integration/secret-leak.test.ts`
+- **Run command**: `npm test` or `npx vitest run tests/integration/secret-leak.test.ts`
+- **Key technique**: Read actual secret value from `process.env.SUPABASE_TEST_ANON_KEY` at test time; assert `expect(body).not.toContain(secretValue)` — do not hardcode the key in the test
+- **Trigger selection**: Use error paths that are deterministic without a session (401 from session-check branch) and with a session (404 from DB-query branch)
+- **What to assert absent**: anon key string, `SUPABASE_TEST_URL` string, `"Bearer "` substring, stack trace pattern
+- **Red/green verification**: Temporarily add the key to a response body → test turns red; revert → green
+
+#### 3. §3 Phase 1 status update
+
+**File**: `context/foundation/test-plan.md`
+
+**Intent**: Mark Phase 1 as `complete` in the rollout table now that all three risks (#1, #3, #6) are covered.
+
+**Contract**: Change the `Status` cell for Phase 1 from `implementing` to `complete`.
+
+### Success Criteria
+
+#### Automated Verification
+
+- `npm run lint` passes (test-plan.md valid markdown)
+
+#### Manual Verification
+
+- §6.3 is filled in: a new contributor can add a protected-route assertion without reading `middleware-redirect.test.ts`
+- §6.4 is filled in: a new contributor can add a secret-leak assertion for a new API route without reading `secret-leak.test.ts`
+- §3 Phase 1 row shows `complete`
+
+---
+
 ## References
 
 - Research: `context/changes/testing-bootstrap-auth-access/research.md`
@@ -311,3 +527,52 @@ Update `context/foundation/test-plan.md §6.2` with the completed cookbook patte
 #### Manual
 
 - [x] 4.2 §6.2 in test-plan.md is filled in with location, naming, run command, and reference test — 67bac9c
+
+### Phase 5: Astro dev server globalSetup
+
+#### Automated
+
+- [x] 5.1 `npm test` starts the Astro dev server automatically (port 4322), runs all existing tests green, and shuts the server down on exit
+- [x] 5.2 `npx tsc --noEmit` passes with `tests/globalSetup.ts` included
+
+#### Manual
+
+- [x] 5.3 After `npm test` completes, no process remains on port 4322 (`lsof -i :4322` returns nothing)
+- [x] 5.4 If server fails to start within 30s, `npm test` exits non-zero with a clear timeout error
+
+### Phase 6: Middleware redirect integration test
+
+#### Automated
+
+- [ ] 6.1 `npm test` passes — 4 new middleware tests green (total ≥6 across 2+ suites)
+- [ ] 6.2 `npm run lint` passes on `tests/integration/middleware-redirect.test.ts`
+- [ ] 6.3 `npx tsc --noEmit` passes
+
+#### Manual
+
+- [ ] 6.4 Empty `PROTECTED_ROUTES` in `src/middleware.ts` → `npm test` turns red on middleware tests; restore → green
+- [ ] 6.5 `/auth/signin` test stays 200 (no redirect loop confirmed)
+
+### Phase 7: Secret-leak integration test
+
+#### Automated
+
+- [ ] 7.1 `npm test` passes — 2 new secret-leak tests green (total ≥8 across 3 suites)
+- [ ] 7.2 `npm run lint` passes on `tests/integration/secret-leak.test.ts`
+- [ ] 7.3 `npx tsc --noEmit` passes
+
+#### Manual
+
+- [ ] 7.4 Temporarily inject `process.env.SUPABASE_TEST_ANON_KEY` into the 401 response body → `npm test` turns red; revert → green
+
+### Phase 8: Cookbook update (§6.3 and §6.4)
+
+#### Automated
+
+- [ ] 8.1 `npm run lint` passes (test-plan.md valid markdown)
+
+#### Manual
+
+- [ ] 8.2 §6.3 filled in — middleware redirect pattern documented for future contributors
+- [ ] 8.3 §6.4 filled in — secret-leak pattern documented for future contributors
+- [ ] 8.4 §3 Phase 1 row shows `complete`

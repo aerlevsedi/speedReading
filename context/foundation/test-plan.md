@@ -55,7 +55,7 @@ Status vocabulary (parser literals): `not started` → `change opened` → `rese
 
 | # | Phase name | Goal | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
-| 1 | Bootstrap + auth/access integration | Wire test runner; prove RLS isolation, middleware redirect, and no-secret-leak via first integration tests | #1, #3, #6 | Integration (real local Supabase + HTTP); test runner bootstrap | change opened | context/changes/testing-bootstrap-auth-access/ |
+| 1 | Bootstrap + auth/access integration | Wire test runner; prove RLS isolation, middleware redirect, and no-secret-leak via first integration tests | #1, #3, #6 | Integration (real local Supabase + HTTP); test runner bootstrap | implementing | context/changes/testing-bootstrap-auth-access/ |
 | 2 | Completion pipeline correctness | Prove completion record lands in DB and WPM value is in a sane range after API returns 200 | #2 | Integration (real DB write + query back) | not started | — |
 | 3 | Dataset alternation and cold-start | Prove dataset rotation algorithm is correct and pages survive empty history without crashing | #4, #5 | Unit / integration (algorithm + page render with empty fixture) | not started | — |
 | 4 | Quality-gates wiring | Add test run step to CI so all of the above is enforced on every push | all | CI gate (GitHub Actions workflow update) | not started | — |
