@@ -55,7 +55,7 @@ Status vocabulary (parser literals): `not started` → `change opened` → `rese
 
 | # | Phase name | Goal | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
-| 1 | Bootstrap + auth/access integration | Wire test runner; prove RLS isolation, middleware redirect, and no-secret-leak via first integration tests | #1, #3, #6 | Integration (real local Supabase + HTTP); test runner bootstrap | implementing | context/changes/testing-bootstrap-auth-access/ |
+| 1 | Bootstrap + auth/access integration | Wire test runner; prove RLS isolation, middleware redirect, and no-secret-leak via first integration tests | #1, #3, #6 | Integration (real local Supabase + HTTP); test runner bootstrap | complete | context/changes/testing-bootstrap-auth-access/ |
 | 2 | Completion pipeline correctness | Prove completion record lands in DB and WPM value is in a sane range after API returns 200 | #2 | Integration (real DB write + query back) | not started | — |
 | 3 | Dataset alternation and cold-start | Prove dataset rotation algorithm is correct and pages survive empty history without crashing | #4, #5 | Unit / integration (algorithm + page render with empty fixture) | not started | — |
 | 4 | Quality-gates wiring | Add test run step to CI so all of the above is enforced on every push | all | CI gate (GitHub Actions workflow update) | not started | — |
@@ -134,11 +134,56 @@ The reference test uses a two-user pattern:
 
 ### 6.3 Middleware redirect integration test
 
-TBD — see §3 Phase 1 (Bootstrap + auth/access integration)
+**Location:** `tests/integration/middleware-redirect.test.ts`
+
+**Run command:**
+- All integration tests: `npm test`
+- Single file: `npx vitest run tests/integration/middleware-redirect.test.ts`
+
+**Server dependency:** Requires `tests/globalSetup.ts` — Vitest runs it once before any suite. It spawns `astro dev` on port 4322 and exposes the base URL via `process.env.TEST_SERVER_URL`. No manual server start needed.
+
+**Key technique:** Use `fetch(url, { redirect: "manual" })` — this prevents Node from auto-following the 302. Lets you assert `response.status === 302` and `response.headers.get("Location")` in a single request.
+
+**No-loop assertion:** Always add a test that `GET /auth/signin` returns `200` (not a redirect). This proves no redirect loop exists — if `/auth/signin` ever lands in `PROTECTED_ROUTES` by mistake, the test turns red.
+
+**Adding a new protected-route assertion:**
+1. Add an `it` block inside the existing `describe`.
+2. `fetch(`${BASE_URL}/your-new-route`, { redirect: "manual" })`.
+3. Assert `response.status === 302` and `response.headers.get("Location")?.startsWith("/auth/signin")`.
+4. No `beforeAll`/`afterAll` needed — globalSetup manages the server.
+
+**Regressions caught:**
+- `PROTECTED_ROUTES` array modified (routes removed or renamed) → protected route returns 200 instead of 302
+- `startsWith("/")` replaced with `===` exact match → `/exercise/abc` bypasses protection (only `/exercise` exact would match)
+- Redirect target changed to a different path → `Location` header assertion fails
+- `/auth/signin` added to `PROTECTED_ROUTES` by mistake → test 4 returns 302 instead of 200 (loop regression)
 
 ### 6.4 Secret-leak integration test
 
-TBD — see §3 Phase 1 (Bootstrap + auth/access integration)
+**Location:** `tests/integration/secret-leak.test.ts`
+
+**Run command:**
+- All integration tests: `npm test`
+- Single file: `npx vitest run tests/integration/secret-leak.test.ts`
+
+**Key technique:** Read the actual secret value from `process.env.SUPABASE_TEST_ANON_KEY` at test time. Assert `expect(body).not.toContain(secretValue)`. Do **not** hardcode the key in the test — hardcoding defeats the assertion when keys rotate and creates a false sense of coverage.
+
+**Trigger selection:** Pick one error path that fires without a session (session-check branch, e.g. 401) and one that fires with a DB call (e.g. 404 for a non-existent resource). Together they cover the two distinct error branches most likely to accidentally surface raw Supabase error objects.
+
+**What to assert absent in each response body:**
+- `process.env.SUPABASE_TEST_ANON_KEY` — the anon key string
+- `process.env.SUPABASE_TEST_URL` — the Supabase instance URL
+- `"Bearer "` — any bearer token substring
+- Stack trace pattern (e.g. `"Error:"`, `"at Object."`)
+
+**Adding a new secret-leak assertion for a new API route:**
+1. Add an `it` block inside the existing `describe`.
+2. Trigger the error path (remove cookie, pass a bad ID, etc.).
+3. `const body = await response.text()`.
+4. Assert `expect(body).not.toContain(anonKey)` and `expect(body).not.toContain(supabaseUrl)`.
+5. No fixture setup needed if the error fires before any DB call.
+
+**Red/green verification:** Temporarily add the key to the error response body (e.g. `JSON.stringify({ error: "Unauthorized", debug: process.env.SUPABASE_TEST_ANON_KEY })`) → `npm test` turns red. Revert → green. This confirms the test would catch a real key-in-body regression.
 
 ### 6.5 Completion API DB-write integration test
 

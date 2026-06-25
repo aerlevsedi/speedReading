@@ -557,22 +557,22 @@ Fill in `context/foundation/test-plan.md §6.3` (middleware redirect cookbook) a
 
 #### Automated
 
-- [x] 7.1 `npm test` passes — 2 new secret-leak tests green (total ≥8 across 3 suites)
-- [x] 7.2 `npm run lint` passes on `tests/integration/secret-leak.test.ts`
-- [x] 7.3 `npx tsc --noEmit` passes
+- [x] 7.1 `npm test` passes — 2 new secret-leak tests green (total ≥8 across 3 suites) — eb5e91a
+- [x] 7.2 `npm run lint` passes on `tests/integration/secret-leak.test.ts` — eb5e91a
+- [x] 7.3 `npx tsc --noEmit` passes — eb5e91a
 
 #### Manual
 
-- [x] 7.4 Temporarily inject `process.env.SUPABASE_TEST_ANON_KEY` into the 401 response body → `npm test` turns red; revert → green
+- [x] 7.4 Temporarily inject `process.env.SUPABASE_TEST_ANON_KEY` into the 401 response body → `npm test` turns red; revert → green — eb5e91a
 
 ### Phase 8: Cookbook update (§6.3 and §6.4)
 
 #### Automated
 
-- [ ] 8.1 `npm run lint` passes (test-plan.md valid markdown)
+- [x] 8.1 `npm run lint` passes (test-plan.md valid markdown)
 
 #### Manual
 
-- [ ] 8.2 §6.3 filled in — middleware redirect pattern documented for future contributors
-- [ ] 8.3 §6.4 filled in — secret-leak pattern documented for future contributors
-- [ ] 8.4 §3 Phase 1 row shows `complete`
+- [x] 8.2 §6.3 filled in — middleware redirect pattern documented for future contributors
+- [x] 8.3 §6.4 filled in — secret-leak pattern documented for future contributors
+- [x] 8.4 §3 Phase 1 row shows `complete`

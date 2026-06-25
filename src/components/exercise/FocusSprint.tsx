@@ -10,7 +10,7 @@ interface Props {
 }
 
 // Hard-coded comprehension questions per dataset
-const QUESTIONS_BY_DATASET: Record<string, { text: string; options: string[]; correctIndex: number }[]> = {
+const QUESTIONS_BY_DATASET: Partial<Record<string, { text: string; options: string[]; correctIndex: number }[]>> = {
   dataset_1: [
     // CSS Layout questions
     {

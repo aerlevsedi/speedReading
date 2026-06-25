@@ -17,7 +17,7 @@ interface Props {
 }
 
 // Hard-coded questions per dataset for information recall
-const QUESTIONS_BY_DATASET: Record<string, Question[]> = {
+const QUESTIONS_BY_DATASET: Partial<Record<string, Question[]>> = {
   dataset_1: [
     // Web Performance questions
     {

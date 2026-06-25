@@ -27,7 +27,7 @@ export async function getNextExerciseForType(
   if (historyResult.data) {
     // Type assertion for exercises nested data with null safety
     const exercisesData = historyResult.data.exercises as unknown as { dataset_id?: string };
-    const lastDataset = exercisesData?.dataset_id ?? "dataset_1";
+    const lastDataset = exercisesData.dataset_id ?? "dataset_1";
     // Alternate between dataset_1 and dataset_2
     selectedDataset = lastDataset === "dataset_1" ? "dataset_2" : "dataset_1";
   }
