@@ -569,10 +569,10 @@ Fill in `context/foundation/test-plan.md §6.3` (middleware redirect cookbook) a
 
 #### Automated
 
-- [x] 8.1 `npm run lint` passes (test-plan.md valid markdown)
+- [x] 8.1 `npm run lint` passes (test-plan.md valid markdown) — dcedb97
 
 #### Manual
 
-- [x] 8.2 §6.3 filled in — middleware redirect pattern documented for future contributors
-- [x] 8.3 §6.4 filled in — secret-leak pattern documented for future contributors
-- [x] 8.4 §3 Phase 1 row shows `complete`
+- [x] 8.2 §6.3 filled in — middleware redirect pattern documented for future contributors — dcedb97
+- [x] 8.3 §6.4 filled in — secret-leak pattern documented for future contributors — dcedb97
+- [x] 8.4 §3 Phase 1 row shows `complete` — dcedb97
