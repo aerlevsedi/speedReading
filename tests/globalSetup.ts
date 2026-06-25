@@ -6,11 +6,13 @@ const POLL_INTERVAL_MS = 500;
 const TIMEOUT_MS = 60_000;
 
 let child: ChildProcess | null = null;
+let spawnError: Error | null = null;
 
 async function waitForServer(): Promise<void> {
   const deadline = Date.now() + TIMEOUT_MS;
 
   while (Date.now() < deadline) {
+    if (spawnError) throw spawnError;
     try {
       const response = await fetch(BASE_URL);
       if (response.ok || response.status < 500) return;
@@ -32,7 +34,7 @@ export async function setup(): Promise<void> {
   });
 
   child.on("error", (err) => {
-    throw new Error(`Failed to start Astro dev server: ${err.message}`);
+    spawnError = new Error(`Failed to start Astro dev server: ${err.message}`);
   });
 
   process.env.TEST_SERVER_URL = BASE_URL;
@@ -45,16 +47,14 @@ export async function teardown(): Promise<void> {
 
   const proc = child;
   return new Promise<void>((resolve) => {
-    proc.on("close", () => {
-      resolve();
-    });
     proc.kill("SIGTERM");
-
-    setTimeout(() => {
-      if (!proc.killed) {
-        proc.kill("SIGKILL");
-      }
+    const t = setTimeout(() => {
+      if (!proc.killed) proc.kill("SIGKILL");
       resolve();
     }, 5_000);
+    proc.on("close", () => {
+      clearTimeout(t);
+      resolve();
+    });
   });
 }
