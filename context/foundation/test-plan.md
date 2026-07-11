@@ -56,8 +56,8 @@ Status vocabulary (parser literals): `not started` → `change opened` → `rese
 | # | Phase name | Goal | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
 | 1 | Bootstrap + auth/access integration | Wire test runner; prove RLS isolation, middleware redirect, and no-secret-leak via first integration tests | #1, #3, #6 | Integration (real local Supabase + HTTP); test runner bootstrap | complete | context/changes/testing-bootstrap-auth-access/ |
-| 2 | Completion pipeline correctness | Prove completion record lands in DB and WPM value is in a sane range after API returns 200 | #2 | Integration (real DB write + query back) | not started | — |
-| 3 | Dataset alternation and cold-start | Prove dataset rotation algorithm is correct and pages survive empty history without crashing | #4, #5 | Unit / integration (algorithm + page render with empty fixture) | not started | — |
+| 2 | Completion pipeline correctness | Prove completion record lands in DB and WPM value is in a sane range after API returns 200 | #2 | Integration (real DB write + query back) | complete | context/changes/completion-pipeline-correctness/ |
+| 3 | Dataset alternation and cold-start | Prove dataset rotation algorithm is correct and pages survive empty history without crashing | #4, #5 | Unit / integration (algorithm + page render with empty fixture) | complete | context/changes/dataset-alternation-coldstart/ |
 | 4 | Quality-gates wiring | Add test run step to CI so all of the above is enforced on every push | all | CI gate (GitHub Actions workflow update) | not started | — |
 
 ---
@@ -187,15 +187,86 @@ The reference test uses a two-user pattern:
 
 ### 6.5 Completion API DB-write integration test
 
-TBD — see §3 Phase 2 (Completion pipeline correctness)
+**File:** `tests/integration/completion-pipeline.test.ts`
+
+**Risk covered:** Risk #2 — silent DB write failure masked by a successful-looking redirect. `POST /api/exercises/complete` always 302-redirects; status code alone cannot distinguish success from failure.
+
+**Why integration, not hermetic:** The rule involves a real DB insert + RLS SELECT policy. A mock would lie about FK violations and RLS constraints — the whole point is to prove the row actually landed.
+
+**Test structure:**
+
+1. `beforeAll` — create fixture user via `createFixtureUser`, sign in via `POST /api/auth/signin` with real FormData, collect `Set-Cookie` headers into `cookieHeader` string.
+2. `afterAll` — `deleteFixtureUsers` (cascade removes completions).
+
+**Three tests:**
+
+1. **Happy path** — authenticated POST with `{ exercise_id: SEEDED_EXERCISE_ID, duration_seconds: "60", errors: "0" }` → assert `302`, location starts with `/results/`, extract `completionId` from URL, query via `adminClient()` → assert `user_id`, `duration_seconds`, `type_data.wpm === 262`. Read-back via `authClient(jwt)` proves SELECT RLS allows owner.
+2. **FK violation** — POST with `exercise_id = "00000000-0000-0000-0000-000000000000"` → assert `302`, location contains `/dashboard` and `error=`.
+3. **Unauthenticated** — POST without `Cookie` header → assert `302`, location matches `/auth/signin`.
+
+**Key invariants:**
+- `EXPECTED_WPM = 262` — seeded exercise has 262 words; `Math.round(262 / (60/60)) = 262`.
+- Cookie injection: strip attributes (`Path=`, `Expires=`, etc.) — keep only `name=value` pairs joined with `; `.
+- Use `fetch({ redirect: "manual" })` on all requests — Astro redirects must not be auto-followed.
+
+**Red/green verification:** Comment out the `adminClient` DB assertions — all three tests still pass (redirect alone is not a guard). Restore assertions — tests prove the write actually happened. This is the core anti-vibe-testing check for this risk.
 
 ### 6.6 Dataset alternation unit/integration test
 
-TBD — see §3 Phase 3 (Dataset alternation and cold-start)
+**File:** `tests/integration/dataset-alternation.test.ts`
+
+**Risk covered:** Risk #4 — dataset alternation always returns the same dataset; retry mechanic broken for all users. The algorithm lives in `src/lib/services/exerciseService.ts:9-49` and is exercised via `GET /api/exercises/next-for-type?type=<type>`.
+
+**Why integration, not unit:** The alternation decision reads real rows from `exercise_completions`. A mock would lie about DB state — the test must prove the query + ternary + DB read all work together.
+
+**Test structure:**
+
+1. `beforeAll` — `createFixtureUser`, sign in via `POST /api/auth/signin`, collect `cookieHeader`.
+2. `afterAll` — `deleteFixtureUsers` (cascade removes completions).
+3. `beforeEach` — `adminClient().from("exercise_completions").delete().eq("user_id", userId)` — clears completions so each `it()` starts from a known state. Critical: without this, test order would affect results.
+
+**Four tests:**
+
+1. **Cold-start** — no completions → `GET /api/exercises/next-for-type?type=animated_pacer` → `body.dataset_id === "dataset_1"`
+2. **d1→d2** — insert completion for `ANIMATED_PACER_DATASET1_ID` → GET → `body.dataset_id === "dataset_2"`
+3. **d2→d1** — insert completion for `ANIMATED_PACER_DATASET2_ID` → GET → `body.dataset_id === "dataset_1"`
+4. **Per-type isolation** — insert completion for `animated_pacer` dataset_1 → GET `focus_sprint` → `body.dataset_id === "dataset_1"` (cold-start default, unaffected by animated_pacer history)
+
+**Key constants** (from `tests/helpers/fixtures.ts`):
+- `ANIMATED_PACER_DATASET1_ID = "a0000000-0000-0000-0000-000000000001"`
+- `ANIMATED_PACER_DATASET2_ID = "a0000000-0000-0000-0000-000000000002"`
+
+**Adding a new alternation assertion for a new exercise type:**
+1. Add the exercise ID constants to `tests/helpers/fixtures.ts`.
+2. Add an `it()` block inside the existing `describe` (the `beforeEach` cleanup already covers it).
+3. Pattern: insert completion via `adminClient()`, GET the endpoint, assert `body.dataset_id`.
+
+**Red/green verification:** Change the cold-start `it()` assertion from `"dataset_1"` to `"dataset_2"` → `npm test` turns red. Restore → green. This confirms the test catches a real alternation regression.
 
 ### 6.7 Cold-start render integration test
 
-TBD — see §3 Phase 3 (Dataset alternation and cold-start)
+**File:** `tests/integration/dashboard-coldstart.test.ts`
+
+**Risk covered:** Risk #5 — dashboard or results page crashes for a new user with empty completion history.
+
+**Why HTTP render test, not unit test:** `src/pages/dashboard.astro` calls `getNextExerciseForType` directly via server-side import — not through the HTTP endpoint. Only an HTTP render test exercises the full path including the null-filter guard and `exercises.length > 0` check.
+
+**Test structure:**
+
+1. `beforeAll` — `createFixtureUser`, sign in via `POST /api/auth/signin`, collect `cookieHeader`. No completions inserted — user stays at 0 throughout.
+2. `afterAll` — `deleteFixtureUsers`.
+
+**One test:**
+
+- `GET {BASE_URL}/dashboard` with session cookie → assert `response.status === 200`
+- `const html = await response.text()`
+- `expect(html).toContain("/exercise/")` — at least one exercise card link rendered (proves seed data was fetched and card rendered, not just that the server didn't crash)
+- `expect(html).not.toContain("Error:")` — no unhandled error in body
+- `expect(html).not.toContain("at Object.")` — no stack trace in body
+
+**Why `/exercise/` in href:** Dashboard `ExerciseCard` components link to `/exercise/[id]`. Presence proves the seed data was fetched and at least one card rendered — stronger signal than status 200 alone.
+
+**Red/green verification:** Change `toContain("/exercise/")` to `toContain("/exercise/THIS-SHOULD-NOT-EXIST")` → `npm test` turns red. Restore → green. This confirms the assertion catches a real cold-start render regression.
 
 ---
 

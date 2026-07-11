@@ -298,22 +298,22 @@ Fill in the two TBD cookbook entries in `test-plan.md` and advance Phase 3 rollo
 
 #### Automated
 
-- [x] 2.1 `npm test` passes with 1 new cold-start test green
-- [x] 2.2 `npm run lint` passes
-- [x] 2.3 `npm run typecheck` passes
+- [x] 2.1 `npm test` passes with 1 new cold-start test green — a1df496
+- [x] 2.2 `npm run lint` passes — a1df496
+- [x] 2.3 `npm run typecheck` passes — a1df496
 
 #### Manual
 
-- [x] 2.4 Test passes against local Supabase
-- [x] 2.5 Destructive verify: break dashboard service call → test turns red on `/exercise/` assertion; restore → green
+- [x] 2.4 Test passes against local Supabase — a1df496
+- [x] 2.5 Destructive verify: break dashboard service call → test turns red on `/exercise/` assertion; restore → green — a1df496
 
 ### Phase 3: Cookbook §6.6 + §6.7 + rollout sync
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
-- [ ] 3.2 `npm run typecheck` passes
+- [x] 3.1 `npm run lint` passes
+- [x] 3.2 `npm run typecheck` passes
 
 #### Manual
 
-- [ ] 3.3 §6.6 and §6.7 in test-plan.md are filled in (not TBD); §3 Phase 3 row shows `complete`
+- [x] 3.3 §6.6 and §6.7 in test-plan.md are filled in (not TBD); §3 Phase 3 row shows `complete`
