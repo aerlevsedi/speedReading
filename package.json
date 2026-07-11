@@ -67,6 +67,15 @@
     ],
     "*.{json,css,md}": [
       "prettier --write"
+    ],
+    "src/pages/api/exercises/**/*.{ts,tsx,astro}": [
+      "AI_AGENT=1 npx vitest related --run"
+    ],
+    "src/middleware.ts": [
+      "AI_AGENT=1 npx vitest related --run"
+    ],
+    "src/lib/services/**/*.{ts,tsx}": [
+      "AI_AGENT=1 npx vitest related --run"
     ]
   }
 }
