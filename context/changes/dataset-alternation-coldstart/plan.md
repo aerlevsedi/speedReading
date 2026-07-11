@@ -285,27 +285,27 @@ Fill in the two TBD cookbook entries in `test-plan.md` and advance Phase 3 rollo
 
 #### Automated
 
-- [x] 1.1 `npm test` passes with 4 new alternation tests green
-- [x] 1.2 `npm run lint` passes (no new lint errors)
-- [x] 1.3 `npm run typecheck` passes (no new type errors)
+- [x] 1.1 `npm test` passes with 4 new alternation tests green — 8e48bfb
+- [x] 1.2 `npm run lint` passes (no new lint errors) — 8e48bfb
+- [x] 1.3 `npm run typecheck` passes (no new type errors) — 8e48bfb
 
 #### Manual
 
-- [x] 1.4 All 4 tests pass against local Supabase (`npx supabase start`)
-- [x] 1.5 Destructive verify: change cold-start assertion to `"dataset_2"` → test turns red; restore → green
+- [x] 1.4 All 4 tests pass against local Supabase (`npx supabase start`) — 8e48bfb
+- [x] 1.5 Destructive verify: change cold-start assertion to `"dataset_2"` → test turns red; restore → green — 8e48bfb
 
 ### Phase 2: Cold-start dashboard integration test
 
 #### Automated
 
-- [ ] 2.1 `npm test` passes with 1 new cold-start test green
-- [ ] 2.2 `npm run lint` passes
-- [ ] 2.3 `npm run typecheck` passes
+- [x] 2.1 `npm test` passes with 1 new cold-start test green
+- [x] 2.2 `npm run lint` passes
+- [x] 2.3 `npm run typecheck` passes
 
 #### Manual
 
-- [ ] 2.4 Test passes against local Supabase
-- [ ] 2.5 Destructive verify: break dashboard service call → test turns red on `/exercise/` assertion; restore → green
+- [x] 2.4 Test passes against local Supabase
+- [x] 2.5 Destructive verify: break dashboard service call → test turns red on `/exercise/` assertion; restore → green
 
 ### Phase 3: Cookbook §6.6 + §6.7 + rollout sync
 
