@@ -311,9 +311,9 @@ Fill in the two TBD cookbook entries in `test-plan.md` and advance Phase 3 rollo
 
 #### Automated
 
-- [x] 3.1 `npm run lint` passes
-- [x] 3.2 `npm run typecheck` passes
+- [x] 3.1 `npm run lint` passes — 27e0c78
+- [x] 3.2 `npm run typecheck` passes — 27e0c78
 
 #### Manual
 
-- [x] 3.3 §6.6 and §6.7 in test-plan.md are filled in (not TBD); §3 Phase 3 row shows `complete`
+- [x] 3.3 §6.6 and §6.7 in test-plan.md are filled in (not TBD); §3 Phase 3 row shows `complete` — 27e0c78
