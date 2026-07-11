@@ -12,10 +12,15 @@
 //   /exercise/[id] redirects unauthenticated users to /dashboard (not /auth/signin),
 //   so only the middleware can produce a clean redirect to /auth/signin for /exercise/*.
 //   This makes the test verify the middleware specifically, not page-level fallback.
+//
+// storageState: undefined — overrides the global storageState so this test runs without
+// a session cookie, testing the unauthenticated path specifically.
 import { test, expect } from "@playwright/test";
 
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test("unauthenticated request to /exercise/* redirects to /auth/signin via middleware", async ({ page }) => {
-  // Step 1: navigate to a protected route without a session cookie (fresh context has none)
+  // Step 1: navigate to a protected route without a session cookie (storageState cleared above)
   await page.goto("/exercise/00000000-0000-0000-0000-000000000000");
 
   // Step 2: wait for middleware redirect to land — state, not time

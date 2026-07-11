@@ -33,3 +33,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Playwright auth state (contains session cookies)
+playwright/.auth/
