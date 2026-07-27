@@ -31,6 +31,67 @@ jobs:
           path: dist/
           retention-days: 1
 
+  test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Start local Supabase
+        run: npx supabase start
+
+      - name: Export local Supabase credentials
+        run: |
+          SUPABASE_STATUS=$(npx supabase status)
+          echo "SUPABASE_TEST_URL=$(echo "$SUPABASE_STATUS" | grep 'API URL' | awk '{print $NF}')" >> $GITHUB_ENV
+          echo "SUPABASE_TEST_ANON_KEY=$(echo "$SUPABASE_STATUS" | grep 'anon key' | awk '{print $NF}')" >> $GITHUB_ENV
+          echo "SUPABASE_TEST_SERVICE_ROLE_KEY=$(echo "$SUPABASE_STATUS" | grep 'service_role key' | awk '{print $NF}')" >> $GITHUB_ENV
+
+      - name: Run integration tests (Vitest)
+        run: npm test
+        env:
+          SUPABASE_URL: ${{ env.SUPABASE_TEST_URL }}
+          SUPABASE_KEY: ${{ env.SUPABASE_TEST_ANON_KEY }}
+
+  e2e:
+    name: E2E Tests (unauthenticated flows)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Start local Supabase
+        run: npx supabase start
+
+      - name: Export local Supabase credentials
+        run: |
+          SUPABASE_STATUS=$(npx supabase status)
+          echo "SUPABASE_TEST_URL=$(echo "$SUPABASE_STATUS" | grep 'API URL' | awk '{print $NF}')" >> $GITHUB_ENV
+          echo "SUPABASE_TEST_ANON_KEY=$(echo "$SUPABASE_STATUS" | grep 'anon key' | awk '{print $NF}')" >> $GITHUB_ENV
+
+      - name: Run E2E tests (unauthenticated only)
+        run: npx playwright test tests/e2e/seed.spec.ts
+        env:
+          CI: true
+          SUPABASE_URL: ${{ env.SUPABASE_TEST_URL }}
+          SUPABASE_KEY: ${{ env.SUPABASE_TEST_ANON_KEY }}
+
   deploy:
     name: Deploy to Cloudflare Workers
     needs: ci
