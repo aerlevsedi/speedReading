@@ -10,14 +10,14 @@ Add the ability for users to set a global reading speed goal (WPM) and see goal 
 - `src/pages/dashboard.astro` — shows exercise cards and user email. No goal display.
 - No `user_goals` table, no `profiles` table — goal storage is entirely absent from the DB.
 - No API endpoints for goals.
-- WPM is computed and stored in `exercise_completions.type_data.wpm` for `animated_pacer` and `focus_sprint`. Results page already conditionally shows WPM (`showWpm` flag, line 53).
+- WPM is computed and stored in `exercise_completions.type_data.wpm` for `focus_sprint` and `focus_sprint`. Results page already conditionally shows WPM (`showWpm` flag, line 53).
 - Supabase client pattern: `const result = await supabase...` then `result.data` / `result.error` (codebase-wide convention per lessons.md).
 - `createClient` returns null on missing env vars — all callers null-check before use (lessons.md).
 - `user_id` is always derived from `context.locals.user` / `Astro.locals.user`, never from client input (lessons.md security rule).
 
 ### Key Discoveries:
 
-- `src/pages/results/[id].astro:53` — `showWpm` already gates WPM display to `animated_pacer` and `focus_sprint`; goal comparison will additionally gate on `animated_pacer` only.
+- `src/pages/results/[id].astro:53` — `showWpm` already gates WPM display to `focus_sprint` and `focus_sprint`; goal comparison will additionally gate on `focus_sprint` only.
 - `src/pages/dashboard.astro:10` — supabase client created on every page load; the goal + latest WPM query fits naturally in the same server block.
 - `supabase/migrations/` — three existing migrations; new goal migration will be `20260727000000_create_user_goals.sql`.
 - shadcn/ui Progress component exists at `src/components/ui/progress.tsx` (standard shadcn — verify it's installed; if not, add with `npx shadcn@latest add progress`).
@@ -191,7 +191,7 @@ Add a goal display + inline edit to the dashboard. Shows current goal (or "Set g
 **Contract**: After the existing `createClient` null-check and before the exercise fetches, add two Supabase queries:
 
 1. `user_goals` — select `target_wpm` where `user_id = user.id`, single row (may be null).
-2. `exercise_completions` — join `exercises`, filter `user_id = user.id` and `exercise_type = 'animated_pacer'`, order by `completed_at DESC`, limit 1 — extract `type_data.wpm`.
+2. `exercise_completions` — join `exercises`, filter `user_id = user.id` and `exercise_type = 'focus_sprint'`, order by `completed_at DESC`, limit 1 — extract `type_data.wpm`.
 
 Use the `result` pattern per lessons.md. Both queries should be non-blocking on failure (treat null as "no data").
 
@@ -268,7 +268,7 @@ On the results page, for Animated Pacer completions: fetch the user's goal serve
 **Intent**: Add a goal comparison section below the metrics grid, visible only on Animated Pacer completions. Shows progress bar + percentage if goal is set; shows "Set your reading speed goal" CTA linking to `/dashboard` if no goal is set.
 
 **Contract**:
-- Gating condition: `exercise.exercise_type === 'animated_pacer'` (not `showWpm` — goal applies to Animated Pacer only, not Focus Sprint)
+- Gating condition: `exercise.exercise_type === 'focus_sprint'` (not `showWpm` — goal applies to Focus Sprint only, not Focus Sprint)
 - When goal set: display label "Reading Speed Goal", Progress component value = `Math.min((wpm / targetWpm) * 100, 100)`, text below: `{wpm} wpm / {targetWpm} wpm — {pct}%` (cap pct display at 100% even if over goal; optionally show "Goal reached!" when over)
 - When no goal: render a card or banner with text "Set your reading speed goal to track your progress" + link `<a href="/dashboard">Set goal</a>`
 
@@ -344,31 +344,31 @@ No existing data migration needed. `user_goals` is a new table; existing users s
 
 #### Automated
 
-- [x] 2.1 npm run build passes
-- [x] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes — 5850827
+- [x] 2.2 npm run lint passes — 5850827
 
 #### Manual
 
-- [x] 2.3 Authenticated POST with valid wpm returns success
-- [x] 2.4 Subsequent POST updates row (upsert, no duplicate)
-- [x] 2.5 Out-of-range values return 400
-- [x] 2.6 Unauthenticated POST returns 401
+- [x] 2.3 Authenticated POST with valid wpm returns success — 5850827
+- [x] 2.4 Subsequent POST updates row (upsert, no duplicate) — 5850827
+- [x] 2.5 Out-of-range values return 400 — 5850827
+- [x] 2.6 Unauthenticated POST returns 401 — 5850827
 
 ### Phase 3: Dashboard Goal Widget
 
 #### Automated
 
-- [ ] 3.1 npm run build passes
-- [ ] 3.2 npm run lint passes
+- [x] 3.1 npm run build passes
+- [x] 3.2 npm run lint passes
 
 #### Manual
 
-- [ ] 3.3 Dashboard shows "Set goal" prompt when no goal set
-- [ ] 3.4 Inline edit with hint ranges opens on click
-- [ ] 3.5 Saving updates display without page reload
-- [ ] 3.6 Out-of-range input shows error message
-- [ ] 3.7 Latest Animated Pacer WPM shown alongside goal
-- [ ] 3.8 Goal persists after page refresh
+- [x] 3.3 Dashboard shows "Set goal" prompt when no goal set
+- [x] 3.4 Inline edit with hint ranges opens on click
+- [x] 3.5 Saving updates display without page reload
+- [x] 3.6 Out-of-range input shows error message
+- [x] 3.7 Latest Focus Sprint WPM shown alongside goal
+- [x] 3.8 Goal persists after page refresh
 
 ### Phase 4: Results Page Goal Comparison
 

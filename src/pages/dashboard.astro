@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
 import { getNextExerciseForType } from "@/lib/services/exerciseService";
 import ExerciseCard from "@/components/dashboard/ExerciseCard";
+import GoalWidget from "@/components/dashboard/GoalWidget";
 import Banner from "@/components/Banner.astro";
 import type { Exercise } from "@/types";
 
@@ -17,6 +18,28 @@ if (!user) {
 }
 
 const error = Astro.url.searchParams.get("error");
+
+// Fetch user's current WPM goal
+const goalResult = await supabase.from("user_goals").select("target_wpm").eq("user_id", user.id).maybeSingle();
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const currentGoal: number | null = goalResult.data?.target_wpm ?? null;
+
+// Fetch latest Animated Pacer WPM via two-step: get exercise ids of the right type, then latest completion
+const apExercisesResult = await supabase.from("exercises").select("id").eq("exercise_type", "focus_sprint");
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return
+const apIds: string[] = apExercisesResult.data?.map((r) => r.id) ?? [];
+let latestWpm: number | null = null;
+if (apIds.length > 0) {
+  const latestResult = await supabase
+    .from("exercise_completions")
+    .select("type_data")
+    .eq("user_id", user.id)
+    .in("exercise_id", apIds)
+    .order("completed_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  latestWpm = (latestResult.data?.type_data as { wpm?: number } | null)?.wpm ?? null;
+}
 
 // Fetch one exercise per type using dataset selection logic
 // Note: Smart Questions removed 2026-06-08 (incomplete design, redundant with Focus Sprint)
@@ -52,6 +75,7 @@ try {
         <p class="text-blue-100/80">
           Welcome back, <span class="font-semibold text-white">{user.email}</span>
         </p>
+        <GoalWidget currentGoal={currentGoal} latestWpm={latestWpm} client:load />
         <form method="POST" action="/api/auth/signout" class="mt-4">
           <button
             type="submit"
