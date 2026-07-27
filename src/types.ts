@@ -42,3 +42,11 @@ export interface Completion {
   };
   completed_at: string; // ISO timestamp
 }
+
+export interface UserGoal {
+  id: string;
+  user_id: string;
+  target_wpm: number;
+  created_at: string;
+  updated_at: string;
+}
