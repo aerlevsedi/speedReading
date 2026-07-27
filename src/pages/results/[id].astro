@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import type { Completion, Exercise } from "@/types";
 import { CheckCircle2, XCircle, Clock, Zap } from "lucide-react";
 
@@ -51,6 +52,17 @@ const correctAnswers = totalQuestions - completion.errors;
 
 // WPM is shown for all reading exercises (all types read text)
 const showWpm = exercise.exercise_type === "animated_pacer" || exercise.exercise_type === "focus_sprint";
+
+// Goal comparison: only for Focus Sprint (user-paced, true WPM baseline)
+const showGoalComparison = exercise.exercise_type === "focus_sprint";
+let targetWpm: number | null = null;
+if (showGoalComparison) {
+  const goalResult = await supabase.from("user_goals").select("target_wpm").eq("user_id", user.id).maybeSingle();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  targetWpm = goalResult.data?.target_wpm ?? null;
+}
+const goalPct = targetWpm && wpm > 0 ? Math.min(Math.round((wpm / targetWpm) * 100), 100) : null;
+const goalReached = targetWpm !== null && wpm >= targetWpm;
 
 // Format duration as MM:SS
 const minutes = Math.floor(completion.duration_seconds / 60);
@@ -105,6 +117,36 @@ const formattedDuration = `${minutes}:${seconds.toString().padStart(2, "0")}`;
           )
         }
       </div>
+
+      <!-- Goal Comparison (Focus Sprint only) -->
+      {
+        showGoalComparison && (
+          <div class="mb-8 rounded-2xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+            <h2 class="mb-4 text-sm font-semibold tracking-wide text-blue-100/60 uppercase">Reading Speed Goal</h2>
+            {targetWpm !== null && goalPct !== null ? (
+              <div>
+                <div class="mb-3 flex items-baseline justify-between">
+                  <span class="text-lg font-bold text-white">
+                    {wpm} wpm / {targetWpm} wpm
+                  </span>
+                  <span class:list={["text-sm font-semibold", goalReached ? "text-green-300" : "text-blue-200"]}>
+                    {goalReached ? "Goal reached! 🎉" : `${goalPct}%`}
+                  </span>
+                </div>
+                <Progress value={goalPct} className="h-3" client:load />
+              </div>
+            ) : (
+              <p class="text-sm text-blue-100/60">
+                No goal set yet.{" "}
+                <a href="/dashboard" class="text-blue-300 underline underline-offset-2 hover:text-blue-200">
+                  Set your reading speed goal
+                </a>{" "}
+                to track your progress.
+              </p>
+            )}
+          </div>
+        )
+      }
 
       <!-- Navigation -->
       <div class="text-center">

@@ -358,28 +358,28 @@ No existing data migration needed. `user_goals` is a new table; existing users s
 
 #### Automated
 
-- [x] 3.1 npm run build passes
-- [x] 3.2 npm run lint passes
+- [x] 3.1 npm run build passes — 3b697d2
+- [x] 3.2 npm run lint passes — 3b697d2
 
 #### Manual
 
-- [x] 3.3 Dashboard shows "Set goal" prompt when no goal set
-- [x] 3.4 Inline edit with hint ranges opens on click
-- [x] 3.5 Saving updates display without page reload
-- [x] 3.6 Out-of-range input shows error message
-- [x] 3.7 Latest Focus Sprint WPM shown alongside goal
-- [x] 3.8 Goal persists after page refresh
+- [x] 3.3 Dashboard shows "Set goal" prompt when no goal set — 3b697d2
+- [x] 3.4 Inline edit with hint ranges opens on click — 3b697d2
+- [x] 3.5 Saving updates display without page reload — 3b697d2
+- [x] 3.6 Out-of-range input shows error message — 3b697d2
+- [x] 3.7 Latest Focus Sprint WPM shown alongside goal — 3b697d2
+- [x] 3.8 Goal persists after page refresh — 3b697d2
 
 ### Phase 4: Results Page Goal Comparison
 
 #### Automated
 
-- [ ] 4.1 npm run build passes
-- [ ] 4.2 npm run lint passes
+- [x] 4.1 npm run build passes
+- [x] 4.2 npm run lint passes
 
 #### Manual
 
-- [ ] 4.3 Animated Pacer with goal set shows correct progress bar and percentage
-- [ ] 4.4 Over-goal result shows 100% bar and "Goal reached!"
-- [ ] 4.5 Animated Pacer with no goal shows CTA linking to dashboard
-- [ ] 4.6 Focus Sprint and Speed Scan results show no goal section
+- [x] 4.3 Focus Sprint with goal set shows correct progress bar and percentage
+- [x] 4.4 Over-goal result shows 100% bar and "Goal reached!"
+- [x] 4.5 Focus Sprint with no goal shows CTA linking to dashboard
+- [x] 4.6 Animated Pacer and Speed Scan results show no goal section
