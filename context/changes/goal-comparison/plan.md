@@ -331,28 +331,28 @@ No existing data migration needed. `user_goals` is a new table; existing users s
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly against local Supabase
-- [x] 1.2 TypeScript build passes with new UserGoal type
-- [x] 1.3 Linting passes
+- [x] 1.1 Migration applies cleanly against local Supabase — 034350e
+- [x] 1.2 TypeScript build passes with new UserGoal type — 034350e
+- [x] 1.3 Linting passes — 034350e
 
 #### Manual
 
-- [x] 1.4 user_goals table visible in Supabase Studio
-- [x] 1.5 RLS blocks insert for wrong user_id
+- [x] 1.4 user_goals table visible in Supabase Studio — 034350e
+- [x] 1.5 RLS blocks insert for wrong user_id — 034350e
 
 ### Phase 2: Goal API Endpoint
 
 #### Automated
 
-- [ ] 2.1 npm run build passes
-- [ ] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes
+- [x] 2.2 npm run lint passes
 
 #### Manual
 
-- [ ] 2.3 Authenticated POST with valid wpm returns success
-- [ ] 2.4 Subsequent POST updates row (upsert, no duplicate)
-- [ ] 2.5 Out-of-range values return 400
-- [ ] 2.6 Unauthenticated POST returns 401
+- [x] 2.3 Authenticated POST with valid wpm returns success
+- [x] 2.4 Subsequent POST updates row (upsert, no duplicate)
+- [x] 2.5 Out-of-range values return 400
+- [x] 2.6 Unauthenticated POST returns 401
 
 ### Phase 3: Dashboard Goal Widget
 

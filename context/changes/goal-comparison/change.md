@@ -4,6 +4,7 @@ title: Goal Setting and Comparison (S-03)
 status: planned
 created: 2026-07-27
 updated: 2026-07-27
+status: implementing
 roadmap_id: S-03
 prd_refs: FR-015, FR-016, FR-017
 prerequisites: S-01
