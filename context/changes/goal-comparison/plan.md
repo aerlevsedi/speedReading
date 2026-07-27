@@ -374,12 +374,12 @@ No existing data migration needed. `user_goals` is a new table; existing users s
 
 #### Automated
 
-- [x] 4.1 npm run build passes
-- [x] 4.2 npm run lint passes
+- [x] 4.1 npm run build passes — cb1ff57
+- [x] 4.2 npm run lint passes — cb1ff57
 
 #### Manual
 
-- [x] 4.3 Focus Sprint with goal set shows correct progress bar and percentage
-- [x] 4.4 Over-goal result shows 100% bar and "Goal reached!"
-- [x] 4.5 Focus Sprint with no goal shows CTA linking to dashboard
-- [x] 4.6 Animated Pacer and Speed Scan results show no goal section
+- [x] 4.3 Focus Sprint with goal set shows correct progress bar and percentage — cb1ff57
+- [x] 4.4 Over-goal result shows 100% bar and "Goal reached!" — cb1ff57
+- [x] 4.5 Focus Sprint with no goal shows CTA linking to dashboard — cb1ff57
+- [x] 4.6 Animated Pacer and Speed Scan results show no goal section — cb1ff57
