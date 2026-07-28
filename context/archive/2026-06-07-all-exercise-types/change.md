@@ -1,8 +1,9 @@
 ---
 change_id: all-exercise-types
-status: implemented
+status: archived
 created: 2026-06-07
-updated: 2026-06-09
+updated: 2026-07-28
+archived_at: 2026-07-28T16:18:31Z
 ---
 
 # All Exercise Types

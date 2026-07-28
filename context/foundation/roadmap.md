@@ -29,7 +29,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | ---- | ----------------------------- | ------------------------------------------------------------------------------ | ------------- | ---------------------------------- | -------- |
 | F-01 | exercise-data-model-seed      | (foundation) exercise schema + completions table + 1 seeded exercise instance  | —             | FR-018, FR-019                     | done     |
 | S-01 | first-exercise-completion     | log in, complete one exercise, see result summary (errors + duration)         | F-01          | US-01, FR-001, FR-004, FR-006, FR-009, FR-010 | done     |
-| S-02 | all-exercise-types            | see all 3 exercise types on dashboard and select any (6 total instances)      | S-01          | FR-018, FR-019, FR-006             | in-progress |
+| S-02 | all-exercise-types            | see all 3 exercise types on dashboard and select any (6 total instances)      | S-01          | FR-018, FR-019, FR-006             | done |
 | S-03 | goal-comparison               | set a reading speed goal and see goal comparison on result summary            | S-01          | FR-016, FR-017, FR-015             | done |
 | S-04 | recommendation-system         | see recommended exercise marked on dashboard (least-used algorithm)           | S-01, S-02    | FR-005, FR-020                     | proposed |
 | S-05 | progress-chart                | see progress chart comparing current to previous sessions                     | S-01          | FR-014                             | proposed |
@@ -99,7 +99,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:** —
 - **Risk:** Adds variety — the multi-type requirement is what distinguishes this from a one-trick app (PRD Vision). Sequenced after north star (S-01) to prove the loop works before scaling to multiple types. Unlocks recommendation (S-04) which needs multiple types to recommend from, and retry-dataset (S-06) which needs 2 datasets per type.
 - **Implementation note (2026-06-08):** Originally planned 4 types (Animated Pacer, Smart Questions, Focus Sprint, Speed Scan). During Phase 3-6 implementation, Smart Questions was identified as incomplete (no reading content, only quiz) and redundant with Focus Sprint (both are "read + answer questions"). **Decision: Remove Smart Questions, ship with 3 types.** Final types: **(1) Animated Pacer** (word-by-word guided reading with WPM tracking), **(2) Focus Sprint** (timed reading with countdown pressure + comprehension questions), **(3) Speed Scan** (3-phase: preview questions → scan text → recall answers). Database migration includes all 4 types (8 instances seeded), but dashboard surfaces only 3 types (6 instances). Smart Questions seeds (IDs ending in 011, 012) remain in DB but unused. SmartQuestions.tsx component exists in codebase but is not routed. This preserves flexibility to re-introduce Smart Questions later (e.g., as standalone quiz or Focus Sprint mode toggle) without DB migration.
-- **Status:** in-progress
+- **Status:** done
 
 ### S-03: Goal comparison
 
@@ -215,4 +215,5 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **F-01: (foundation) exercise schema + completions table + RLS policies landed; 1 exercise instance seeded for north star validation.** — Archived 2026-06-07 → `context/archive/2026-06-05-exercise-data-model-seed/`. Lesson: —.
 - **S-01: user can log in, complete one exercise, see result summary (errors + duration)** — Archived 2026-06-07 → `context/archive/2026-06-05-first-exercise-completion/`. Lesson: —.
+- **S-02: user can see all 3 exercise types on dashboard and select any (6 total instances seeded: 3 types × 2 datasets)** — Archived 2026-07-28 → `context/archive/2026-06-07-all-exercise-types/`. Lesson: —.
 - **S-03: user can set a reading speed goal and see goal comparison on result summary** — Archived 2026-07-28 → `context/archive/2026-07-27-goal-comparison/`. Lesson: —.
