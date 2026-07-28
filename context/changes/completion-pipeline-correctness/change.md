@@ -1,9 +1,9 @@
 ---
 change_id: completion-pipeline-correctness
 title: Completion pipeline correctness
-status: implementing
+status: impl_reviewed
 created: 2026-06-26
-updated: 2026-06-26
+updated: 2026-07-28
 archived_at: null
 ---
 
