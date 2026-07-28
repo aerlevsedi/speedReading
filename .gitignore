@@ -36,3 +36,7 @@ pnpm-debug.log*
 
 # Playwright auth state (contains session cookies)
 playwright/.auth/
+
+# Playwright test output & CLI cache
+test-results/
+.playwright-cli/
