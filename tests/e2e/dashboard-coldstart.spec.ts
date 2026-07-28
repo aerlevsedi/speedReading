@@ -8,9 +8,7 @@
 // if it runs against a user with existing history, it still passes but tests the wrong state.
 import { test, expect } from "@playwright/test";
 
-test("dashboard renders without crashing for authenticated user with empty completion history", async ({
-  page,
-}) => {
+test("dashboard renders without crashing for authenticated user with empty completion history", async ({ page }) => {
   // Step 1: navigate to dashboard as an authenticated user (storageState provides the session)
   await page.goto("/dashboard");
 
