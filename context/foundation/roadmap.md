@@ -3,7 +3,7 @@ project: Speed-Reading Training App
 version: 1
 status: draft
 created: 2026-06-02
-updated: 2026-06-07
+updated: 2026-07-28
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -30,7 +30,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | F-01 | exercise-data-model-seed      | (foundation) exercise schema + completions table + 1 seeded exercise instance  | —             | FR-018, FR-019                     | done     |
 | S-01 | first-exercise-completion     | log in, complete one exercise, see result summary (errors + duration)         | F-01          | US-01, FR-001, FR-004, FR-006, FR-009, FR-010 | done     |
 | S-02 | all-exercise-types            | see all 3 exercise types on dashboard and select any (6 total instances)      | S-01          | FR-018, FR-019, FR-006             | in-progress |
-| S-03 | goal-comparison               | set a reading speed goal and see goal comparison on result summary            | S-01          | FR-016, FR-017, FR-015             | proposed |
+| S-03 | goal-comparison               | set a reading speed goal and see goal comparison on result summary            | S-01          | FR-016, FR-017, FR-015             | done |
 | S-04 | recommendation-system         | see recommended exercise marked on dashboard (least-used algorithm)           | S-01, S-02    | FR-005, FR-020                     | proposed |
 | S-05 | progress-chart                | see progress chart comparing current to previous sessions                     | S-01          | FR-014                             | proposed |
 | S-06 | retry-different-dataset       | retry same exercise type with different dataset                               | S-02          | FR-012, FR-019                     | proposed |
@@ -112,7 +112,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - How to guide users on realistic wpm goals? (FR-016 Socrates note: users don't know what's realistic. Options: measure baseline first, suggest ranges, or set smart default.) — Owner: product/UX. Block: no (can ship with a simple input field; guidance is a refinement).
 - **Risk:** Validates the "progress proof" wedge (Vision: users want measurable progress). Sequenced after north star but parallel with recommendation (S-04) and chart (S-05) — all three are independent progress-tracking features.
-- **Status:** proposed
+- **Status:** done
 
 ### S-04: Recommendation system
 
@@ -215,3 +215,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **F-01: (foundation) exercise schema + completions table + RLS policies landed; 1 exercise instance seeded for north star validation.** — Archived 2026-06-07 → `context/archive/2026-06-05-exercise-data-model-seed/`. Lesson: —.
 - **S-01: user can log in, complete one exercise, see result summary (errors + duration)** — Archived 2026-06-07 → `context/archive/2026-06-05-first-exercise-completion/`. Lesson: —.
+- **S-03: user can set a reading speed goal and see goal comparison on result summary** — Archived 2026-07-28 → `context/archive/2026-07-27-goal-comparison/`. Lesson: —.
