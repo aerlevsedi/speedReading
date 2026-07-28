@@ -266,16 +266,16 @@ Cover the chart's data-driven states with real local Supabase + HTTP, following 
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run build`
-- [x] 1.2 Linting passes: `npm run lint`
+- [x] 1.1 Type checking passes: `npm run build` — c17d98d
+- [x] 1.2 Linting passes: `npm run lint` — c17d98d
 
 ### Phase 2: Recharts dependency and ProgressChart island
 
 #### Automated
 
-- [ ] 2.1 Dependency installs and lockfile updates: `npm install`
-- [ ] 2.2 Type checking passes: `npm run build`
-- [ ] 2.3 Linting passes: `npm run lint`
+- [x] 2.1 Dependency installs and lockfile updates: `npm install`
+- [x] 2.2 Type checking passes: `npm run build`
+- [x] 2.3 Linting passes: `npm run lint`
 
 #### Manual
 
