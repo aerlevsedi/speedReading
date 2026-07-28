@@ -37,7 +37,11 @@ export default function GoalWidget({ currentGoal, latestWpm }: Props) {
 
     try {
       const body = new URLSearchParams({ target_wpm: String(wpm) });
-      const res = await fetch("/api/goals/set", { method: "POST", body });
+      const res = await fetch("/api/goals/set", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      });
       const json = (await res.json()) as { success?: boolean; error?: string };
 
       if (!res.ok || json.error) {

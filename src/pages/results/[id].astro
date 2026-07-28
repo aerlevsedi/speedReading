@@ -11,17 +11,17 @@ export const prerender = false;
 const { id } = Astro.params;
 const { user } = Astro.locals;
 
-if (!id) {
+if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)) {
   return Astro.redirect("/dashboard?error=Invalid+completion+ID");
+}
+
+if (!user) {
+  return Astro.redirect("/auth/signin?error=Authentication+required");
 }
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 if (!supabase) {
   return Astro.redirect("/dashboard?error=Server+configuration+error");
-}
-
-if (!user) {
-  return Astro.redirect("/auth/signin?error=Authentication+required");
 }
 
 const result = await supabase

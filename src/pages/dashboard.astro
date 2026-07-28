@@ -21,25 +21,21 @@ const error = Astro.url.searchParams.get("error");
 
 // Fetch user's current WPM goal
 const goalResult = await supabase.from("user_goals").select("target_wpm").eq("user_id", user.id).maybeSingle();
+if (goalResult.error) console.error("Failed to fetch goal:", goalResult.error);
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const currentGoal: number | null = goalResult.data?.target_wpm ?? null;
 
-// Fetch latest Animated Pacer WPM via two-step: get exercise ids of the right type, then latest completion
-const apExercisesResult = await supabase.from("exercises").select("id").eq("exercise_type", "focus_sprint");
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return
-const apIds: string[] = apExercisesResult.data?.map((r) => r.id) ?? [];
-let latestWpm: number | null = null;
-if (apIds.length > 0) {
-  const latestResult = await supabase
-    .from("exercise_completions")
-    .select("type_data")
-    .eq("user_id", user.id)
-    .in("exercise_id", apIds)
-    .order("completed_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  latestWpm = (latestResult.data?.type_data as { wpm?: number } | null)?.wpm ?? null;
-}
+// Fetch latest Focus Sprint WPM via single join query
+const latestWpmResult = await supabase
+  .from("exercise_completions")
+  .select("type_data, exercises!inner(exercise_type)")
+  .eq("user_id", user.id)
+  .eq("exercises.exercise_type", "focus_sprint")
+  .order("completed_at", { ascending: false })
+  .limit(1)
+  .maybeSingle();
+if (latestWpmResult.error) console.error("Failed to fetch latest WPM:", latestWpmResult.error);
+const latestWpm: number | null = (latestWpmResult.data?.type_data as { wpm?: number } | null)?.wpm ?? null;
 
 // Fetch one exercise per type using dataset selection logic
 // Note: Smart Questions removed 2026-06-08 (incomplete design, redundant with Focus Sprint)

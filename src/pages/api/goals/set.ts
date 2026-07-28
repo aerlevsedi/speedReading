@@ -1,3 +1,4 @@
+// JSON contract — consumed via fetch() from GoalWidget; not a form-submit/redirect endpoint
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 

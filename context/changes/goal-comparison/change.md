@@ -1,7 +1,7 @@
 ---
 id: goal-comparison
 title: Goal Setting and Comparison (S-03)
-status: implemented
+status: impl_reviewed
 created: 2026-07-27
 updated: 2026-07-27
 roadmap_id: S-03
