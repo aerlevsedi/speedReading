@@ -1,7 +1,7 @@
 ---
 change_id: progress-chart
 title: Progress chart comparing current to previous sessions
-status: preparing
+status: planned
 created: 2026-07-28
 updated: 2026-07-28
 archived_at: null
