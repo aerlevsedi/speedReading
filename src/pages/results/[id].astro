@@ -1,9 +1,11 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
+import { getFocusSprintProgress } from "@/lib/services/progressService";
+import ProgressChart from "@/components/dashboard/ProgressChart";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import type { Completion, Exercise } from "@/types";
+import type { Completion, Exercise, ProgressPoint } from "@/types";
 import { CheckCircle2, XCircle, Clock, Zap } from "lucide-react";
 
 export const prerender = false;
@@ -63,6 +65,13 @@ if (showGoalComparison) {
 }
 const goalPct = targetWpm && wpm > 0 ? Math.min(Math.round((wpm / targetWpm) * 100), 100) : null;
 const goalReached = targetWpm !== null && wpm >= targetWpm;
+
+// Progress chart: Focus Sprint WPM trend across all sessions (S-05, FR-014)
+let progressPoints: ProgressPoint[] = [];
+if (showGoalComparison) {
+  progressPoints = await getFocusSprintProgress(supabase, user.id);
+}
+const showProgressChart = showGoalComparison && progressPoints.length >= 2;
 
 // Format duration as MM:SS
 const minutes = Math.floor(completion.duration_seconds / 60);
@@ -142,6 +151,22 @@ const formattedDuration = `${minutes}:${seconds.toString().padStart(2, "0")}`;
                   Set your reading speed goal
                 </a>{" "}
                 to track your progress.
+              </p>
+            )}
+          </div>
+        )
+      }
+
+      <!-- Progress Chart (Focus Sprint only) -->
+      {
+        showGoalComparison && (
+          <div class="mb-8 rounded-2xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+            <h2 class="mb-4 text-sm font-semibold tracking-wide text-blue-100/60 uppercase">Progress Over Time</h2>
+            {showProgressChart ? (
+              <ProgressChart points={progressPoints} goalWpm={targetWpm} variant="full" client:only="react" />
+            ) : (
+              <p class="text-sm text-blue-100/60">
+                Complete another Focus Sprint to see your reading speed trend across sessions.
               </p>
             )}
           </div>

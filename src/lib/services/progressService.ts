@@ -2,6 +2,14 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ProgressPoint } from "@/types";
 
 /**
+ * Upper bound for a plausible reading speed. Focus Sprint WPM is derived from
+ * word count / duration, so a stray too-fast completion (e.g. a 1-second click)
+ * yields an absurd value; points above this ceiling are dropped so junk sessions
+ * can't distort the progress trend.
+ */
+const MAX_PLAUSIBLE_WPM = 2000;
+
+/**
  * Get the authenticated user's Focus Sprint WPM series in chronological order
  * (oldest → newest), so the last element is the most recent session.
  *
@@ -29,5 +37,7 @@ export async function getFocusSprintProgress(supabase: SupabaseClient, userId: s
       completedAt: row.completed_at,
       wpm: row.type_data?.wpm ?? NaN,
     }))
-    .filter((point): point is ProgressPoint => Number.isFinite(point.wpm));
+    .filter(
+      (point): point is ProgressPoint => Number.isFinite(point.wpm) && point.wpm > 0 && point.wpm <= MAX_PLAUSIBLE_WPM,
+    );
 }

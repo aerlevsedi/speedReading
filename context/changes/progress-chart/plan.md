@@ -273,27 +273,27 @@ Cover the chart's data-driven states with real local Supabase + HTTP, following 
 
 #### Automated
 
-- [x] 2.1 Dependency installs and lockfile updates: `npm install`
-- [x] 2.2 Type checking passes: `npm run build`
-- [x] 2.3 Linting passes: `npm run lint`
+- [x] 2.1 Dependency installs and lockfile updates: `npm install` — 1ad2f44
+- [x] 2.2 Type checking passes: `npm run build` — 1ad2f44
+- [x] 2.3 Linting passes: `npm run lint` — 1ad2f44
 
 #### Manual
 
-- [ ] 2.4 Component renders a line with ≥2 mock points; goal reference line appears when `goalWpm` is passed
+- [x] 2.4 Component renders a line with ≥2 mock points; goal reference line appears when `goalWpm` is passed
 
 ### Phase 3: Focus Sprint results page integration
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run build`
-- [ ] 3.2 Linting passes: `npm run lint`
+- [x] 3.1 Type checking passes: `npm run build`
+- [x] 3.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.3 ≥2 Focus Sprint completions → trend chart shows, current session is last point
-- [ ] 3.4 1 completion → placeholder shown, not a broken chart
-- [ ] 3.5 Goal set → reference line appears; no goal → no line, no error
-- [ ] 3.6 Animated Pacer and Speed Scan results unchanged (no chart)
+- [x] 3.3 ≥2 Focus Sprint completions → trend chart shows, current session is last point
+- [x] 3.4 1 completion → placeholder shown, not a broken chart
+- [x] 3.5 Goal set → reference line appears; no goal → no line, no error
+- [x] 3.6 Animated Pacer and Speed Scan results unchanged (no chart)
 
 ### Phase 4: Dashboard mini-trend
 

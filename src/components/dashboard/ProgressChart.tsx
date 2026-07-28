@@ -39,6 +39,12 @@ export default function ProgressChart({ points, goalWpm, variant = "full" }: Pro
 
   const lastIndex = data.length - 1;
 
+  // Y domain includes the goal line so it is never clipped off the top/bottom.
+  const wpmValues = data.map((d) => d.wpm);
+  const domainValues = hasGoal ? [...wpmValues, goalWpm] : wpmValues;
+  const yMin = Math.max(0, Math.floor(Math.min(...domainValues) - 20));
+  const yMax = Math.ceil(Math.max(...domainValues) + 20);
+
   return (
     <div style={{ width: "100%", height: compact ? 96 : 240 }} data-testid="progress-chart">
       <ResponsiveContainer width="100%" height="100%">
@@ -58,9 +64,10 @@ export default function ProgressChart({ points, goalWpm, variant = "full" }: Pro
             tick={{ fill: AXIS_COLOR, fontSize: 12 }}
             tickLine={false}
             axisLine={false}
-            width={36}
-            domain={["dataMin - 20", "dataMax + 20"]}
+            width={48}
+            domain={[yMin, yMax]}
             allowDecimals={false}
+            tickFormatter={(value: number) => `${Math.round(value)}`}
           />
           {!compact && (
             <Tooltip
