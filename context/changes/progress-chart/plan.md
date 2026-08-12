@@ -279,33 +279,33 @@ Cover the chart's data-driven states with real local Supabase + HTTP, following 
 
 #### Manual
 
-- [x] 2.4 Component renders a line with ≥2 mock points; goal reference line appears when `goalWpm` is passed
+- [x] 2.4 Component renders a line with ≥2 mock points; goal reference line appears when `goalWpm` is passed — 9d00a1c
 
 ### Phase 3: Focus Sprint results page integration
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run build`
-- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.1 Type checking passes: `npm run build` — 9d00a1c
+- [x] 3.2 Linting passes: `npm run lint` — 9d00a1c
 
 #### Manual
 
-- [x] 3.3 ≥2 Focus Sprint completions → trend chart shows, current session is last point
-- [x] 3.4 1 completion → placeholder shown, not a broken chart
-- [x] 3.5 Goal set → reference line appears; no goal → no line, no error
-- [x] 3.6 Animated Pacer and Speed Scan results unchanged (no chart)
+- [x] 3.3 ≥2 Focus Sprint completions → trend chart shows, current session is last point — 9d00a1c
+- [x] 3.4 1 completion → placeholder shown, not a broken chart — 9d00a1c
+- [x] 3.5 Goal set → reference line appears; no goal → no line, no error — 9d00a1c
+- [x] 3.6 Animated Pacer and Speed Scan results unchanged (no chart) — 9d00a1c
 
 ### Phase 4: Dashboard mini-trend
 
 #### Automated
 
-- [ ] 4.1 Type checking passes: `npm run build`
-- [ ] 4.2 Linting passes: `npm run lint`
+- [x] 4.1 Type checking passes: `npm run build`
+- [x] 4.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 4.3 Dashboard shows compact trend for ≥2 sessions; placeholder for fewer
-- [ ] 4.4 Exercise cards + goal widget render with no layout regressions
+- [x] 4.3 Dashboard shows compact trend for ≥2 sessions; placeholder for fewer
+- [x] 4.4 Exercise cards + goal widget render with no layout regressions
 
 ### Phase 5: Integration tests
 

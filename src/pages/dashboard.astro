@@ -2,10 +2,12 @@
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
 import { getNextExerciseForType } from "@/lib/services/exerciseService";
+import { getFocusSprintProgress } from "@/lib/services/progressService";
 import ExerciseCard from "@/components/dashboard/ExerciseCard";
 import GoalWidget from "@/components/dashboard/GoalWidget";
+import ProgressChart from "@/components/dashboard/ProgressChart";
 import Banner from "@/components/Banner.astro";
-import type { Exercise } from "@/types";
+import type { Exercise, ProgressPoint } from "@/types";
 
 const { user } = Astro.locals;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
@@ -36,6 +38,10 @@ const latestWpmResult = await supabase
   .maybeSingle();
 if (latestWpmResult.error) console.error("Failed to fetch latest WPM:", latestWpmResult.error);
 const latestWpm: number | null = (latestWpmResult.data?.type_data as { wpm?: number } | null)?.wpm ?? null;
+
+// Fetch Focus Sprint WPM series for the dashboard mini-trend (S-05, FR-014)
+const progressPoints: ProgressPoint[] = await getFocusSprintProgress(supabase, user.id);
+const showProgressChart = progressPoints.length >= 2;
 
 // Fetch one exercise per type using dataset selection logic
 // Note: Smart Questions removed 2026-06-08 (incomplete design, redundant with Focus Sprint)
@@ -72,6 +78,18 @@ try {
           Welcome back, <span class="font-semibold text-white">{user.email}</span>
         </p>
         <GoalWidget currentGoal={currentGoal} latestWpm={latestWpm} client:load />
+        <div class="mt-4 border-t border-white/10 pt-4">
+          <h2 class="mb-3 text-xs font-semibold tracking-wide text-blue-100/60 uppercase">Reading Speed Trend</h2>
+          {
+            showProgressChart ? (
+              <ProgressChart points={progressPoints} goalWpm={currentGoal} variant="compact" client:only="react" />
+            ) : (
+              <p class="text-xs text-blue-100/50">
+                Complete two or more Focus Sprint sessions to see your reading speed trend.
+              </p>
+            )
+          }
+        </div>
         <form method="POST" action="/api/auth/signout" class="mt-4">
           <button
             type="submit"
