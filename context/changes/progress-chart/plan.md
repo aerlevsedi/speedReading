@@ -299,22 +299,22 @@ Cover the chart's data-driven states with real local Supabase + HTTP, following 
 
 #### Automated
 
-- [x] 4.1 Type checking passes: `npm run build`
-- [x] 4.2 Linting passes: `npm run lint`
+- [x] 4.1 Type checking passes: `npm run build` — 7223b8a
+- [x] 4.2 Linting passes: `npm run lint` — 7223b8a
 
 #### Manual
 
-- [x] 4.3 Dashboard shows compact trend for ≥2 sessions; placeholder for fewer
-- [x] 4.4 Exercise cards + goal widget render with no layout regressions
+- [x] 4.3 Dashboard shows compact trend for ≥2 sessions; placeholder for fewer — 7223b8a
+- [x] 4.4 Exercise cards + goal widget render with no layout regressions — 7223b8a
 
 ### Phase 5: Integration tests
 
 #### Automated
 
-- [ ] 5.1 New tests pass: `npm run test`
-- [ ] 5.2 Full suite still green: `npm run test`
-- [ ] 5.3 Linting passes: `npm run lint`
+- [x] 5.1 New tests pass: `npm run test` — HEAD
+- [x] 5.2 Full suite still green: `npm run test` — HEAD
+- [x] 5.3 Linting passes: `npm run lint` — HEAD
 
 #### Manual
 
-- [ ] 5.4 Tests deterministic across re-runs (unique fixtures; cleanup verified)
+- [x] 5.4 Tests deterministic across re-runs (unique fixtures; cleanup verified) — HEAD
