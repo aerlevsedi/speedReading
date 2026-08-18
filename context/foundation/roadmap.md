@@ -32,7 +32,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | S-02 | all-exercise-types            | see all 3 exercise types on dashboard and select any (6 total instances)      | S-01          | FR-018, FR-019, FR-006             | done |
 | S-03 | goal-comparison               | set a reading speed goal and see goal comparison on result summary            | S-01          | FR-016, FR-017, FR-015             | done |
 | S-04 | recommendation-system         | see recommended exercise marked on dashboard (least-used algorithm)           | S-01, S-02    | FR-005, FR-020                     | proposed |
-| S-05 | progress-chart                | see progress chart comparing current to previous sessions                     | S-01          | FR-014                             | proposed |
+| S-05 | progress-chart                | see progress chart comparing current to previous sessions                     | S-01          | FR-014                             | done     |
 | S-06 | retry-different-dataset       | retry same exercise type with different dataset                               | S-02          | FR-012, FR-019                     | proposed |
 | S-08 | intro-and-instructions        | see first-time intro on each exercise type, access instructions via icon      | S-02          | FR-007, FR-008                     | proposed |
 | S-09 | logout-lifecycle              | log out manually and auto-logout after 1 hour inactivity                      | S-01          | FR-002, FR-003                     | proposed |
@@ -217,3 +217,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-01: user can log in, complete one exercise, see result summary (errors + duration)** — Archived 2026-06-07 → `context/archive/2026-06-05-first-exercise-completion/`. Lesson: —.
 - **S-02: user can see all 3 exercise types on dashboard and select any (6 total instances seeded: 3 types × 2 datasets)** — Archived 2026-07-28 → `context/archive/2026-06-07-all-exercise-types/`. Lesson: —.
 - **S-03: user can set a reading speed goal and see goal comparison on result summary** — Archived 2026-07-28 → `context/archive/2026-07-27-goal-comparison/`. Lesson: —.
+- **S-05: user can see progress chart comparing current to previous sessions** — Archived 2026-08-18 → `context/archive/2026-08-18-progress-chart/`. Lesson: —.
