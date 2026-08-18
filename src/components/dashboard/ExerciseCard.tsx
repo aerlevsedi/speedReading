@@ -5,9 +5,10 @@ import type { Exercise } from "@/types";
 
 interface Props {
   exercise: Exercise;
+  isRecommended?: boolean;
 }
 
-export default function ExerciseCard({ exercise }: Props) {
+export default function ExerciseCard({ exercise, isRecommended = false }: Props) {
   const [isNavigating, setIsNavigating] = useState(false);
   const typeBadgeColor = {
     animated_pacer: "bg-blue-500/20 text-blue-300",
@@ -30,7 +31,14 @@ export default function ExerciseCard({ exercise }: Props) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/[0.15]">
       <div className="mb-3 flex items-start justify-between">
-        <span className={`rounded-lg px-3 py-1 text-xs font-medium ${typeBadgeColor}`}>{typeLabel}</span>
+        <div className="flex items-center gap-2">
+          <span className={`rounded-lg px-3 py-1 text-xs font-medium ${typeBadgeColor}`}>{typeLabel}</span>
+          {isRecommended && (
+            <span className="rounded-lg bg-yellow-500/20 px-3 py-1 text-xs font-medium text-yellow-300">
+              Recommended
+            </span>
+          )}
+        </div>
         {exercise.difficulty && (
           <span className="flex items-center gap-1 text-xs text-blue-100/60">
             <BarChart3 className="size-3" />
