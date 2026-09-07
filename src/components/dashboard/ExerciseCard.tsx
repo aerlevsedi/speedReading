@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Play, Clock, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Exercise } from "@/types";
@@ -10,19 +10,31 @@ interface Props {
 
 export default function ExerciseCard({ exercise, isRecommended = false }: Props) {
   const [isNavigating, setIsNavigating] = useState(false);
-  const typeBadgeColor = {
-    animated_pacer: "bg-blue-500/20 text-blue-300",
-    smart_questions: "bg-purple-500/20 text-purple-300",
-    focus_sprint: "bg-green-500/20 text-green-300",
-    speed_scan: "bg-orange-500/20 text-orange-300",
-  }[exercise.exercise_type];
+  useEffect(
+    () => () => {
+      setIsNavigating(false);
+    },
+    [],
+  );
+  const typeBadgeColor =
+    (
+      {
+        animated_pacer: "bg-blue-500/20 text-blue-300",
+        smart_questions: "bg-purple-500/20 text-purple-300",
+        focus_sprint: "bg-green-500/20 text-green-300",
+        speed_scan: "bg-orange-500/20 text-orange-300",
+      } as Record<string, string>
+    )[exercise.exercise_type] ?? "bg-gray-500/20 text-gray-300";
 
-  const typeLabel = {
-    animated_pacer: "Animated Pacer",
-    smart_questions: "Smart Questions",
-    focus_sprint: "Focus Sprint",
-    speed_scan: "Speed Scan",
-  }[exercise.exercise_type];
+  const typeLabel =
+    (
+      {
+        animated_pacer: "Animated Pacer",
+        smart_questions: "Smart Questions",
+        focus_sprint: "Focus Sprint",
+        speed_scan: "Speed Scan",
+      } as Record<string, string>
+    )[exercise.exercise_type] ?? exercise.exercise_type;
 
   const estimatedMinutes = exercise.estimated_duration_seconds
     ? Math.ceil(exercise.estimated_duration_seconds / 60)

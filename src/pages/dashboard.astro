@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
 import { getNextExerciseForType } from "@/lib/services/exerciseService";
 import { getFocusSprintProgress } from "@/lib/services/progressService";
+import { getRecommendedExerciseType, VISIBLE_EXERCISE_TYPES } from "@/lib/services/recommendationService";
 import ExerciseCard from "@/components/dashboard/ExerciseCard";
 import GoalWidget from "@/components/dashboard/GoalWidget";
 import ProgressChart from "@/components/dashboard/ProgressChart";
@@ -45,14 +46,16 @@ const showProgressChart = progressPoints.length >= 2;
 
 // Fetch one exercise per type using dataset selection logic
 // Note: Smart Questions removed 2026-06-08 (incomplete design, redundant with Focus Sprint)
-const exerciseTypes = ["animated_pacer", "focus_sprint", "speed_scan"] as const;
-
 let exercises: Exercise[] = [];
+let recommendedType = "animated_pacer" as (typeof VISIBLE_EXERCISE_TYPES)[number];
 try {
-  const exercisePromises = exerciseTypes.map((type) => getNextExerciseForType(supabase, user.id, type));
-  const exerciseResults = await Promise.all(exercisePromises);
+  const [exerciseResults, recommended] = await Promise.all([
+    Promise.all(VISIBLE_EXERCISE_TYPES.map((type) => getNextExerciseForType(supabase, user.id, type))),
+    getRecommendedExerciseType(supabase, user.id),
+  ]);
   // Filter out nulls (exercises that don't exist yet)
   exercises = exerciseResults.filter((ex): ex is Exercise => ex !== null);
+  recommendedType = recommended;
 } catch (err) {
   console.error("Failed to fetch exercises:", err);
   return Astro.redirect("/dashboard?error=Failed+to+load+exercises");
@@ -104,7 +107,13 @@ try {
       <div class="grid gap-6 sm:grid-cols-2">
         {
           exercises.length > 0 ? (
-            exercises.map((exercise) => <ExerciseCard exercise={exercise} client:load />)
+            exercises.map((exercise) => (
+              <ExerciseCard
+                exercise={exercise}
+                isRecommended={exercise.exercise_type === recommendedType}
+                client:load
+              />
+            ))
           ) : (
             <p class="text-blue-100/60">No exercises available yet.</p>
           )
