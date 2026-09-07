@@ -47,3 +47,25 @@ export async function getNextExerciseForType(
 
   return exerciseResult.data as Exercise;
 }
+
+export async function getAlternateExercise(
+  supabase: SupabaseClient,
+  exerciseType: Exercise["exercise_type"],
+  currentDatasetId: string,
+): Promise<Exercise | null> {
+  const alternateDataset = currentDatasetId === "dataset_1" ? "dataset_2" : "dataset_1";
+
+  const result = await supabase
+    .from("exercises")
+    .select("*")
+    .eq("exercise_type", exerciseType)
+    .eq("dataset_id", alternateDataset)
+    .limit(1)
+    .single();
+
+  if (result.error) {
+    return null;
+  }
+
+  return result.data as Exercise;
+}
