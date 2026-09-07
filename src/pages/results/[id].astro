@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
 import { getFocusSprintProgress } from "@/lib/services/progressService";
+import { getAlternateExercise } from "@/lib/services/exerciseService";
 import ProgressChart from "@/components/dashboard/ProgressChart";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -72,6 +73,8 @@ if (showGoalComparison) {
   progressPoints = await getFocusSprintProgress(supabase, user.id);
 }
 const showProgressChart = showGoalComparison && progressPoints.length >= 2;
+
+const alternateExercise = await getAlternateExercise(supabase, exercise.exercise_type, exercise.dataset_id);
 
 // Format duration as MM:SS
 const minutes = Math.floor(completion.duration_seconds / 60);
@@ -174,10 +177,19 @@ const formattedDuration = `${minutes}:${seconds.toString().padStart(2, "0")}`;
       }
 
       <!-- Navigation -->
-      <div class="text-center">
+      <div class="flex justify-center gap-3">
         <a href="/dashboard">
           <Button size="lg" client:load>Back to Dashboard</Button>
         </a>
+        {
+          alternateExercise && (
+            <a href={`/exercise/${alternateExercise.id}`}>
+              <Button size="lg" variant="outline" client:load>
+                Try with different content
+              </Button>
+            </a>
+          )
+        }
       </div>
     </div>
   </div>

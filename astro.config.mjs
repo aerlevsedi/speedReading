@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig, envField } from "astro/config";
+import { fileURLToPath } from "url";
 
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
@@ -13,6 +14,9 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     resolve: {
+      alias: {
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
+      },
       dedupe: ["react", "react-dom"],
     },
   },

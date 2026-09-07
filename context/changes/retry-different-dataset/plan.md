@@ -143,25 +143,25 @@ One additional DB query per results page load (`getAlternateExercise`). The `exe
 
 #### Automated
 
-- [x] 1.1 TypeScript compiles without errors: `npm run build`
-- [x] 1.2 Lint passes: `npm run lint`
+- [x] 1.1 TypeScript compiles without errors: `npm run build` — f1be617
+- [x] 1.2 Lint passes: `npm run lint` — f1be617
 
 #### Manual
 
-- [ ] 1.3 Function is importable from `@/lib/services/exerciseService` without errors
+- [x] 1.3 Function is importable from `@/lib/services/exerciseService` without errors
 
 ### Phase 2: Results Page Integration
 
 #### Automated
 
-- [ ] 2.1 Production build succeeds: `npm run build`
-- [ ] 2.2 Lint passes: `npm run lint`
+- [x] 2.1 Production build succeeds: `npm run build`
+- [x] 2.2 Lint passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.3 After completing any exercise, results page shows "Try with different content" button
-- [ ] 2.4 Clicking the button navigates to the exercise page for the other dataset
-- [ ] 2.5 The new exercise runs and completes normally (saved to `exercise_completions`)
-- [ ] 2.6 After completing both datasets for a type, the dashboard still correctly alternates
-- [ ] 2.7 "Back to Dashboard" button still works and unchanged
-- [ ] 2.8 No visual regression on the results page layout
+- [x] 2.3 After completing any exercise, results page shows "Try with different content" button
+- [x] 2.4 Clicking the button navigates to the exercise page for the other dataset
+- [x] 2.5 The new exercise runs and completes normally (saved to `exercise_completions`)
+- [x] 2.6 After completing both datasets for a type, the dashboard still correctly alternates
+- [x] 2.7 "Back to Dashboard" button still works and unchanged
+- [x] 2.8 No visual regression on the results page layout
