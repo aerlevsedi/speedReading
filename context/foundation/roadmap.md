@@ -3,7 +3,7 @@ project: Speed-Reading Training App
 version: 1
 status: draft
 created: 2026-06-02
-updated: 2026-07-28
+updated: 2026-09-07
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -31,7 +31,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | S-01 | first-exercise-completion     | log in, complete one exercise, see result summary (errors + duration)         | F-01          | US-01, FR-001, FR-004, FR-006, FR-009, FR-010 | done     |
 | S-02 | all-exercise-types            | see all 3 exercise types on dashboard and select any (6 total instances)      | S-01          | FR-018, FR-019, FR-006             | done |
 | S-03 | goal-comparison               | set a reading speed goal and see goal comparison on result summary            | S-01          | FR-016, FR-017, FR-015             | done |
-| S-04 | recommendation-system         | see recommended exercise marked on dashboard (least-used algorithm)           | S-01, S-02    | FR-005, FR-020                     | proposed |
+| S-04 | recommendation-system         | see recommended exercise marked on dashboard (least-used algorithm)           | S-01, S-02    | FR-005, FR-020                     | done     |
 | S-05 | progress-chart                | see progress chart comparing current to previous sessions                     | S-01          | FR-014                             | done     |
 | S-06 | retry-different-dataset       | retry same exercise type with different dataset                               | S-02          | FR-012, FR-019                     | proposed |
 | S-08 | intro-and-instructions        | see first-time intro on each exercise type, access instructions via icon      | S-02          | FR-007, FR-008                     | proposed |
@@ -124,7 +124,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Core domain rule (Business Logic: least-used algorithm guides balanced practice). Sequenced after S-02 (needs multiple types to recommend from). Depends on completions history from S-01. Cold-start handled per PRD (default recommendation when all types equally unused).
-- **Status:** proposed
+- **Status:** done
 
 ### S-05: Progress chart
 
@@ -218,3 +218,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-02: user can see all 3 exercise types on dashboard and select any (6 total instances seeded: 3 types × 2 datasets)** — Archived 2026-07-28 → `context/archive/2026-06-07-all-exercise-types/`. Lesson: —.
 - **S-03: user can set a reading speed goal and see goal comparison on result summary** — Archived 2026-07-28 → `context/archive/2026-07-27-goal-comparison/`. Lesson: —.
 - **S-05: user can see progress chart comparing current to previous sessions** — Archived 2026-08-18 → `context/archive/2026-08-18-progress-chart/`. Lesson: —.
+- **S-04: user can see recommended exercise marked on dashboard (least-used algorithm)** — Archived 2026-09-07 → `context/archive/2026-08-18-recommendation-system/`. Lesson: —.

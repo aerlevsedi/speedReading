@@ -1,9 +1,10 @@
 ---
 id: recommendation-system
 title: Recommendation System
-status: impl_reviewed
+status: archived
 created: 2026-08-18
 updated: 2026-09-07
+archived_at: 2026-09-07T09:17:52Z
 
 roadmap_ref: S-04
 prd_refs: FR-005, FR-020
