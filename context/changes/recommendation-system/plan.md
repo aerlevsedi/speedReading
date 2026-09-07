@@ -177,23 +177,23 @@ Jedno dodatkowe zapytanie Supabase przy każdym load dashboardu. Zapytanie jest 
 
 #### Automated
 
-- [x] 1.1 `npm run lint` przechodzi bez błędów TypeScript
+- [x] 1.1 `npm run lint` przechodzi bez błędów TypeScript — 0266f53
 
 #### Manual
 
-- [x] 1.2 `src/lib/services/recommendationService.ts` istnieje i eksportuje `getRecommendedExerciseType`
-- [x] 1.3 `ExerciseCard.tsx` renderuje badge gdy `isRecommended={true}`
+- [x] 1.2 `src/lib/services/recommendationService.ts` istnieje i eksportuje `getRecommendedExerciseType` — 0266f53
+- [x] 1.3 `ExerciseCard.tsx` renderuje badge gdy `isRecommended={true}` — 0266f53
 
 ### Phase 2: Dashboard Integration
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` przechodzi
-- [ ] 2.2 `npm run build` kończy się bez błędów
+- [x] 2.1 `npm run lint` przechodzi
+- [x] 2.2 `npm run build` kończy się bez błędów
 
 #### Manual
 
-- [ ] 2.3 Dashboard ładuje się bez błędów w konsoli
-- [ ] 2.4 Dokładnie jedna karta ma badge "Recommended"
-- [ ] 2.5 Cold-start: animated_pacer ma badge
-- [ ] 2.6 Rekomendacja aktualizuje się po nowym completion
+- [x] 2.3 Dashboard ładuje się bez błędów w konsoli
+- [x] 2.4 Dokładnie jedna karta ma badge "Recommended"
+- [x] 2.5 Cold-start: animated_pacer ma badge
+- [x] 2.6 Rekomendacja aktualizuje się po nowym completion
