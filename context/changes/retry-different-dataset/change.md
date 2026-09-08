@@ -1,7 +1,7 @@
 ---
 change_id: retry-different-dataset
 title: Retry different dataset
-status: implementing
+status: implemented
 created: 2026-09-07
 updated: 2026-09-07
 

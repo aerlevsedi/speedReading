@@ -154,8 +154,8 @@ One additional DB query per results page load (`getAlternateExercise`). The `exe
 
 #### Automated
 
-- [x] 2.1 Production build succeeds: `npm run build`
-- [x] 2.2 Lint passes: `npm run lint`
+- [x] 2.1 Production build succeeds: `npm run build` — c0237ef
+- [x] 2.2 Lint passes: `npm run lint` — c0237ef
 
 #### Manual
 
