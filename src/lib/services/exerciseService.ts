@@ -24,6 +24,10 @@ export async function getNextExerciseForType(
   // Step 2: Determine which dataset to select
   let selectedDataset = "dataset_1"; // Cold-start default
 
+  if (historyResult.error) {
+    console.error("getNextExerciseForType: failed to fetch history, defaulting to dataset_1", historyResult.error);
+  }
+
   if (historyResult.data) {
     // Type assertion for exercises nested data with null safety
     const exercisesData = historyResult.data.exercises as unknown as { dataset_id?: string };
@@ -64,6 +68,10 @@ export async function getAlternateExercise(
     .single();
 
   if (result.error) {
+    // PGRST116 = "no rows returned" — expected when alternate dataset doesn't exist
+    if (result.error.code !== "PGRST116") {
+      console.error("getAlternateExercise: unexpected DB error", result.error);
+    }
     return null;
   }
 
