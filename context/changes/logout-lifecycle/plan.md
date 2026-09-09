@@ -141,23 +141,23 @@ The check must be `=== "/"` (exact match), not `startsWith`, to avoid accidental
 
 #### Automated
 
-- [x] 1.1 Lint passes: `npm run lint`
-- [x] 1.2 Build passes: `npm run build`
+- [x] 1.1 Lint passes: `npm run lint` — cdd5500
+- [x] 1.2 Build passes: `npm run build` — cdd5500
 
 #### Manual
 
-- [x] 1.3 Sign in with valid credentials → lands on `/dashboard`
-- [x] 1.4 Sign in with invalid credentials → stays on `/auth/signin` with error (regression)
+- [x] 1.3 Sign in with valid credentials → lands on `/dashboard` — cdd5500
+- [x] 1.4 Sign in with invalid credentials → stays on `/auth/signin` with error (regression) — cdd5500
 
 ### Phase 2: Root-URL Guard in Middleware
 
 #### Automated
 
-- [ ] 2.1 Lint passes: `npm run lint`
-- [ ] 2.2 Build passes: `npm run build`
+- [x] 2.1 Lint passes: `npm run lint`
+- [x] 2.2 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.3 Logged-in user navigates to `/` → redirected to `/dashboard`
-- [ ] 2.4 Logged-out user navigates to `/` → landing page renders normally
-- [ ] 2.5 Sign-out from `/dashboard` → lands on `/` (not redirected back)
+- [x] 2.3 Logged-in user navigates to `/` → redirected to `/dashboard`
+- [x] 2.4 Logged-out user navigates to `/` → landing page renders normally
+- [x] 2.5 Sign-out from `/dashboard` → lands on `/` (not redirected back)

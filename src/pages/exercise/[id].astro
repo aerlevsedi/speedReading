@@ -31,6 +31,14 @@ const exercise = result.data as Exercise;
 <Layout title={exercise.title}>
   <div class="bg-cosmic min-h-screen p-4">
     <div class="mx-auto max-w-4xl">
+      <div class="mb-4">
+        <a
+          href="/dashboard"
+          class="inline-flex items-center gap-1 text-sm text-blue-100/60 transition-colors hover:text-blue-100"
+        >
+          ← Back to Dashboard
+        </a>
+      </div>
       <div class="mb-6 text-center">
         <h1 class="mb-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
           {exercise.title}

@@ -21,5 +21,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
   }
 
+  if (context.url.pathname === "/" && context.locals.user) {
+    return context.redirect("/dashboard");
+  }
+
   return next();
 });
