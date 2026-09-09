@@ -1,7 +1,7 @@
 ---
 change_id: logout-lifecycle
 title: Logout lifecycle
-status: implementing
+status: implemented
 created: 2026-09-09
 updated: 2026-09-09
 archived_at: null

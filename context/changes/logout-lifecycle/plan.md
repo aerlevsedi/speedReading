@@ -153,11 +153,11 @@ The check must be `=== "/"` (exact match), not `startsWith`, to avoid accidental
 
 #### Automated
 
-- [x] 2.1 Lint passes: `npm run lint`
-- [x] 2.2 Build passes: `npm run build`
+- [x] 2.1 Lint passes: `npm run lint` — 31d714e
+- [x] 2.2 Build passes: `npm run build` — 31d714e
 
 #### Manual
 
-- [x] 2.3 Logged-in user navigates to `/` → redirected to `/dashboard`
-- [x] 2.4 Logged-out user navigates to `/` → landing page renders normally
-- [x] 2.5 Sign-out from `/dashboard` → lands on `/` (not redirected back)
+- [x] 2.3 Logged-in user navigates to `/` → redirected to `/dashboard` — 31d714e
+- [x] 2.4 Logged-out user navigates to `/` → landing page renders normally — 31d714e
+- [x] 2.5 Sign-out from `/dashboard` → lands on `/` (not redirected back) — 31d714e
