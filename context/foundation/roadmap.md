@@ -179,12 +179,12 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 | Roadmap ID | Change ID                 | Suggested issue title                              | Ready for `/10x-plan` | Notes                                          |
 | ---------- | ------------------------- | -------------------------------------------------- | --------------------- | ---------------------------------------------- |
-| F-01       | exercise-data-model-seed  | Define 4 exercise types + seed data model          | yes                   | Run `/10x-plan exercise-data-model-seed`       |
-| S-01       | first-exercise-completion | Ship first exercise completion (north star)        | no                    | Blocked by F-01                                |
-| S-02       | all-exercise-types        | Add all 4 exercise types to dashboard              | no                    | Blocked by S-01                                |
-| S-03       | goal-comparison           | Add goal setting and comparison                    | no                    | Blocked by S-01                                |
-| S-04       | recommendation-system     | Add least-used recommendation to dashboard         | no                    | Blocked by S-01 + S-02                         |
-| S-05       | progress-chart            | Add progress chart to results                      | no                    | Blocked by S-01                                |
+| F-01       | exercise-data-model-seed  | Define 4 exercise types + seed data model          | —                     | Done — archived 2026-06-07                     |
+| S-01       | first-exercise-completion | Ship first exercise completion (north star)        | —                     | Done — archived 2026-06-07                     |
+| S-02       | all-exercise-types        | Add all 4 exercise types to dashboard              | —                     | Done — archived 2026-07-28                     |
+| S-03       | goal-comparison           | Add goal setting and comparison                    | —                     | Done — archived 2026-07-28                     |
+| S-04       | recommendation-system     | Add least-used recommendation to dashboard         | —                     | Done — archived 2026-09-07                     |
+| S-05       | progress-chart            | Add progress chart to results                      | —                     | Done — archived 2026-08-18                     |
 | S-06       | retry-different-dataset   | Add retry with different dataset                   | —                     | Done — archived 2026-09-09                     |
 | S-08       | intro-and-instructions    | Add first-time intro + instructions icon           | no                    | Blocked by S-02                                |
 | S-09       | logout-lifecycle          | Add manual logout + auto-logout (if time permits)  | no                    | Blocked by S-01; consider Parking auto-logout  |
