@@ -3,7 +3,7 @@ project: Speed-Reading Training App
 version: 1
 status: draft
 created: 2026-06-02
-updated: 2026-09-07
+updated: 2026-09-09
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -33,7 +33,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | S-03 | goal-comparison               | set a reading speed goal and see goal comparison on result summary            | S-01          | FR-016, FR-017, FR-015             | done |
 | S-04 | recommendation-system         | see recommended exercise marked on dashboard (least-used algorithm)           | S-01, S-02    | FR-005, FR-020                     | done     |
 | S-05 | progress-chart                | see progress chart comparing current to previous sessions                     | S-01          | FR-014                             | done     |
-| S-06 | retry-different-dataset       | retry same exercise type with different dataset                               | S-02          | FR-012, FR-019                     | proposed |
+| S-06 | retry-different-dataset       | retry same exercise type with different dataset                               | S-02          | FR-012, FR-019                     | done |
 | S-08 | intro-and-instructions        | see first-time intro on each exercise type, access instructions via icon      | S-02          | FR-007, FR-008                     | proposed |
 | S-09 | logout-lifecycle              | log out manually and auto-logout after 1 hour inactivity                      | S-01          | FR-002, FR-003                     | proposed |
 
@@ -148,7 +148,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Validates the 2-dataset mechanic (PRD: retry with same dataset is useless — users memorize answers). Sequenced after S-02 which seeds 8 instances (4 types × 2 datasets). Parallel with progress features (S-03/S-04/S-05) — no dependency between them.
-- **Status:** proposed
+- **Status:** done
 
 ### S-08: Intro and instructions
 
@@ -219,3 +219,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-03: user can set a reading speed goal and see goal comparison on result summary** — Archived 2026-07-28 → `context/archive/2026-07-27-goal-comparison/`. Lesson: —.
 - **S-05: user can see progress chart comparing current to previous sessions** — Archived 2026-08-18 → `context/archive/2026-08-18-progress-chart/`. Lesson: —.
 - **S-04: user can see recommended exercise marked on dashboard (least-used algorithm)** — Archived 2026-09-07 → `context/archive/2026-08-18-recommendation-system/`. Lesson: —.
+- **S-06: retry same exercise type with different dataset** — Archived 2026-09-09 → `context/archive/2026-09-07-retry-different-dataset/`. Lesson: —.
