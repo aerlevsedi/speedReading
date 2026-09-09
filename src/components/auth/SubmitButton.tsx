@@ -1,16 +1,14 @@
 import type { ReactNode } from "react";
-import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 
 interface SubmitButtonProps {
   pendingText: string;
   icon: ReactNode;
   children: ReactNode;
+  pending?: boolean;
 }
 
-export function SubmitButton({ pendingText, icon, children }: SubmitButtonProps) {
-  const { pending } = useFormStatus();
-
+export function SubmitButton({ pendingText, icon, children, pending = false }: SubmitButtonProps) {
   return (
     <Button
       type="submit"
