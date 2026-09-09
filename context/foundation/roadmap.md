@@ -185,7 +185,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-03       | goal-comparison           | Add goal setting and comparison                    | no                    | Blocked by S-01                                |
 | S-04       | recommendation-system     | Add least-used recommendation to dashboard         | no                    | Blocked by S-01 + S-02                         |
 | S-05       | progress-chart            | Add progress chart to results                      | no                    | Blocked by S-01                                |
-| S-06       | retry-different-dataset   | Add retry with different dataset                   | no                    | Blocked by S-02                                |
+| S-06       | retry-different-dataset   | Add retry with different dataset                   | —                     | Done — archived 2026-09-09                     |
 | S-08       | intro-and-instructions    | Add first-time intro + instructions icon           | no                    | Blocked by S-02                                |
 | S-09       | logout-lifecycle          | Add manual logout + auto-logout (if time permits)  | no                    | Blocked by S-01; consider Parking auto-logout  |
 
