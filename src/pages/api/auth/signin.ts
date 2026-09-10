@@ -6,6 +6,10 @@ export const POST: APIRoute = async (context) => {
   const email = form.get("email") as string;
   const password = form.get("password") as string;
 
+  if (!email || !password) {
+    return context.redirect(`/auth/signin?error=${encodeURIComponent("Email and password are required")}`);
+  }
+
   const supabase = createClient(context.request.headers, context.cookies);
   if (!supabase) {
     return context.redirect(`/auth/signin?error=${encodeURIComponent("Supabase is not configured")}`);
@@ -13,7 +17,7 @@ export const POST: APIRoute = async (context) => {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    return context.redirect(`/auth/signin?error=${encodeURIComponent(error.message)}`);
+    return context.redirect(`/auth/signin?error=${encodeURIComponent("Invalid email or password")}`);
   }
 
   return context.redirect("/dashboard");

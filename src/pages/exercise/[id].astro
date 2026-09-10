@@ -6,10 +6,14 @@ import ExerciseFlow from "@/components/exercise/ExerciseFlow";
 
 export const prerender = false;
 
+const { user } = Astro.locals;
+if (!user) {
+  return Astro.redirect("/auth/signin?error=Unauthorized");
+}
+
 const { id } = Astro.params;
 
-// Handle missing ID
-if (!id) {
+if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)) {
   return Astro.redirect("/dashboard?error=Invalid+exercise+ID");
 }
 
