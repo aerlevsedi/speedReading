@@ -3,7 +3,7 @@ project: Speed-Reading Training App
 version: 1
 status: draft
 created: 2026-06-02
-updated: 2026-09-09
+updated: 2026-09-10
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -35,7 +35,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | S-05 | progress-chart                | see progress chart comparing current to previous sessions                     | S-01          | FR-014                             | done     |
 | S-06 | retry-different-dataset       | retry same exercise type with different dataset                               | S-02          | FR-012, FR-019                     | done |
 | S-08 | intro-and-instructions        | see first-time intro on each exercise type, access instructions via icon      | S-02          | FR-007, FR-008                     | proposed |
-| S-09 | logout-lifecycle              | log out manually and auto-logout after 1 hour inactivity                      | S-01          | FR-002, FR-003                     | proposed |
+| S-09 | logout-lifecycle              | log out manually and auto-logout after 1 hour inactivity                      | S-01          | FR-002, FR-003                     | done     |
 
 ## Streams
 
@@ -173,7 +173,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Is auto-logout essential for MVP security? (FR-003 Socrates: auto-logout adds complexity with no clear benefit — consider optional or remove.) — Owner: product/security. Block: no (manual logout is must-have; auto-logout can be deferred if time-constrained).
 - **Risk:** Auth lifecycle completeness — manual logout is must-have (FR-002), auto-logout is questioned (FR-003 Socrates note). Sequenced after north star (S-01 establishes login). Parallel with all other slices — no dependency. Consider Parking auto-logout if timeline tightens (main_goal: speed, top_blocker: time).
-- **Status:** proposed
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -220,3 +220,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-05: user can see progress chart comparing current to previous sessions** — Archived 2026-08-18 → `context/archive/2026-08-18-progress-chart/`. Lesson: —.
 - **S-04: user can see recommended exercise marked on dashboard (least-used algorithm)** — Archived 2026-09-07 → `context/archive/2026-08-18-recommendation-system/`. Lesson: —.
 - **S-06: retry same exercise type with different dataset** — Archived 2026-09-09 → `context/archive/2026-09-07-retry-different-dataset/`. Lesson: —.
+- **S-09: user can log out manually and is auto-logged out after 1 hour inactivity** — Archived 2026-09-10 → `context/archive/2026-09-09-logout-lifecycle/`. Lesson: —.
