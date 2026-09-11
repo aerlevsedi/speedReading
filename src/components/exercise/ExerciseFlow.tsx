@@ -7,6 +7,7 @@ import type { Exercise } from "@/types";
 
 interface Props {
   exercise: Exercise;
+  seenIntros: string[];
 }
 
 // Component map for routing based on exercise type
@@ -17,7 +18,7 @@ const ExerciseComponentMap = {
   speed_scan: SpeedScan,
 } as const;
 
-export default function ExerciseFlow({ exercise }: Props) {
+export default function ExerciseFlow({ exercise, seenIntros: _seenIntros }: Props) {
   const [isComplete, setIsComplete] = useState(false);
   const [duration, setDuration] = useState(0);
   const [errors, setErrors] = useState(0);

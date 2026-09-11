@@ -51,6 +51,13 @@ export interface UserGoal {
   updated_at: string;
 }
 
+export interface UserIntroView {
+  id: string;
+  user_id: string;
+  exercise_type: string;
+  seen_at: string;
+}
+
 // A single point in the Focus Sprint WPM progress chart (S-05)
 export interface ProgressPoint {
   completedAt: string; // ISO timestamp

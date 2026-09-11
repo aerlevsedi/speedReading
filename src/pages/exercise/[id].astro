@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
 import type { Exercise } from "@/types";
 import ExerciseFlow from "@/components/exercise/ExerciseFlow";
+import type { UserIntroView } from "@/types";
 
 export const prerender = false;
 
@@ -30,6 +31,12 @@ if (result.error || !result.data) {
 }
 
 const exercise = result.data as Exercise;
+
+const introResult = await supabase.from("user_intro_views").select("exercise_type").eq("user_id", user.id);
+
+const seenIntros: string[] = introResult.error
+  ? []
+  : (introResult.data as Pick<UserIntroView, "exercise_type">[]).map((r) => r.exercise_type);
 ---
 
 <Layout title={exercise.title}>
@@ -50,7 +57,7 @@ const exercise = result.data as Exercise;
         <p class="text-sm text-blue-100/60">Read at your own pace. Focus on comprehension.</p>
       </div>
 
-      <ExerciseFlow exercise={exercise} client:load />
+      <ExerciseFlow exercise={exercise} seenIntros={seenIntros} client:load />
     </div>
   </div>
 </Layout>
