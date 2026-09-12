@@ -424,22 +424,22 @@ The DB migration extends the CHECK constraint via `DROP CONSTRAINT IF EXISTS` + 
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly (`npx supabase db reset` or `migration up`)
-- [x] 1.2 2 seed records exist with `exercise_type = 'peripheral_vision_grid'`
+- [x] 1.1 Migration applies cleanly (`npx supabase db reset` or `migration up`) — 44007f0
+- [x] 1.2 2 seed records exist with `exercise_type = 'peripheral_vision_grid'` — 44007f0
 
 #### Manual
 
-- [x] 1.3 Confirm in Supabase Studio or psql that both seed rows are present
+- [x] 1.3 Confirm in Supabase Studio or psql that both seed rows are present — 44007f0
 
 ### Phase 2: Types and Shared Interfaces
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` passes with no new type errors
+- [x] 2.1 `npm run lint` passes with no new type errors
 
 #### Manual
 
-- [ ] 2.2 No TypeScript errors in editor after saving types.ts
+- [x] 2.2 No TypeScript errors in editor after saving types.ts
 
 ### Phase 3: PeripheralVisionGrid React Component
 

@@ -1,7 +1,7 @@
 // Database entity types
 export interface Exercise {
   id: string; // UUID
-  exercise_type: "animated_pacer" | "smart_questions" | "focus_sprint" | "speed_scan";
+  exercise_type: "animated_pacer" | "smart_questions" | "focus_sprint" | "speed_scan" | "peripheral_vision_grid";
   dataset_id: string;
   title: string;
   description: string | null;
@@ -38,7 +38,7 @@ export interface Completion {
   errors: number;
   type_data: {
     wpm?: number;
-    // Extensible for other exercise types
+    grids_completed?: number;
   };
   completed_at: string; // ISO timestamp
 }
