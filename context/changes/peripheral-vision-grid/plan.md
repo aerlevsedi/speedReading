@@ -435,26 +435,26 @@ The DB migration extends the CHECK constraint via `DROP CONSTRAINT IF EXISTS` + 
 
 #### Automated
 
-- [x] 2.1 `npm run lint` passes with no new type errors
+- [x] 2.1 `npm run lint` passes with no new type errors — 523ea2d
 
 #### Manual
 
-- [x] 2.2 No TypeScript errors in editor after saving types.ts
+- [x] 2.2 No TypeScript errors in editor after saving types.ts — 523ea2d
 
 ### Phase 3: PeripheralVisionGrid React Component
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
+- [x] 3.1 `npm run lint` passes
 
 #### Manual
 
-- [ ] 3.2 3-2-1 countdown displays and transitions to grid
-- [ ] 3.3 Grid renders 12 numbers in random positions with green center dot
-- [ ] 3.4 Wrong taps are silently ignored
-- [ ] 3.5 Correct sequence advances and resets grid on 12
-- [ ] 3.6 Timer expires and `onComplete` fires
-- [ ] 3.7 Small viewport (<1024px) shows notice instead of grid
+- [x] 3.2 3-2-1 countdown displays and transitions to grid
+- [x] 3.3 Grid renders 12 numbers in random positions with green center dot
+- [x] 3.4 Wrong taps are silently ignored
+- [x] 3.5 Correct sequence advances and resets grid on 12
+- [x] 3.6 Timer expires and `onComplete` fires
+- [x] 3.7 Small viewport (<1024px) shows notice instead of grid
 
 ### Phase 4: ExerciseFlow Integration
 
