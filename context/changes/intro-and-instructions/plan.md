@@ -430,15 +430,15 @@ Run `npx supabase db reset` locally to apply the new migration alongside existin
 
 #### Automated
 
-- [x] 3.1 TypeScript compiles: `npm run build`
-- [x] 3.2 Lint passes: `npm run lint`
+- [x] 3.1 TypeScript compiles: `npm run build` — ab57978
+- [x] 3.2 Lint passes: `npm run lint` — ab57978
 
 #### Manual
 
-- [x] 3.3 First visit to exercise type shows modal; exercise timer not yet running
-- [x] 3.4 Tick checkbox + Start → modal closes, exercise starts, DB row inserted
-- [x] 3.5 Second visit to same type → no modal
-- [x] 3.6 First visit to different type → modal appears
-- [x] 3.7 Dismiss without checkbox → modal closes, no DB row; modal shows again next visit
-- [x] 3.8 `?` button re-opens modal mid-exercise without resetting exercise state
-- [x] 3.9 End-to-end: complete an exercise → results page shows correct data (no regression)
+- [x] 3.3 First visit to exercise type shows modal; exercise timer not yet running — ab57978
+- [x] 3.4 Tick checkbox + Start → modal closes, exercise starts, DB row inserted — ab57978
+- [x] 3.5 Second visit to same type → no modal — ab57978
+- [x] 3.6 First visit to different type → modal appears — ab57978
+- [x] 3.7 Dismiss without checkbox → modal closes, no DB row; modal shows again next visit — ab57978
+- [x] 3.8 `?` button re-opens modal mid-exercise without resetting exercise state — ab57978
+- [x] 3.9 End-to-end: complete an exercise → results page shows correct data (no regression) — ab57978
