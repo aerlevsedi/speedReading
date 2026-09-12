@@ -3,7 +3,7 @@ project: Speed-Reading Training App
 version: 1
 status: draft
 created: 2026-06-02
-updated: 2026-09-10
+updated: 2026-09-12
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -34,7 +34,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | S-04 | recommendation-system         | see recommended exercise marked on dashboard (least-used algorithm)           | S-01, S-02    | FR-005, FR-020                     | done     |
 | S-05 | progress-chart                | see progress chart comparing current to previous sessions                     | S-01          | FR-014                             | done     |
 | S-06 | retry-different-dataset       | retry same exercise type with different dataset                               | S-02          | FR-012, FR-019                     | done |
-| S-08 | intro-and-instructions        | see first-time intro on each exercise type, access instructions via icon      | S-02          | FR-007, FR-008                     | proposed |
+| S-08 | intro-and-instructions        | see first-time intro on each exercise type, access instructions via icon      | S-02          | FR-007, FR-008                     | done |
 | S-09 | logout-lifecycle              | log out manually and auto-logout after 1 hour inactivity                      | S-01          | FR-002, FR-003                     | done     |
 
 ## Streams
@@ -160,7 +160,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Onboarding UX — essential for first-time users (FR-007 Socrates: intro is essential). Sequenced after S-02 which establishes all 4 types (intro needs to be designed per type). Parallel with other refinements.
-- **Status:** proposed
+- **Status:** done
 
 ### S-09: Logout lifecycle
 
@@ -221,3 +221,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-04: user can see recommended exercise marked on dashboard (least-used algorithm)** — Archived 2026-09-07 → `context/archive/2026-08-18-recommendation-system/`. Lesson: —.
 - **S-06: retry same exercise type with different dataset** — Archived 2026-09-09 → `context/archive/2026-09-07-retry-different-dataset/`. Lesson: —.
 - **S-09: user can log out manually and is auto-logged out after 1 hour inactivity** — Archived 2026-09-10 → `context/archive/2026-09-09-logout-lifecycle/`. Lesson: —.
+- **S-08: user can see first-time intro on each exercise type, then access instructions via question-mark icon** — Archived 2026-09-12 → `context/archive/2026-09-10-intro-and-instructions/`. Lesson: —.

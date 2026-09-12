@@ -1,10 +1,10 @@
 ---
 change_id: intro-and-instructions
 title: Intro and instructions
-status: impl_reviewed
+status: archived
 created: 2026-09-10
 updated: 2026-09-12
-archived_at: null
+archived_at: 2026-09-12T09:31:19Z
 ---
 
 ## Notes
