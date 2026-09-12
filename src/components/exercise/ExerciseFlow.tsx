@@ -3,6 +3,7 @@ import AnimatedPacer from "./AnimatedPacer";
 import SmartQuestions from "./SmartQuestions";
 import FocusSprint from "./FocusSprint";
 import SpeedScan from "./SpeedScan";
+import PeripheralVisionGrid from "./PeripheralVisionGrid";
 import ExerciseIntroModal from "./ExerciseIntroModal";
 import type { Exercise } from "@/types";
 
@@ -16,15 +17,17 @@ const ExerciseComponentMap = {
   smart_questions: SmartQuestions,
   focus_sprint: FocusSprint,
   speed_scan: SpeedScan,
+  peripheral_vision_grid: PeripheralVisionGrid,
 } as const;
 
-const INTRO_SUPPORTED_TYPES = ["animated_pacer", "focus_sprint", "speed_scan"] as const;
+const INTRO_SUPPORTED_TYPES = ["animated_pacer", "focus_sprint", "speed_scan", "peripheral_vision_grid"] as const;
 type IntroSupportedType = (typeof INTRO_SUPPORTED_TYPES)[number];
 
 export default function ExerciseFlow({ exercise, seenIntros }: Props) {
   const [isComplete, setIsComplete] = useState(false);
   const [duration, setDuration] = useState(0);
   const [errors, setErrors] = useState(0);
+  const [gridsCompleted, setGridsCompleted] = useState(0);
 
   const supportsIntro = (INTRO_SUPPORTED_TYPES as readonly string[]).includes(exercise.exercise_type);
   const alreadySeen = seenIntros.includes(exercise.exercise_type);
@@ -33,9 +36,10 @@ export default function ExerciseFlow({ exercise, seenIntros }: Props) {
   const [markedAsSeen, setMarkedAsSeen] = useState(alreadySeen);
   const [introOpenCount, setIntroOpenCount] = useState(0);
 
-  const handleComplete = (durationSeconds: number, errorCount: number) => {
+  const handleComplete = (durationSeconds: number, errorCount: number, gridsCount = 0) => {
     setDuration(durationSeconds);
     setErrors(errorCount);
+    setGridsCompleted(gridsCount);
     setIsComplete(true);
   };
 
@@ -61,6 +65,7 @@ export default function ExerciseFlow({ exercise, seenIntros }: Props) {
         <input type="hidden" name="exercise_id" value={exercise.id} />
         <input type="hidden" name="duration_seconds" value={duration} />
         <input type="hidden" name="errors" value={errors} />
+        {gridsCompleted > 0 && <input type="hidden" name="grids_completed" value={gridsCompleted} />}
         <button type="submit" ref={(el) => el?.click()}>
           Submit
         </button>

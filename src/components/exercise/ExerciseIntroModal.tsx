@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface Props {
-  exerciseType: "animated_pacer" | "focus_sprint" | "speed_scan";
+  exerciseType: "animated_pacer" | "focus_sprint" | "speed_scan" | "peripheral_vision_grid";
   open: boolean;
   initialChecked?: boolean;
   onDismiss: (doNotShowAgain: boolean) => void;
@@ -43,6 +43,18 @@ const INTRO_CONTENT = {
       "Recall phase: answer the questions from memory.",
     ],
     whatsMeasured: "Total time across all three phases; score reflects recall accuracy (correct answers out of 3).",
+  },
+  peripheral_vision_grid: {
+    title: "Peripheral Vision Grid",
+    purpose:
+      "Train your peripheral vision — the ability to perceive and locate information without directly fixating on it. This skill underpins all reading exercises.",
+    howItWorks: [
+      "A 3×4 grid of numbers 1–12 appears with a green dot at the center.",
+      "Keep your gaze fixed on the green dot throughout the exercise.",
+      "Without looking away from the center dot, tap numbers 1, 2, 3 … 12 in sequence using your peripheral vision.",
+      "When you tap 12, the grid resets with a new arrangement. Repeat for 30 seconds.",
+    ],
+    whatsMeasured: "Number of complete 1→12 sequences (grids) finished within 30 seconds. Higher is better.",
   },
 };
 

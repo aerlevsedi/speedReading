@@ -445,27 +445,27 @@ The DB migration extends the CHECK constraint via `DROP CONSTRAINT IF EXISTS` + 
 
 #### Automated
 
-- [x] 3.1 `npm run lint` passes
+- [x] 3.1 `npm run lint` passes — 267b486
 
 #### Manual
 
-- [x] 3.2 3-2-1 countdown displays and transitions to grid
-- [x] 3.3 Grid renders 12 numbers in random positions with green center dot
-- [x] 3.4 Wrong taps are silently ignored
-- [x] 3.5 Correct sequence advances and resets grid on 12
-- [x] 3.6 Timer expires and `onComplete` fires
-- [x] 3.7 Small viewport (<1024px) shows notice instead of grid
+- [x] 3.2 3-2-1 countdown displays and transitions to grid — 267b486
+- [x] 3.3 Grid renders 12 numbers in random positions with green center dot — 267b486
+- [x] 3.4 Wrong taps are silently ignored — 267b486
+- [x] 3.5 Correct sequence advances and resets grid on 12 — 267b486
+- [x] 3.6 Timer expires and `onComplete` fires — 267b486
+- [x] 3.7 Small viewport (<1024px) shows notice instead of grid — 267b486
 
 ### Phase 4: ExerciseFlow Integration
 
 #### Automated
 
-- [ ] 4.1 `npm run lint` passes with no TypeScript errors
+- [x] 4.1 `npm run lint` passes with no TypeScript errors
 
 #### Manual
 
-- [ ] 4.2 Peripheral Vision Grid exercise URL renders the component
-- [ ] 4.3 `?` button re-opens intro modal with correct content
+- [x] 4.2 Peripheral Vision Grid exercise URL renders the component
+- [x] 4.3 `?` button re-opens intro modal with correct content
 
 ### Phase 5: API Completion Fix
 
