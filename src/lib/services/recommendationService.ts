@@ -1,6 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export const VISIBLE_EXERCISE_TYPES = ["animated_pacer", "focus_sprint", "speed_scan"] as const;
+export const VISIBLE_EXERCISE_TYPES = [
+  "animated_pacer",
+  "focus_sprint",
+  "speed_scan",
+  "peripheral_vision_grid",
+] as const;
 
 type ExerciseType = (typeof VISIBLE_EXERCISE_TYPES)[number];
 

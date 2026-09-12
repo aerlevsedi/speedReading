@@ -471,34 +471,34 @@ The DB migration extends the CHECK constraint via `DROP CONSTRAINT IF EXISTS` + 
 
 #### Automated
 
-- [x] 5.1 `npm run lint` passes
+- [x] 5.1 `npm run lint` passes — 5f943bf
 
 #### Manual
 
-- [x] 5.2 Completing a Peripheral Vision Grid exercise redirects to results page
-- [x] 5.3 DB row has `type_data = { grids_completed: N }`, `errors = 0`
-- [x] 5.4 Existing exercise types still store WPM correctly
+- [x] 5.2 Completing a Peripheral Vision Grid exercise redirects to results page — 5f943bf
+- [x] 5.3 DB row has `type_data = { grids_completed: N }`, `errors = 0` — 5f943bf
+- [x] 5.4 Existing exercise types still store WPM correctly — 5f943bf
 
 ### Phase 6: Results Page Display
 
 #### Automated
 
-- [x] 6.1 `npm run lint` passes
+- [x] 6.1 `npm run lint` passes — 5f943bf
 
 #### Manual
 
-- [x] 6.2 Results page for Peripheral Vision Grid shows Duration + Grids Completed
-- [x] 6.3 No WPM card, comprehension card, or goal section on Peripheral Vision Grid results
-- [x] 6.4 Focus Sprint results page still shows WPM, goal, and progress chart
+- [x] 6.2 Results page for Peripheral Vision Grid shows Duration + Grids Completed — 5f943bf
+- [x] 6.3 No WPM card, comprehension card, or goal section on Peripheral Vision Grid results — 5f943bf
+- [x] 6.4 Focus Sprint results page still shows WPM, goal, and progress chart — 5f943bf
 
 ### Phase 7: Dashboard Registration
 
 #### Automated
 
-- [ ] 7.1 `npm run lint` passes
+- [x] 7.1 `npm run lint` passes
 
 #### Manual
 
-- [ ] 7.2 Dashboard shows 2 Peripheral Vision Grid cards with teal badge
-- [ ] 7.3 "Recommended" badge appears on Peripheral Vision Grid for a new user
-- [ ] 7.4 All 3 existing exercise type cards render correctly
+- [x] 7.2 Dashboard shows 2 Peripheral Vision Grid cards with teal badge
+- [x] 7.3 "Recommended" badge appears on Peripheral Vision Grid for a new user
+- [x] 7.4 All 3 existing exercise type cards render correctly

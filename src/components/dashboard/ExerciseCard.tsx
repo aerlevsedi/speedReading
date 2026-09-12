@@ -23,6 +23,7 @@ export default function ExerciseCard({ exercise, isRecommended = false }: Props)
         smart_questions: "bg-purple-500/20 text-purple-300",
         focus_sprint: "bg-green-500/20 text-green-300",
         speed_scan: "bg-orange-500/20 text-orange-300",
+        peripheral_vision_grid: "bg-teal-500/20 text-teal-300",
       } as Record<string, string>
     )[exercise.exercise_type] ?? "bg-gray-500/20 text-gray-300";
 
@@ -33,6 +34,7 @@ export default function ExerciseCard({ exercise, isRecommended = false }: Props)
         smart_questions: "Smart Questions",
         focus_sprint: "Focus Sprint",
         speed_scan: "Speed Scan",
+        peripheral_vision_grid: "Peripheral Vision",
       } as Record<string, string>
     )[exercise.exercise_type] ?? exercise.exercise_type;
 

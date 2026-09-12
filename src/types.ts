@@ -23,6 +23,9 @@ export interface Exercise {
     // Speed Scan
     scan_time_seconds?: number;
     info_recall_count?: number;
+
+    // Peripheral Vision Grid
+    symbols?: string[];
   };
   difficulty: "beginner" | "intermediate" | "advanced" | null;
   estimated_duration_seconds: number | null;

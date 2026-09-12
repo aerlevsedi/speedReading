@@ -6,7 +6,9 @@ interface Props {
   onComplete: (durationSeconds: number, errorCount: number, gridsCompleted: number) => void;
 }
 
-function shuffle(arr: number[]): number[] {
+const DEFAULT_SYMBOLS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+
+function shuffle(arr: string[]): string[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -15,22 +17,23 @@ function shuffle(arr: number[]): number[] {
   return a;
 }
 
-function freshShuffle(current: number[]): number[] {
-  const base = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  let next = shuffle(base);
+function freshShuffle(symbols: string[], current: string[]): string[] {
+  let next = shuffle(symbols);
   while (next.every((v, i) => v === current[i])) {
-    next = shuffle(base);
+    next = shuffle(symbols);
   }
   return next;
 }
 
-export default function PeripheralVisionGrid({ exercise: _exercise, onComplete }: Props) {
+export default function PeripheralVisionGrid({ exercise, onComplete }: Props) {
+  const symbols = exercise.config.symbols ?? DEFAULT_SYMBOLS;
+
   const [isSmallViewport] = useState(() => typeof window !== "undefined" && window.innerWidth < 1024);
   const [phase, setPhase] = useState<"countdown" | "running" | "done">("countdown");
   const [countdownValue, setCountdownValue] = useState<3 | 2 | 1>(3);
   const [timeLeft, setTimeLeft] = useState(30);
-  const [grid, setGrid] = useState<number[]>(() => shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]));
-  const [nextNumber, setNextNumber] = useState(1);
+  const [grid, setGrid] = useState<string[]>(() => shuffle(symbols));
+  const [nextIndex, setNextIndex] = useState(0);
   const [gridsCompleted, setGridsCompleted] = useState(0);
 
   // Countdown ticks 3→2→1 then transitions to running. Hardcoded start=3, no stale dep.
@@ -75,14 +78,14 @@ export default function PeripheralVisionGrid({ exercise: _exercise, onComplete }
     }
   }, [phase, onComplete, gridsCompleted]);
 
-  function handleTap(num: number) {
-    if (phase !== "running" || num !== nextNumber) return;
-    if (num === 12) {
-      setGrid((g) => freshShuffle(g));
-      setNextNumber(1);
+  function handleTap(symbol: string) {
+    if (phase !== "running" || symbol !== symbols[nextIndex]) return;
+    if (nextIndex === symbols.length - 1) {
+      setGrid((g) => freshShuffle(symbols, g));
+      setNextIndex(0);
       setGridsCompleted((c) => c + 1);
     } else {
-      setNextNumber(num + 1);
+      setNextIndex(nextIndex + 1);
     }
   }
 
@@ -121,17 +124,20 @@ export default function PeripheralVisionGrid({ exercise: _exercise, onComplete }
 
       <div className="relative">
         <div className="grid grid-cols-3 gap-3">
-          {grid.map((num, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                handleTap(num);
-              }}
-              className={`flex h-16 w-16 items-center justify-center rounded-lg text-xl font-semibold transition-colors ${num < nextNumber ? "border border-teal-500/40 bg-teal-900/40 text-teal-300" : "bg-gray-800 text-gray-200 hover:bg-gray-700 active:bg-gray-600"}`}
-            >
-              {num}
-            </button>
-          ))}
+          {grid.map((symbol, idx) => {
+            const tapped = symbols.indexOf(symbol) < nextIndex;
+            return (
+              <button
+                key={idx}
+                onClick={() => {
+                  handleTap(symbol);
+                }}
+                className={`flex h-16 w-16 items-center justify-center rounded-lg text-xl font-semibold transition-colors ${tapped ? "border border-teal-500/40 bg-teal-900/40 text-teal-300" : "bg-gray-800 text-gray-200 hover:bg-gray-700 active:bg-gray-600"}`}
+              >
+                {symbol}
+              </button>
+            );
+          })}
         </div>
         {/* Center dot overlay — pointer-events-none so taps pass through */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
