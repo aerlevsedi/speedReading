@@ -495,10 +495,10 @@ The DB migration extends the CHECK constraint via `DROP CONSTRAINT IF EXISTS` + 
 
 #### Automated
 
-- [x] 7.1 `npm run lint` passes
+- [x] 7.1 `npm run lint` passes — fcd845c
 
 #### Manual
 
-- [x] 7.2 Dashboard shows 2 Peripheral Vision Grid cards with teal badge
-- [x] 7.3 "Recommended" badge appears on Peripheral Vision Grid for a new user
-- [x] 7.4 All 3 existing exercise type cards render correctly
+- [x] 7.2 Dashboard shows 2 Peripheral Vision Grid cards with teal badge — fcd845c
+- [x] 7.3 "Recommended" badge appears on Peripheral Vision Grid for a new user — fcd845c
+- [x] 7.4 All 3 existing exercise type cards render correctly — fcd845c
