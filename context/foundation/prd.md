@@ -1,8 +1,9 @@
 ---
 project: Speed-Reading Training App
-version: 1
+version: 2
 status: draft
 created: 2026-05-22
+updated: 2026-09-12
 context_type: greenfield
 product_type: web-app
 target_scale:
@@ -81,6 +82,16 @@ User can complete one full exercise session:
 2. **UX:** Exercises are nicely displayed and clear. Instructions are accessible (first-time intro + question-mark icon for subsequent sessions).
 
 ## User Stories
+
+### US-02: Complete a Peripheral Vision Grid session
+
+**As a** user on the dashboard
+**I want to** select the Peripheral Vision Grid exercise, keep my gaze on the center dot, and tap numbers 1–12 in order as fast as I can
+**So that** I can train my peripheral vision and see how many full grids I completed in 30 seconds.
+
+**Given** I am on the dashboard and the Peripheral Vision Grid exercise card is visible
+**When** I select it, see the intro modal (first time), start the exercise, and tap 1–12 in sequence on one or more grids within 30 seconds
+**Then** the exercise ends at 30 seconds and I see a results page showing the number of grids I completed.
 
 ### US-01: Access and finish the exercise
 
@@ -180,6 +191,36 @@ User can complete one full exercise session:
 - FR-020: System recommends the least-used exercise type to the user. Priority: must-have
   > Socrates: Counter-argument considered: "Least-used prevents skill stagnation." Resolution: kept; recommendation pushes users to harder/neglected exercises. Note: cold-start problem — on first login, all exercises are equally unused; recommendation is arbitrary.
 
+### Peripheral Vision Grid exercise
+
+- FR-021: User can see the Peripheral Vision Grid on the dashboard and select it. Priority: must-have.
+
+  > Socrates: Counter-argument considered: "Adding a 4th exercise type dilutes the recommendation rotation." Resolution: kept; more variety is the explicit product goal (FR-018). The least-used algorithm handles rotation automatically.
+
+- FR-022: User sees a first-time intro modal for Peripheral Vision Grid explaining the purpose, mechanics, and scoring before the exercise starts. Priority: must-have.
+
+  > Socrates: Counter-argument considered: "The mechanic is obvious — numbers in a grid, tap in order." Resolution: kept; the CENTER DOT constraint is non-obvious and must be explained. Without the intro, users will look around the grid freely and miss the point of the exercise.
+
+- FR-023: User sees a 3×4 grid of numbers 1–12 placed randomly in cells, with a green dot displayed in the center of the grid. Priority: must-have.
+
+  > Socrates: Counter-argument considered: "A green dot is a weak gaze anchor — users will still look around." Resolution: kept for MVP; the dot is a convention in peripheral vision training tools. Stronger anchors (e.g., animated dot) are post-MVP enhancements.
+
+- FR-024: User taps numbers 1–12 in ascending sequence; only the correct next number in sequence registers (wrong taps are ignored silently). Priority: must-have.
+
+  > Socrates: Counter-argument considered: "Silent wrong-tap ignoring gives no feedback." Resolution: kept for MVP simplicity. A brief visual highlight on wrong taps (no penalty, no score impact) is noted as a post-MVP refinement.
+
+- FR-025: When the user correctly taps 12, the grid resets with a new random arrangement and the completed-grid counter increments by 1. Priority: must-have.
+
+  > Socrates: No counter-argument; it stands as written. Immediate reset keeps the flow game-like and maintains time pressure.
+
+- FR-026: The exercise runs for 30 seconds from the moment the first grid appears; when time expires the exercise ends and the user sees the results page showing grids completed. Priority: must-have.
+
+  > Socrates: Counter-argument considered: "30 seconds is arbitrary — might be too short or too easy." Resolution: kept for MVP; 30 seconds is a standard peripheral vision drill duration. Variable duration is post-MVP.
+
+- FR-027: The system stores the exercise completion with `score = grids_completed` (integer); WPM is null/0 for this exercise type. Priority: must-have.
+
+  > Socrates: Counter-argument considered: "Storing grids_completed in the WPM score column is semantically confusing." Resolution: kept for now — the score column is already generic. A dedicated column is a post-MVP schema improvement.
+
 ## Non-Functional Requirements
 
 1. **Performance:** Dashboard and exercise views load quickly — perceived as fast by users on typical broadband connections (target: less than 2 seconds for initial load).
@@ -189,6 +230,10 @@ User can complete one full exercise session:
 3. **Data retention:** All exercise history is retained permanently. No automatic deletion or expiration of user data. Users build a complete historical record of their progress.
 
 4. **Privacy:** Only authenticated users can access the dashboard and personal exercise history. No unauthenticated access to user data.
+
+5. **Peripheral Vision Grid — grid randomness:** Each new grid arrangement must be a fresh Fisher-Yates shuffle of 1–12. No two consecutive grids may have the same arrangement.
+
+6. **Peripheral Vision Grid — tap responsiveness:** Tap/click registration must feel immediate — no perceptible lag between a correct tap and the grid re-render (target: < 50ms).
 
 ## Business Logic
 
@@ -238,9 +283,15 @@ This MVP explicitly does NOT include:
 
 2. **Advanced analytics / detailed progress reports** — simple charts only (comparison to previous sessions, goal percentage). No drill-down, export functionality, or complex visualizations. Keep data presentation straightforward.
 
-3. **Custom exercise creation by users** — app ships with fixed exercise datasets (4 types × 2 datasets = 8 instances). Users cannot upload their own text, create custom exercises, or modify existing ones. Content is curated and provided by the app.
+3. **Custom exercise creation by users** — app ships with fixed exercise datasets (4 types × 2 datasets = 8 instances for reading types; 2 seeded instances for Peripheral Vision Grid). Users cannot upload their own text, create custom exercises, or modify existing ones. Content is curated and provided by the app.
 
 4. **Native mobile app** — no iOS/Android native app, no hybrid app framework. Web app accessed via desktop browsers is primary; responsive design is acceptable if it doesn't add complexity, but native mobile app development is out of scope.
+
+5. **Variable grid size for Peripheral Vision Grid** — fixed 3×4 (12 numbers) for MVP. Difficulty tiers (e.g., 4×4) are post-MVP.
+
+6. **Variable exercise duration for Peripheral Vision Grid** — fixed 30 seconds for MVP. Configurable duration is post-MVP.
+
+7. **Gaze tracking / eye-tracking API** — the center dot is a behavioral anchor only; no browser eye-tracking is used or planned.
 
 ## Open Questions
 

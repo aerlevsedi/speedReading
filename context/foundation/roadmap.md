@@ -4,6 +4,7 @@ version: 1
 status: draft
 created: 2026-06-02
 updated: 2026-09-12
+prd_version: 2
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -36,6 +37,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | S-06 | retry-different-dataset       | retry same exercise type with different dataset                               | S-02          | FR-012, FR-019                     | done |
 | S-08 | intro-and-instructions        | see first-time intro on each exercise type, access instructions via icon      | S-02          | FR-007, FR-008                     | done |
 | S-09 | logout-lifecycle              | log out manually and auto-logout after 1 hour inactivity                      | S-01          | FR-002, FR-003                     | done     |
+| S-10 | peripheral-vision-grid        | play a 30-second grid game that trains peripheral vision (4th exercise type)  | S-02          | FR-021–FR-027                      | proposed |
 
 ## Streams
 
@@ -46,6 +48,7 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | A      | Core loop          | `F-01` → `S-01` → `S-02` → `S-04`          | Sequential backbone: data model → first completion → variety → recommendation.       |
 | B      | Progress tracking  | `S-03` / `S-05`                            | Both branch from `S-01`, parallel with each other and with Stream A's `S-02`/`S-04`. |
 | C      | UX polish          | `S-06` / `S-08` / `S-09`                   | Parallel refinements; `S-06`/`S-08` join Stream A at `S-02`, `S-09` branches from `S-01`. |
+| D      | New exercise types | `S-10`                                      | Peripheral Vision Grid — 4th exercise type, branches from `S-02`. |
 
 ## Baseline
 
@@ -175,6 +178,18 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** Auth lifecycle completeness — manual logout is must-have (FR-002), auto-logout is questioned (FR-003 Socrates note). Sequenced after north star (S-01 establishes login). Parallel with all other slices — no dependency. Consider Parking auto-logout if timeline tightens (main_goal: speed, top_blocker: time).
 - **Status:** done
 
+### S-10: Peripheral Vision Grid
+
+- **Outcome:** user can play a 30-second grid game that trains peripheral vision — tap numbers 1–12 in order while keeping gaze fixed on a center dot; score is grids completed
+- **Change ID:** peripheral-vision-grid
+- **PRD refs:** FR-021 (dashboard card), FR-022 (intro modal), FR-023 (grid + center dot), FR-024 (tap sequence mechanic), FR-025 (grid reset on completion), FR-026 (30-second timer), FR-027 (score storage)
+- **Prerequisites:** S-02
+- **Parallel with:** S-03, S-04, S-05, S-06, S-08, S-09
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** New exercise type that doesn't fit the text-reading pattern — requires a new React component with game-loop logic (timer, random grid, tap sequence validation). The peripheral vision effect depends on grid cell size relative to viewport; too small a screen and the dot ceases to be a meaningful anchor. Desktop-only for MVP. Integration with ExerciseFlow.tsx and intro modal system follows the established pattern.
+- **Status:** proposed
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                 | Suggested issue title                              | Ready for `/10x-plan` | Notes                                          |
@@ -188,6 +203,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-06       | retry-different-dataset   | Add retry with different dataset                   | —                     | Done — archived 2026-09-09                     |
 | S-08       | intro-and-instructions    | Add first-time intro + instructions icon           | no                    | Blocked by S-02                                |
 | S-09       | logout-lifecycle          | Add manual logout + auto-logout (if time permits)  | no                    | Blocked by S-01; consider Parking auto-logout  |
+| S-10       | peripheral-vision-grid    | Add Peripheral Vision Grid exercise (4th type)     | yes                   | Blocked by S-02; desktop-only MVP              |
 
 ## Open Roadmap Questions
 
