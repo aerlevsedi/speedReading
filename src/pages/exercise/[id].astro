@@ -32,7 +32,7 @@ if (result.error || !result.data) {
 
 const exercise = result.data as Exercise;
 
-const introResult = await supabase.from("user_intro_views").select("exercise_type").eq("user_id", user.id);
+const introResult = await supabase.from("user_intro_views").select("exercise_type").eq("user_id", user.id).limit(20);
 
 const seenIntros: string[] = introResult.error
   ? []

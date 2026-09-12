@@ -24,7 +24,7 @@ export async function getNextExerciseForType(
   // Step 2: Determine which dataset to select
   let selectedDataset = "dataset_1"; // Cold-start default
 
-  if (historyResult.error) {
+  if (historyResult.error && historyResult.error.code !== "PGRST116") {
     console.error("getNextExerciseForType: failed to fetch history, defaulting to dataset_1", historyResult.error);
   }
 

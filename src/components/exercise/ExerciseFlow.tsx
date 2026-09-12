@@ -18,14 +18,18 @@ const ExerciseComponentMap = {
   speed_scan: SpeedScan,
 } as const;
 
+const INTRO_SUPPORTED_TYPES = ["animated_pacer", "focus_sprint", "speed_scan"] as const;
+type IntroSupportedType = (typeof INTRO_SUPPORTED_TYPES)[number];
+
 export default function ExerciseFlow({ exercise, seenIntros }: Props) {
   const [isComplete, setIsComplete] = useState(false);
   const [duration, setDuration] = useState(0);
   const [errors, setErrors] = useState(0);
 
+  const supportsIntro = (INTRO_SUPPORTED_TYPES as readonly string[]).includes(exercise.exercise_type);
   const alreadySeen = seenIntros.includes(exercise.exercise_type);
-  const [isFirstTimeGate, setIsFirstTimeGate] = useState(!alreadySeen);
-  const [introOpen, setIntroOpen] = useState(!alreadySeen);
+  const [isFirstTimeGate, setIsFirstTimeGate] = useState(supportsIntro && !alreadySeen);
+  const [introOpen, setIntroOpen] = useState(supportsIntro && !alreadySeen);
   const [markedAsSeen, setMarkedAsSeen] = useState(alreadySeen);
   const [introOpenCount, setIntroOpenCount] = useState(0);
 
@@ -42,7 +46,10 @@ export default function ExerciseFlow({ exercise, seenIntros }: Props) {
       setMarkedAsSeen(true);
       const fd = new FormData();
       fd.append("exercise_type", exercise.exercise_type);
-      void fetch("/api/intros/mark-seen", { method: "POST", body: fd });
+      void fetch("/api/intros/mark-seen", { method: "POST", body: fd }).catch((err) => {
+        console.error("[mark-seen]", err);
+        setMarkedAsSeen(false);
+      });
     }
   };
 
@@ -62,29 +69,33 @@ export default function ExerciseFlow({ exercise, seenIntros }: Props) {
   }
 
   return (
-    <div>
-      <ExerciseIntroModal
-        key={introOpenCount}
-        exerciseType={exercise.exercise_type as "animated_pacer" | "focus_sprint" | "speed_scan"}
-        open={introOpen}
-        initialChecked={markedAsSeen}
-        onDismiss={handleIntroDismiss}
-      />
+    <div className="relative">
+      {supportsIntro && (
+        <ExerciseIntroModal
+          key={introOpenCount}
+          exerciseType={exercise.exercise_type as IntroSupportedType}
+          open={introOpen}
+          initialChecked={markedAsSeen}
+          onDismiss={handleIntroDismiss}
+        />
+      )}
+      {supportsIntro && (
+        <button
+          onClick={() => {
+            setIntroOpenCount((c) => c + 1);
+            setIntroOpen(true);
+          }}
+          className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-sm text-white/60 transition-colors hover:bg-white/20 hover:text-white"
+          aria-label="Show exercise instructions"
+        >
+          ?
+        </button>
+      )}
       <div className="mb-6 text-center">
-        <div className="mb-2 inline-flex items-center gap-2">
+        <div className="mb-2">
           <h1 className="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
             {exercise.title}
           </h1>
-          <button
-            onClick={() => {
-              setIntroOpenCount((c) => c + 1);
-              setIntroOpen(true);
-            }}
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs text-white/60 transition-colors hover:bg-white/20 hover:text-white"
-            aria-label="Show exercise instructions"
-          >
-            ?
-          </button>
         </div>
         <p className="text-sm text-blue-100/60">Read at your own pace. Focus on comprehension.</p>
       </div>

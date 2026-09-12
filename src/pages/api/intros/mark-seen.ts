@@ -21,6 +21,14 @@ export const POST: APIRoute = async (context) => {
     });
   }
 
+  const VALID_TYPES = ["animated_pacer", "smart_questions", "focus_sprint", "speed_scan"] as const;
+  if (!(VALID_TYPES as readonly string[]).includes(exerciseType)) {
+    return new Response(JSON.stringify({ error: "Invalid exercise_type" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   const supabase = createClient(context.request.headers, context.cookies);
   if (!supabase) {
     return new Response(JSON.stringify({ error: "Server configuration error" }), {
