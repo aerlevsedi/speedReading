@@ -50,13 +50,6 @@ const seenIntros: string[] = introResult.error
           ← Back to Dashboard
         </a>
       </div>
-      <div class="mb-6 text-center">
-        <h1 class="mb-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-          {exercise.title}
-        </h1>
-        <p class="text-sm text-blue-100/60">Read at your own pace. Focus on comprehension.</p>
-      </div>
-
       <ExerciseFlow exercise={exercise} seenIntros={seenIntros} client:load />
     </div>
   </div>

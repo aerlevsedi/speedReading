@@ -3,6 +3,7 @@ import AnimatedPacer from "./AnimatedPacer";
 import SmartQuestions from "./SmartQuestions";
 import FocusSprint from "./FocusSprint";
 import SpeedScan from "./SpeedScan";
+import ExerciseIntroModal from "./ExerciseIntroModal";
 import type { Exercise } from "@/types";
 
 interface Props {
@@ -10,7 +11,6 @@ interface Props {
   seenIntros: string[];
 }
 
-// Component map for routing based on exercise type
 const ExerciseComponentMap = {
   animated_pacer: AnimatedPacer,
   smart_questions: SmartQuestions,
@@ -18,10 +18,16 @@ const ExerciseComponentMap = {
   speed_scan: SpeedScan,
 } as const;
 
-export default function ExerciseFlow({ exercise, seenIntros: _seenIntros }: Props) {
+export default function ExerciseFlow({ exercise, seenIntros }: Props) {
   const [isComplete, setIsComplete] = useState(false);
   const [duration, setDuration] = useState(0);
   const [errors, setErrors] = useState(0);
+
+  const alreadySeen = seenIntros.includes(exercise.exercise_type);
+  const [isFirstTimeGate, setIsFirstTimeGate] = useState(!alreadySeen);
+  const [introOpen, setIntroOpen] = useState(!alreadySeen);
+  const [markedAsSeen, setMarkedAsSeen] = useState(alreadySeen);
+  const [introOpenCount, setIntroOpenCount] = useState(0);
 
   const handleComplete = (durationSeconds: number, errorCount: number) => {
     setDuration(durationSeconds);
@@ -29,22 +35,60 @@ export default function ExerciseFlow({ exercise, seenIntros: _seenIntros }: Prop
     setIsComplete(true);
   };
 
-  // Route to the appropriate exercise component
+  const handleIntroDismiss = (doNotShowAgain: boolean) => {
+    setIntroOpen(false);
+    setIsFirstTimeGate(false);
+    if (doNotShowAgain && !markedAsSeen) {
+      setMarkedAsSeen(true);
+      const fd = new FormData();
+      fd.append("exercise_type", exercise.exercise_type);
+      void fetch("/api/intros/mark-seen", { method: "POST", body: fd });
+    }
+  };
+
   const ExerciseComponent = ExerciseComponentMap[exercise.exercise_type];
 
-  if (!isComplete) {
-    return <ExerciseComponent exercise={exercise} onComplete={handleComplete} />;
+  if (isComplete) {
+    return (
+      <form method="POST" action="/api/exercises/complete" className="hidden">
+        <input type="hidden" name="exercise_id" value={exercise.id} />
+        <input type="hidden" name="duration_seconds" value={duration} />
+        <input type="hidden" name="errors" value={errors} />
+        <button type="submit" ref={(el) => el?.click()}>
+          Submit
+        </button>
+      </form>
+    );
   }
 
-  // Auto-submit form when complete
   return (
-    <form method="POST" action="/api/exercises/complete" className="hidden">
-      <input type="hidden" name="exercise_id" value={exercise.id} />
-      <input type="hidden" name="duration_seconds" value={duration} />
-      <input type="hidden" name="errors" value={errors} />
-      <button type="submit" ref={(el) => el?.click()}>
-        Submit
-      </button>
-    </form>
+    <div>
+      <ExerciseIntroModal
+        key={introOpenCount}
+        exerciseType={exercise.exercise_type as "animated_pacer" | "focus_sprint" | "speed_scan"}
+        open={introOpen}
+        initialChecked={markedAsSeen}
+        onDismiss={handleIntroDismiss}
+      />
+      <div className="mb-6 text-center">
+        <div className="mb-2 inline-flex items-center gap-2">
+          <h1 className="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+            {exercise.title}
+          </h1>
+          <button
+            onClick={() => {
+              setIntroOpenCount((c) => c + 1);
+              setIntroOpen(true);
+            }}
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs text-white/60 transition-colors hover:bg-white/20 hover:text-white"
+            aria-label="Show exercise instructions"
+          >
+            ?
+          </button>
+        </div>
+        <p className="text-sm text-blue-100/60">Read at your own pace. Focus on comprehension.</p>
+      </div>
+      {!isFirstTimeGate && <ExerciseComponent exercise={exercise} onComplete={handleComplete} />}
+    </div>
   );
 }

@@ -416,29 +416,29 @@ Run `npx supabase db reset` locally to apply the new migration alongside existin
 
 #### Automated
 
-- [x] 2.1 TypeScript compiles without errors: `npm run build`
-- [x] 2.2 Lint passes: `npm run lint`
+- [x] 2.1 TypeScript compiles without errors: `npm run build` — f5cc001
+- [x] 2.2 Lint passes: `npm run lint` — f5cc001
 
 #### Manual
 
-- [x] 2.3 Modal renders with correct content for each exercise type
-- [x] 2.4 "Start Exercise" with unchecked checkbox calls `onDismiss(false)`
-- [x] 2.5 "Start Exercise" with checked checkbox calls `onDismiss(true)`
-- [x] 2.6 Clicking backdrop does NOT close the modal
+- [x] 2.3 Modal renders with correct content for each exercise type — f5cc001
+- [x] 2.4 "Start Exercise" with unchecked checkbox calls `onDismiss(false)` — f5cc001
+- [x] 2.5 "Start Exercise" with checked checkbox calls `onDismiss(true)` — f5cc001
+- [x] 2.6 Clicking backdrop does NOT close the modal — f5cc001
 
 ### Phase 3: ExerciseFlow Integration
 
 #### Automated
 
-- [ ] 3.1 TypeScript compiles: `npm run build`
-- [ ] 3.2 Lint passes: `npm run lint`
+- [x] 3.1 TypeScript compiles: `npm run build`
+- [x] 3.2 Lint passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.3 First visit to exercise type shows modal; exercise timer not yet running
-- [ ] 3.4 Tick checkbox + Start → modal closes, exercise starts, DB row inserted
-- [ ] 3.5 Second visit to same type → no modal
-- [ ] 3.6 First visit to different type → modal appears
-- [ ] 3.7 Dismiss without checkbox → modal closes, no DB row; modal shows again next visit
-- [ ] 3.8 `?` button re-opens modal mid-exercise without resetting exercise state
-- [ ] 3.9 End-to-end: complete an exercise → results page shows correct data (no regression)
+- [x] 3.3 First visit to exercise type shows modal; exercise timer not yet running
+- [x] 3.4 Tick checkbox + Start → modal closes, exercise starts, DB row inserted
+- [x] 3.5 Second visit to same type → no modal
+- [x] 3.6 First visit to different type → modal appears
+- [x] 3.7 Dismiss without checkbox → modal closes, no DB row; modal shows again next visit
+- [x] 3.8 `?` button re-opens modal mid-exercise without resetting exercise state
+- [x] 3.9 End-to-end: complete an exercise → results page shows correct data (no regression)

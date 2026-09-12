@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 interface Props {
   exerciseType: "animated_pacer" | "focus_sprint" | "speed_scan";
   open: boolean;
+  initialChecked?: boolean;
   onDismiss: (doNotShowAgain: boolean) => void;
 }
 
@@ -45,8 +46,8 @@ const INTRO_CONTENT = {
   },
 };
 
-export default function ExerciseIntroModal({ exerciseType, open, onDismiss }: Props) {
-  const [doNotShowAgain, setDoNotShowAgain] = useState(false);
+export default function ExerciseIntroModal({ exerciseType, open, initialChecked = false, onDismiss }: Props) {
+  const [doNotShowAgain, setDoNotShowAgain] = useState(initialChecked);
   const content = INTRO_CONTENT[exerciseType];
 
   return (
