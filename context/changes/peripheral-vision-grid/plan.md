@@ -460,36 +460,36 @@ The DB migration extends the CHECK constraint via `DROP CONSTRAINT IF EXISTS` + 
 
 #### Automated
 
-- [x] 4.1 `npm run lint` passes with no TypeScript errors
+- [x] 4.1 `npm run lint` passes with no TypeScript errors — 0f21640
 
 #### Manual
 
-- [x] 4.2 Peripheral Vision Grid exercise URL renders the component
-- [x] 4.3 `?` button re-opens intro modal with correct content
+- [x] 4.2 Peripheral Vision Grid exercise URL renders the component — 0f21640
+- [x] 4.3 `?` button re-opens intro modal with correct content — 0f21640
 
 ### Phase 5: API Completion Fix
 
 #### Automated
 
-- [ ] 5.1 `npm run lint` passes
+- [x] 5.1 `npm run lint` passes
 
 #### Manual
 
-- [ ] 5.2 Completing a Peripheral Vision Grid exercise redirects to results page
-- [ ] 5.3 DB row has `type_data = { grids_completed: N }`, `errors = 0`
-- [ ] 5.4 Existing exercise types still store WPM correctly
+- [x] 5.2 Completing a Peripheral Vision Grid exercise redirects to results page
+- [x] 5.3 DB row has `type_data = { grids_completed: N }`, `errors = 0`
+- [x] 5.4 Existing exercise types still store WPM correctly
 
 ### Phase 6: Results Page Display
 
 #### Automated
 
-- [ ] 6.1 `npm run lint` passes
+- [x] 6.1 `npm run lint` passes
 
 #### Manual
 
-- [ ] 6.2 Results page for Peripheral Vision Grid shows Duration + Grids Completed
-- [ ] 6.3 No WPM card, comprehension card, or goal section on Peripheral Vision Grid results
-- [ ] 6.4 Focus Sprint results page still shows WPM, goal, and progress chart
+- [x] 6.2 Results page for Peripheral Vision Grid shows Duration + Grids Completed
+- [x] 6.3 No WPM card, comprehension card, or goal section on Peripheral Vision Grid results
+- [x] 6.4 Focus Sprint results page still shows WPM, goal, and progress chart
 
 ### Phase 7: Dashboard Registration
 

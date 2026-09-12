@@ -12,6 +12,7 @@ export const POST: APIRoute = async (context) => {
   const exerciseId = formData.get("exercise_id") as string;
   const durationSeconds = parseInt(formData.get("duration_seconds") as string, 10);
   const errors = parseInt(formData.get("errors") as string, 10);
+  const gridsCompleted = parseInt((formData.get("grids_completed") as string | null) ?? "0", 10);
 
   if (!exerciseId || isNaN(durationSeconds) || isNaN(errors)) {
     return context.redirect("/dashboard?error=Invalid+completion+data");
@@ -22,15 +23,26 @@ export const POST: APIRoute = async (context) => {
     return context.redirect("/dashboard?error=Server+configuration+error");
   }
 
-  // Fetch exercise to calculate WPM
-  const exerciseResult = await supabase.from("exercises").select("content").eq("id", exerciseId).single();
+  // Fetch exercise to get type and content for WPM calculation
+  const exerciseResult = await supabase
+    .from("exercises")
+    .select("content, exercise_type")
+    .eq("id", exerciseId)
+    .single();
 
   if (!exerciseResult.data) {
     return context.redirect("/dashboard?error=Exercise+not+found");
   }
 
-  const wordCount = (exerciseResult.data.content as string).split(/\s+/).length;
-  const wpm = durationSeconds > 0 ? Math.round(wordCount / (durationSeconds / 60)) : 0;
+  const isPeripheralVisionGrid = exerciseResult.data.exercise_type === "peripheral_vision_grid";
+  const typeData = isPeripheralVisionGrid
+    ? { grids_completed: isNaN(gridsCompleted) ? 0 : gridsCompleted }
+    : {
+        wpm:
+          durationSeconds > 0
+            ? Math.round((exerciseResult.data.content as string).split(/\s+/).length / (durationSeconds / 60))
+            : 0,
+      };
 
   // Insert completion
   const completionResult = await supabase
@@ -40,7 +52,7 @@ export const POST: APIRoute = async (context) => {
       exercise_id: exerciseId,
       duration_seconds: durationSeconds,
       errors,
-      type_data: { wpm },
+      type_data: typeData,
     })
     .select()
     .single();

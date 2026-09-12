@@ -127,7 +127,7 @@ export default function PeripheralVisionGrid({ exercise: _exercise, onComplete }
               onClick={() => {
                 handleTap(num);
               }}
-              className="flex h-16 w-16 items-center justify-center rounded-lg bg-gray-800 text-xl font-semibold text-gray-200 transition-colors hover:bg-gray-700 active:bg-gray-600"
+              className={`flex h-16 w-16 items-center justify-center rounded-lg text-xl font-semibold transition-colors ${num < nextNumber ? "border border-teal-500/40 bg-teal-900/40 text-teal-300" : "bg-gray-800 text-gray-200 hover:bg-gray-700 active:bg-gray-600"}`}
             >
               {num}
             </button>

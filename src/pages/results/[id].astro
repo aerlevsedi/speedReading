@@ -7,7 +7,7 @@ import ProgressChart from "@/components/dashboard/ProgressChart";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import type { Completion, Exercise, ProgressPoint } from "@/types";
-import { CheckCircle2, XCircle, Clock, Zap } from "lucide-react";
+import { CheckCircle2, XCircle, Clock, Zap, Grid3X3 } from "lucide-react";
 
 export const prerender = false;
 
@@ -41,6 +41,8 @@ if (result.error || !result.data) {
 const completion = result.data as Completion & { exercises: Exercise };
 const exercise = completion.exercises;
 const wpm = completion.type_data.wpm ?? 0;
+const gridsCompleted = completion.type_data.grids_completed ?? 0;
+const showGridsCompleted = exercise.exercise_type === "peripheral_vision_grid";
 
 // Map exercise type to question count
 // Note: smart_questions removed 2026-06-08, kept here for backward compatibility with old completions
@@ -100,6 +102,17 @@ const formattedDuration = `${minutes}:${seconds.toString().padStart(2, "0")}`;
           <div class="mb-1 text-3xl font-bold text-white">{formattedDuration}</div>
           <div class="text-xs text-blue-100/60">Duration</div>
         </div>
+
+        <!-- Grids Completed (Peripheral Vision Grid only) -->
+        {
+          showGridsCompleted && (
+            <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-center backdrop-blur-xl">
+              <Grid3X3 class="mx-auto mb-2 size-8 text-teal-300" />
+              <div class="mb-1 text-3xl font-bold text-white">{gridsCompleted}</div>
+              <div class="text-xs text-blue-100/60">Grids Completed</div>
+            </div>
+          )
+        }
 
         <!-- WPM (only for reading exercises) -->
         {
