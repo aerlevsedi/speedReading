@@ -401,30 +401,30 @@ Run `npx supabase db reset` locally to apply the new migration alongside existin
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly: `npx supabase db reset`
-- [x] 1.2 TypeScript compiles without errors: `npm run build`
-- [x] 1.3 Lint passes: `npm run lint`
+- [x] 1.1 Migration applies cleanly: `npx supabase db reset` — 481aee7
+- [x] 1.2 TypeScript compiles without errors: `npm run build` — 481aee7
+- [x] 1.3 Lint passes: `npm run lint` — 481aee7
 
 #### Manual
 
-- [x] 1.4 `user_intro_views` table visible in Supabase Studio with correct columns and RLS policies
-- [x] 1.5 POST to `/api/intros/mark-seen` with valid exercise_type returns `{"success":true}`
-- [x] 1.6 POST without auth returns 401
-- [x] 1.7 Navigating to `/exercise/{id}` does not error (seenIntros defaults to `[]`)
+- [x] 1.4 `user_intro_views` table visible in Supabase Studio with correct columns and RLS policies — 481aee7
+- [x] 1.5 POST to `/api/intros/mark-seen` with valid exercise_type returns `{"success":true}` — 481aee7
+- [x] 1.6 POST without auth returns 401 — 481aee7
+- [x] 1.7 Navigating to `/exercise/{id}` does not error (seenIntros defaults to `[]`) — 481aee7
 
 ### Phase 2: Intro Modal Component
 
 #### Automated
 
-- [ ] 2.1 TypeScript compiles without errors: `npm run build`
-- [ ] 2.2 Lint passes: `npm run lint`
+- [x] 2.1 TypeScript compiles without errors: `npm run build`
+- [x] 2.2 Lint passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.3 Modal renders with correct content for each exercise type
-- [ ] 2.4 "Start Exercise" with unchecked checkbox calls `onDismiss(false)`
-- [ ] 2.5 "Start Exercise" with checked checkbox calls `onDismiss(true)`
-- [ ] 2.6 Clicking backdrop does NOT close the modal
+- [x] 2.3 Modal renders with correct content for each exercise type
+- [x] 2.4 "Start Exercise" with unchecked checkbox calls `onDismiss(false)`
+- [x] 2.5 "Start Exercise" with checked checkbox calls `onDismiss(true)`
+- [x] 2.6 Clicking backdrop does NOT close the modal
 
 ### Phase 3: ExerciseFlow Integration
 
