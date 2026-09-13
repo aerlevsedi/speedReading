@@ -1,10 +1,10 @@
 ---
 change_id: peripheral-vision-grid
 title: Peripheral vision grid
-status: implemented
+status: archived
 created: 2026-09-12
-updated: 2026-09-12
-archived_at: null
+updated: 2026-09-13
+archived_at: 2026-09-13T12:41:56Z
 ---
 
 ## Notes

@@ -3,7 +3,7 @@ project: Speed-Reading Training App
 version: 1
 status: draft
 created: 2026-06-02
-updated: 2026-09-12
+updated: 2026-09-13
 prd_version: 2
 prd_version: 1
 main_goal: speed
@@ -37,7 +37,7 @@ Developers reading code spend too much time reading slowly, wasting time that co
 | S-06 | retry-different-dataset       | retry same exercise type with different dataset                               | S-02          | FR-012, FR-019                     | done |
 | S-08 | intro-and-instructions        | see first-time intro on each exercise type, access instructions via icon      | S-02          | FR-007, FR-008                     | done |
 | S-09 | logout-lifecycle              | log out manually and auto-logout after 1 hour inactivity                      | S-01          | FR-002, FR-003                     | done     |
-| S-10 | peripheral-vision-grid        | play a 30-second grid game that trains peripheral vision (4th exercise type)  | S-02          | FR-021–FR-027                      | proposed |
+| S-10 | peripheral-vision-grid        | play a 30-second grid game that trains peripheral vision (4th exercise type)  | S-02          | FR-021–FR-027                      | done |
 
 ## Streams
 
@@ -188,7 +188,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** New exercise type that doesn't fit the text-reading pattern — requires a new React component with game-loop logic (timer, random grid, tap sequence validation). The peripheral vision effect depends on grid cell size relative to viewport; too small a screen and the dot ceases to be a meaningful anchor. Desktop-only for MVP. Integration with ExerciseFlow.tsx and intro modal system follows the established pattern.
-- **Status:** proposed
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -235,6 +235,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-03: user can set a reading speed goal and see goal comparison on result summary** — Archived 2026-07-28 → `context/archive/2026-07-27-goal-comparison/`. Lesson: —.
 - **S-05: user can see progress chart comparing current to previous sessions** — Archived 2026-08-18 → `context/archive/2026-08-18-progress-chart/`. Lesson: —.
 - **S-04: user can see recommended exercise marked on dashboard (least-used algorithm)** — Archived 2026-09-07 → `context/archive/2026-08-18-recommendation-system/`. Lesson: —.
+- **S-10: user can play a 30-second grid game that trains peripheral vision — tap numbers 1–12 in order while keeping gaze fixed on a center dot; score is grids completed** — Archived 2026-09-13 → `context/archive/2026-09-12-peripheral-vision-grid/`. Lesson: —.
 - **S-06: retry same exercise type with different dataset** — Archived 2026-09-09 → `context/archive/2026-09-07-retry-different-dataset/`. Lesson: —.
 - **S-09: user can log out manually and is auto-logged out after 1 hour inactivity** — Archived 2026-09-10 → `context/archive/2026-09-09-logout-lifecycle/`. Lesson: —.
 - **S-08: user can see first-time intro on each exercise type, then access instructions via question-mark icon** — Archived 2026-09-12 → `context/archive/2026-09-10-intro-and-instructions/`. Lesson: —.
