@@ -61,7 +61,6 @@ const INTRO_CONTENT = {
 export default function ExerciseIntroModal({ exerciseType, open, initialChecked = false, onDismiss }: Props) {
   const [doNotShowAgain, setDoNotShowAgain] = useState(initialChecked);
   const content = INTRO_CONTENT[exerciseType];
-  if (!content) return null;
 
   return (
     <Dialog open={open}>

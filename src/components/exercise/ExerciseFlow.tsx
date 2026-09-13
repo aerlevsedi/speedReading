@@ -50,7 +50,7 @@ export default function ExerciseFlow({ exercise, seenIntros }: Props) {
       setMarkedAsSeen(true);
       const fd = new FormData();
       fd.append("exercise_type", exercise.exercise_type);
-      void fetch("/api/intros/mark-seen", { method: "POST", body: fd }).catch((err) => {
+      void fetch("/api/intros/mark-seen", { method: "POST", body: fd }).catch((err: unknown) => {
         console.error("[mark-seen]", err);
         setMarkedAsSeen(false);
       });
