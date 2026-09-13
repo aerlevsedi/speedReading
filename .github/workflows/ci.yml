@@ -24,13 +24,6 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
-      - uses: actions/upload-artifact@v4
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        with:
-          name: dist
-          path: dist/
-          retention-days: 1
-
   test:
     name: Integration Tests
     runs-on: ubuntu-latest
@@ -94,39 +87,3 @@ jobs:
           CI: true
           SUPABASE_URL: ${{ env.SUPABASE_TEST_URL }}
           SUPABASE_KEY: ${{ env.SUPABASE_TEST_ANON_KEY }}
-
-  deploy:
-    name: Deploy to Cloudflare Workers
-    needs: ci
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
-
-      - name: Prefer IPv4 for Supabase connection
-        run: echo "precedence ::ffff:0:0/96  100" | sudo tee -a /etc/gai.conf
-
-      - name: Push database migrations to production
-        run: |
-          npx supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --password ${{ secrets.SUPABASE_DB_PASSWORD }}
-          npx supabase db push --yes
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-      - name: Deploy to Cloudflare Workers
-        run: npx wrangler deploy --config dist/server/wrangler.json
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
