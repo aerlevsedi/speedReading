@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: "list",
   webServer: process.env.CI
     ? {
-        command: "npm run dev",
+        command: "npm run build && npm run preview -- --port 4322",
         url: "http://localhost:4322",
         reuseExistingServer: false,
         timeout: 120_000,

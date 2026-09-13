@@ -111,10 +111,7 @@ jobs:
       - run: npm ci
 
       - name: Push database migrations to production
-        run: npx supabase db push --yes
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: npx supabase db push --db-url "${{ secrets.SUPABASE_DB_URL }}" --yes
 
       - uses: actions/download-artifact@v4
         with:
