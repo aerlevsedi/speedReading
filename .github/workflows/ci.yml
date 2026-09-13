@@ -57,6 +57,8 @@ jobs:
       - name: Run integration tests (Vitest)
         run: npm test
         env:
+          SUPABASE_URL: ${{ env.SUPABASE_TEST_URL }}
+          SUPABASE_KEY: ${{ env.SUPABASE_TEST_ANON_KEY }}
           SUPABASE_TEST_URL: ${{ env.SUPABASE_TEST_URL }}
           SUPABASE_TEST_ANON_KEY: ${{ env.SUPABASE_TEST_ANON_KEY }}
           SUPABASE_TEST_SERVICE_ROLE_KEY: ${{ env.SUPABASE_TEST_SERVICE_ROLE_KEY }}
