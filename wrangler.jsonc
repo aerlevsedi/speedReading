@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "speed-reading-app",
+  "name": "futymka",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-05-28",
   "compatibility_flags": ["nodejs_compat"],
@@ -15,7 +15,7 @@
   },
   "env": {
     "production": {
-      "name": "speed-reading-app",
+      "name": "futymka",
     },
     "preview": {
       "name": "speed-reading-app-preview",
